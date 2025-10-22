@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --linear: cubic-bezier(0.25, 0.25, 0.75, 0.75);
+  --easeInOutQuad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --easeInOutQuint: cubic-bezier(0.86, 0, 0.07, 1);
+  --easeInOutExpo: cubic-bezier(1, 0, 0, 1);
+  --easeInOutBack: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    font-family: "Hiragino Kaku Gothic Pro", "Helvetica Neue", Arial, "Hiragino Sans", Meiryo, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

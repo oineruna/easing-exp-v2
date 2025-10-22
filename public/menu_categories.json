@@ -1,0 +1,152 @@
+{
+  "categories": [
+    {
+      "name": "スポーツ・アウトドア",
+      "subcategories": [
+        {
+          "name": "アウトドア",
+          "subcategories": [{ "name": "テント" }, { "name": "BBQ用品" }, { "name": "アウトドア照明" }, { "name": "アウトドア寝具" }]
+        },
+        {
+          "name": "ゴルフ",
+          "subcategories": [{ "name": "ゴルフクラブ" }, { "name": "ゴルフボール" }, { "name": "ゴルフシューズ" }, { "name": "ゴルフウェア" }]
+        },
+        {
+          "name": "野球",
+          "subcategories": [{ "name": "グローブ" }, { "name": "バット" }, { "name": "野球ボール" }, { "name": "野球ユニフォーム" }]
+        },
+        {
+          "name": "サッカー",
+          "subcategories": [{ "name": "サッカーアクセサリー" }, { "name": "サッカーユニフォーム" }, { "name": "サッカーシューズ" }, { "name": "サッカーボール" }]
+        }
+      ]
+    },
+    {
+      "name": "ダイエット・健康",
+      "subcategories": [
+        {
+          "name": "リラックス＆セルフケア",
+          "subcategories": [{ "name": "アロマセラピー" }, { "name": "ストレス軽減グッズ" }, { "name": "冷え対策グッズ" }, { "name": "リラックスソファ" }]
+        },
+        {
+          "name": "ダイエット食品",
+          "subcategories": [{ "name": "低糖質食品" }, { "name": "置き換えダイエット食" }, { "name": "ダイエットスープ" }, { "name": "ダイエットおやつ" }]
+        },
+        {
+          "name": "健康サプリ",
+          "subcategories": [{ "name": "マルチビタミンサプリ" }, { "name": "コラーゲンサプリ" }, { "name": "DHA・EPAサプリ" }, { "name": "乳酸菌サプリ" }]
+        },
+        {
+          "name": "健康グッズ",
+          "subcategories": [{ "name": "マッサージ器" }, { "name": "体温計" }, { "name": "睡眠グッズ" }, { "name": "姿勢サポート健康グッズ" }]
+        }
+      ]
+    },
+    {
+      "name": "ペット日用品",
+      "subcategories": [
+        {
+          "name": "ペットフード",
+          "subcategories": [{ "name": "キャットフード" }, { "name": "ドッグフード" }, { "name": "鳥用フード" }, { "name": "ウサギフード" }]
+        },
+        {
+          "name": "ペットケア用品",
+          "subcategories": [{ "name": "ペットケアシャンプー" }, { "name": "ペットブラッシング用品" }, { "name": "ペットデンタルケア" }, { "name": "ペット用顔ケア" }]
+        },
+        {
+          "name": "ペットグッズ",
+          "subcategories": [{ "name": "ペット用ベッドグッズ" }, { "name": "ペット用トイレグッズ" }, { "name": "ペット用おもちゃグッズ" }, { "name": "ペット用散歩グッズ" }]
+        },
+        {
+          "name": "ペットお出かけ用品",
+          "subcategories": [{ "name": "ペットキャリーバッグ" }, { "name": "ペットお出かけカート" }, { "name": "ペット用ドライブ用品" }, { "name": "ペットアウトドア服" }]
+        }
+      ]
+    },
+    {
+      "name": "雑貨・文具・裁縫・ギフト",
+      "subcategories": [
+        {
+          "name": "生活雑貨",
+          "subcategories": [{ "name": "トイレットペーパー" }, { "name": "ティッシュ" }, { "name": "ゴミ袋" }, { "name": "ゴミ箱" }]
+        },
+        {
+          "name": "文房具",
+          "subcategories": [{ "name": "ボールペン" }, { "name": "ノートブック" }, { "name": "付箋" }, { "name": "シャープペンシル" }]
+        },
+        {
+          "name": "裁縫用品",
+          "subcategories": [{ "name": "裁縫針" }, { "name": "裁縫糸" }, { "name": "裁縫はさみ" }, { "name": "裁縫用レザー" }]
+        },
+        {
+          "name": "ギフト用品",
+          "subcategories": [{ "name": "ギフトラッピングペーパー" }, { "name": "ギフト用リボン" }, { "name": "ギフトカード" }, { "name": "ギフトバッグ" }]
+        }
+      ]
+    },
+    {
+      "name": "日常食料品",
+      "subcategories": [
+        {
+          "name": "フルーツ",
+          "subcategories": [{ "name": "りんご" }, { "name": "みかん" }, { "name": "バナナ" }, { "name": "ぶどう" }]
+        },
+        {
+          "name": "野菜",
+          "subcategories": [{ "name": "トマト" }, { "name": "きゅうり" }, { "name": "キャベツ" }, { "name": "じゃがいも" }]
+        },
+        {
+          "name": "肉",
+          "subcategories": [{ "name": "牛肉" }, { "name": "豚肉" }, { "name": "鶏肉" }, { "name": "羊肉" }]
+        },
+        {
+          "name": "魚介類",
+          "subcategories": [{ "name": "鮭" }, { "name": "マグロ" }, { "name": "イカ" }, { "name": "カニ" }]
+        }
+      ]
+    },
+    {
+      "name": "書籍・雑誌・漫画・絵本",
+      "subcategories": [
+        {
+          "name": "書籍",
+          "subcategories": [{ "name": "小説" }, { "name": "ノンフィクション書籍" }, { "name": "自己啓発書籍" }, { "name": "趣味・実用書籍" }]
+        },
+        {
+          "name": "雑誌",
+          "subcategories": [{ "name": "ファッション雑誌" }, { "name": "生活情報雑誌" }, { "name": "ビジネス雑誌" }, { "name": "週刊誌" }]
+        },
+        {
+          "name": "漫画",
+          "subcategories": [{ "name": "少年漫画" }, { "name": "少女漫画" }, { "name": "青年漫画" }, { "name": "女性漫画" }]
+        },
+        {
+          "name": "児童書・絵本",
+          "subcategories": [{ "name": "絵本" }, { "name": "読み物（幼稚園向け）" }, { "name": "読み物（小学生向け）" }, { "name": "児童知育本" }]
+        }
+      ]
+    },
+
+    {
+      "name": "園芸・ガーデン",
+      "subcategories": [
+        {
+          "name": "園芸用品",
+          "subcategories": [{ "name": "植物・種苗" }, { "name": "肥料・資材" }, { "name": "園芸用工具" }, { "name": "植木鉢" }]
+        },
+        {
+          "name": "ガーデン家具",
+          "subcategories": [{ "name": "ガーデンテーブル" }, { "name": "ガーデンチェア" }, { "name": "ガーデンソファー" }, { "name": "ガーデンベンチ" }]
+        },
+        {
+          "name": "ガーデンデコ",
+          "subcategories": [{ "name": "ガーデンライト" }, { "name": "ガーデン装飾品" }, { "name": "ガーデン噴水" }, { "name": "ガーデンプランター" }]
+        },
+        {
+          "name": "DIY工具",
+          "subcategories": [{ "name": "DYI用電動工具" }, { "name": "DYI用手工具" }, { "name": "DYI用塗装用品" }, { "name": "DYI用作業保護具" }]
+        }
+      ]
+    }
+  ]
+}

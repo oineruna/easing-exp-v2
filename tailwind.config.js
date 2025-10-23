@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -19,8 +19,14 @@ export default {
           '100%': { transform: 'translate(0px, 0px) scale(1)' },
         },
         'gradient-shift': {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
+          '0%, 100%': { 
+            backgroundPosition: '0% 50%',
+            backgroundSize: '200% 200%'  // ← 追加
+          },
+          '50%': { 
+            backgroundPosition: '100% 50%',
+            backgroundSize: '200% 200%'  // ← 追加
+          },
         },
         shake: {
           '0%, 100%': { transform: 'translateX(0)' },

@@ -1,25 +1,38 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import { ConsentOverlay } from './components/ConsentOverlay';
 import { TutorialIntroOverlay } from './components/TutorialIntroOverlay';
 import { TutorialCompleteOverlay } from './components/TutorialCompleteOverlay';
 import { TaskMenu } from './components/TaskMenu';
 import { TaskEndOverlay } from './components/TaskEndOverlay';
 import { RewardScreen } from './components/RewardScreen';
+
 import { useTaskLogger } from './hooks/useTaskLogger';
 import { useLatinSquare } from './hooks/useLatinSquare';
+
 import { detectLang, t } from './utils/i18n';
 import type { Lang } from './utils/i18n';
+
 import { submitToNetlify } from './utils/netlify';
 import type { Category, TaskLog, EasingFunction } from './types/experiment';
 import { MAX_TASKS, TIME_LIMIT_MS, FIXED_TASKS_JA, FIXED_TASKS_EN } from './utils/taskData';
 
-type AppState = 'consent' | 'ready' | 'tutorial-intro' | 'tutorial' | 'tutorial-complete' | 'task' | 'task-end' | 'reward';
+type AppState =
+  | 'consent'
+  | 'ready'
+  | 'tutorial-intro'
+  | 'tutorial'
+  | 'tutorial-complete'
+  | 'task'
+  | 'task-end'
+  | 'reward';
 
-function generateParticipantId(): number {
-  return Math.floor(Math.random() * 1000);
-}
-
-function findPathToLeaf(categories: Category[], targetName: string, currentPath: string[] = []): string[] | null {
+function findPathToLeaf(
+  categories: Category[],
+  targetName: string,
+  currentPath: string[] = []
+): string[] | null {
   for (const cat of categories) {
     const newPath = [...currentPath, cat.name];
     if (cat.name === targetName) {
@@ -33,229 +46,172 @@ function findPathToLeaf(categories: Category[], targetName: string, currentPath:
   return null;
 }
 
-function App() {
-  const [lang] = useState<Lang>(detectLang());
+export default function App() {
+  const lang: Lang = detectLang();
+  
   const [appState, setAppState] = useState<AppState>('consent');
-  const [participantId] = useState<number>(() => {
-    const id = generateParticipantId();
-    const newUrl = `${window.location.pathname}?participant=${id}`;
-    window.history.replaceState({}, '', newUrl);
-    return id;
-  });
-
+  const [participantId] = useState(() => Math.floor(Math.random() * 10000));
   const [categories, setCategories] = useState<Category[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
   const [taskInfo, setTaskInfo] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<'correct' | 'incorrect' | 'timeout' | ''>('');
   const [currentCorrectPath, setCurrentCorrectPath] = useState<string[]>([]);
   const [currentEasing, setCurrentEasing] = useState<EasingFunction>('linear');
   const [targetItem, setTargetItem] = useState('');
-
   const timeoutIdRef = useRef<number | null>(null);
+
   const taskLogger = useTaskLogger();
 
-  const tutorialTargetItem = lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー';
-
-  // Load categories
   useEffect(() => {
     const categoryFile = lang === 'en' ? '/menu_categories_en.json' : '/menu_categories.json';
     fetch(categoryFile)
       .then(res => res.json())
       .then(data => {
         setCategories(data.categories);
-        
         const FIXED_TASKS = lang === 'en' ? FIXED_TASKS_EN : FIXED_TASKS_JA;
         FIXED_TASKS.forEach((task, index) => {
           const path = findPathToLeaf(data.categories, task.item);
           if (!path) {
-            console.warn(`警告: タスク${index + 1}の商品「${task.item}」がメニューに見つかりませんでした！`);
+            console.warn(`タスク${index + 1}のアイテム (${task.item})がメニューにありません`);
           }
         });
       })
-      .catch(err => console.error('JSON読み込み失敗:', err));
+      .catch(err => console.error('カテゴリー取得エラー:', err));
   }, [lang]);
 
   const handleConsentAgree = useCallback(() => {
     setAppState('ready');
   }, []);
 
-  const handleConsentDisagree = useCallback(() => {
-    alert(t(lang, 'disagreeAlert'));
-  }, [lang]);
-
   const handleStartTutorial = useCallback(() => {
     setAppState('tutorial-intro');
   }, []);
 
   const handleTutorialIntroClose = useCallback(() => {
-    if (confirm(t(lang, 'tutorialStartConfirm'))) {
-      setAppState('tutorial');
-      taskLogger.resetTask();
-      setTaskInfo(t(lang, 'tutorialInfo', tutorialTargetItem));
-      setFeedback('');
-      setFeedbackType('');
-      
-      timeoutIdRef.current = window.setTimeout(() => {
-        setFeedback(t(lang, 'tutorialTimeout'));
-        setFeedbackType('timeout');
-      }, TIME_LIMIT_MS);
-    } else {
-      setAppState('ready');
-    }
-  }, [lang, taskLogger, tutorialTargetItem]);
+    setAppState('tutorial');
+    setTaskInfo(t(lang, 'tutorialInfo', lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー'));
+    setFeedback(null);
+    setFeedbackType('');
+    timeoutIdRef.current = window.setTimeout(() => {
+      setFeedback(t(lang, 'tutorialTimeout'));
+      setFeedbackType('timeout');
+    }, TIME_LIMIT_MS);
+  }, [lang]);
 
   const handleTutorialItemClick = useCallback((itemName: string) => {
-    taskLogger.recordClick(itemName, categories);
-
-    if (itemName !== tutorialTargetItem) {
+    if (itemName !== (lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー')) {
       setFeedback(t(lang, 'tutorialWrong'));
       setFeedbackType('incorrect');
       setTimeout(() => {
-        setFeedback('');
+        setFeedback(null);
         setFeedbackType('');
       }, 2000);
       return;
     }
-
     if (timeoutIdRef.current) {
       clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
     }
     setFeedback(t(lang, 'tutorialCorrect'));
     setFeedbackType('correct');
     setAppState('tutorial-complete');
-  }, [categories, lang, taskLogger, tutorialTargetItem]);
+  }, [lang]);
 
   const handleTutorialCompleteClose = useCallback(() => {
     setAppState('ready');
-    setFeedback('');
+    setFeedback(null);
     setFeedbackType('');
     setTaskInfo('');
   }, []);
 
   const handleStartTask = useCallback(() => {
-    if (!confirm(t(lang, 'startTaskConfirm'))) return;
     setAllLogs([]);
     setCurrentTaskIndex(1);
     setAppState('task');
-  }, [lang]);
+  }, []);
 
   const { currentEasing: assignedEasing, currentTask } = useLatinSquare(participantId, currentTaskIndex, lang);
 
   useEffect(() => {
     if (appState === 'task' && currentTaskIndex > 0 && currentTaskIndex <= MAX_TASKS) {
       taskLogger.resetTask();
-      setFeedback('');
+      setFeedback(null);
       setFeedbackType('');
-
       const item = currentTask.item;
       setTargetItem(item);
       setCurrentEasing(assignedEasing);
       setTaskInfo(t(lang, 'taskInfo', currentTaskIndex, MAX_TASKS, item));
+      const correctPath = findPathToLeaf(categories, item) || [];
+      setCurrentCorrectPath(correctPath);
 
-      const path = findPathToLeaf(categories, item) || [];
-      setCurrentCorrectPath(path);
-
-      console.log(`タスク${currentTaskIndex}: イージング=${assignedEasing}, 商品=${item}`);
-
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
       timeoutIdRef.current = window.setTimeout(() => {
-        handleTaskTimeout(item);
+        const newLog: TaskLog = {
+          taskIndex: currentTaskIndex,
+          correctItem: item,
+          correctPath: correctPath,
+          totalTime: (TIME_LIMIT_MS / 1000).toFixed(2),
+          errorCount: taskLogger.errorCount,
+          timedOut: true,
+          usedEasing: assignedEasing,
+          firstClickTime: taskLogger.firstClickTime,
+          menuTravelDistance: taskLogger.menuTravelDistance,
+          clicks: taskLogger.clicksThisTask,
+        };
+        setAllLogs(prev => [...prev, newLog]);
+        setFeedback(t(lang, 'timeout'));
+        setFeedbackType('timeout');
+        setAppState('task-end');
       }, TIME_LIMIT_MS);
     }
-  }, [appState, currentTaskIndex]);
-
-  const handleTaskTimeout = useCallback((item: string) => {
-    if (timeoutIdRef.current) {
-      clearTimeout(timeoutIdRef.current);
-      timeoutIdRef.current = null;
-    }
-
-    setFeedback(t(lang, 'timeout'));
-    setFeedbackType('timeout');
-
-    const firstClickTimeSec = typeof taskLogger.firstClickTime === 'number' 
-      ? parseFloat(taskLogger.firstClickTime.toFixed(2)) 
-      : null;
-
-    const newLog: TaskLog = {
-      taskIndex: currentTaskIndex,
-      correctItem: item,
-      correctPath: [...currentCorrectPath],
-      totalTime: (TIME_LIMIT_MS / 1000).toFixed(2),
-      errorCount: taskLogger.errorCount,
-      timedOut: true,
-      usedEasing: currentEasing,
-      firstClickTime: firstClickTimeSec,
-      menuTravelDistance: taskLogger.menuTravelDistance,
-      clicks: taskLogger.clicksThisTask,
-    };
-
-    setAllLogs(prev => [...prev, newLog]);
-    setAppState('task-end');
-  }, [lang, currentTaskIndex, currentCorrectPath, currentEasing, taskLogger]);
+  }, [appState, currentTaskIndex, assignedEasing, currentTask, categories, lang, taskLogger]);
 
   const handleTaskItemClick = useCallback((itemName: string, isCorrectPath: boolean) => {
     taskLogger.recordClick(itemName, categories);
-
     if (!isCorrectPath) {
       taskLogger.incrementError();
     }
-
     if (itemName === targetItem) {
-      const endTime = performance.now();
-      const totalTimeSec = ((endTime - taskLogger.startTimeRef.current) / 1000).toFixed(2);
-
       if (timeoutIdRef.current) {
         clearTimeout(timeoutIdRef.current);
         timeoutIdRef.current = null;
       }
-
       setFeedback(t(lang, 'correct'));
       setFeedbackType('correct');
-
-      const firstClickTimeSec = typeof taskLogger.firstClickTime === 'number'
-        ? parseFloat(taskLogger.firstClickTime.toFixed(2))
-        : null;
 
       const newLog: TaskLog = {
         taskIndex: currentTaskIndex,
         correctItem: targetItem,
-        correctPath: [...currentCorrectPath],
-        totalTime: totalTimeSec,
+        correctPath: currentCorrectPath,
+        totalTime: ((performance.now() - taskLogger.startTimeRef.current) / 1000).toFixed(2),
         errorCount: taskLogger.errorCount,
         timedOut: false,
         usedEasing: currentEasing,
-        firstClickTime: firstClickTimeSec,
+        firstClickTime: taskLogger.firstClickTime,
         menuTravelDistance: taskLogger.menuTravelDistance,
         clicks: taskLogger.clicksThisTask,
       };
-
       setAllLogs(prev => [...prev, newLog]);
       setAppState('task-end');
-    } else if (itemName !== targetItem && !isCorrectPath) {
+    } else if (!isCorrectPath) {
       setFeedback(t(lang, 'wrong'));
       setFeedbackType('incorrect');
       setTimeout(() => {
-        setFeedback('');
+        setFeedback(null);
         setFeedbackType('');
       }, 2000);
     }
   }, [categories, currentCorrectPath, currentEasing, currentTaskIndex, lang, targetItem, taskLogger]);
 
-  const handleTaskEndContinue = useCallback((survey: {
-    animationEaseRating: string;
-    taskDifficultyRating: string;
-    animationDifferenceRating: string;
-    comments: string;
-  }) => {
-    setFeedback('');
-    setFeedbackType('');
-
+  const handleTaskEndContinue = useCallback((survey: any) => {
     setAllLogs(prev => {
       const newLogs = [...prev];
       const lastLog = newLogs[newLogs.length - 1];
-      if (lastLog && lastLog.taskIndex === currentTaskIndex) {
+      if (lastLog) {
         lastLog.animationEaseRating = survey.animationEaseRating;
         lastLog.taskDifficultyRating = survey.taskDifficultyRating;
         lastLog.animationDifferenceRating = survey.animationDifferenceRating;
@@ -291,144 +247,173 @@ function App() {
         </div>
       </div>
 
-      {/* Language Switcher */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2 glass-effect rounded-full px-4 py-2 shadow-lg">
-        <a href="?lang=ja" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇯🇵 日本語
-        </a>
-        <span className="text-gray-400">|</span>
-        <a href="?lang=en" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇺🇸 English
-        </a>
-      </div>
-
-      {/* Title */}
-      <div className="pt-12 pb-6">
-        <h1 className="text-4xl md:text-5xl font-black text-center text-white drop-shadow-2xl">
-          {t(lang, 'experimentTitle')}
-        </h1>
-      </div>
-
-      {/* Overlays */}
-      <ConsentOverlay
-        isVisible={appState === 'consent'}
-        lang={lang}
-        onAgree={handleConsentAgree}
-        onDisagree={handleConsentDisagree}
-      />
-
-      <TutorialIntroOverlay
-        isVisible={appState === 'tutorial-intro'}
-        lang={lang}
-        onClose={handleTutorialIntroClose}
-      />
-
-      <TutorialCompleteOverlay
-        isVisible={appState === 'tutorial-complete'}
-        lang={lang}
-        onClose={handleTutorialCompleteClose}
-      />
-
-      <TaskEndOverlay
-        isVisible={appState === 'task-end'}
-        lang={lang}
-        isLastTask={currentTaskIndex >= MAX_TASKS}
-        onContinue={handleTaskEndContinue}
-      />
-
-      {/* Main Content */}
+      {/* タイトル */}
       {appState !== 'consent' && appState !== 'reward' && (
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Control Buttons */}
-          {appState === 'ready' && (
-            <div className="flex justify-center gap-6 mb-10">
-              <button
-                onClick={handleStartTask}
-                className="group relative px-8 py-4 bg-white text-purple-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 overflow-hidden"
-              >
-                <span className="relative z-10">{t(lang, 'startTask')}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">
-                  {t(lang, 'startTask')} ▶
-                </span>
-              </button>
-              <button
-                onClick={handleStartTutorial}
-                className="group relative px-8 py-4 bg-white text-green-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 overflow-hidden"
-              >
-                <span className="relative z-10">{t(lang, 'startTutorial')}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">
-                  {t(lang, 'startTutorial')} 📚
-                </span>
-              </button>
-            </div>
-          )}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="pt-8 pb-6"
+        >
+          <h1 className="text-4xl md:text-5xl font-black text-center text-white drop-shadow-2xl">
+            {t(lang, 'experimentTitle')}
+          </h1>
+        </motion.div>
+      )}
 
-          {/* Task Info */}
-          {(appState === 'tutorial' || appState === 'task') && (
-            <div className="text-center mb-6">
+      {/* Consent画面 */}
+      {appState === 'consent' && (
+        <ConsentOverlay isVisible={true} lang={lang} onAgree={handleConsentAgree} />
+      )}
+
+      {/* チュートリアルイントロ */}
+      {appState === 'tutorial-intro' && (
+        <TutorialIntroOverlay isVisible={true} lang={lang} onClose={handleTutorialIntroClose} />
+      )}
+
+      {/* チュートリアル完了 */}
+      {appState === 'tutorial-complete' && (
+        <TutorialCompleteOverlay isVisible={true} lang={lang} onClose={handleTutorialCompleteClose} />
+      )}
+
+      {/* タスク終了画面 */}
+      {appState === 'task-end' && (
+        <TaskEndOverlay
+          isVisible={true}
+          lang={lang}
+          isLastTask={currentTaskIndex === MAX_TASKS}
+          onContinue={handleTaskEndContinue}
+        />
+      )}
+
+      {/* 報酬画面 */}
+      {appState === 'reward' && (
+        <RewardScreen lang={lang} onContinue={handleRewardContinue} allLogs={allLogs} />
+      )}
+
+      {/* 準備OK画面 */}
+      {appState === 'ready' && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center justify-center gap-6 mt-20"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleStartTask}
+            className="relative group overflow-hidden rounded-2xl p-[2px]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 animate-gradient-shift"></div>
+            <div className="relative bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl px-12 py-5 group-hover:bg-opacity-90 transition-all">
+              <span className="text-white font-bold text-2xl flex items-center gap-3">
+                {t(lang, 'startTask')}
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  →
+                </motion.span>
+              </span>
+            </div>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleStartTutorial}
+            className="relative group overflow-hidden rounded-2xl p-[2px]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
+            <div className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-2xl px-12 py-5 group-hover:bg-opacity-90 transition-all">
+              <span className="text-white font-bold text-2xl flex items-center gap-3">
+                📚 {t(lang, 'startTutorial')}
+              </span>
+            </div>
+          </motion.button>
+        </motion.div>
+      )}
+
+      {/* タスク説明とメニュー */}
+      {(appState === 'tutorial' || appState === 'task') && (
+        <div className="max-w-6xl mx-auto px-4">
+          {/* タスク情報 */}
+          {taskInfo && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 text-center"
+            >
               <div className="inline-block glass-effect rounded-2xl px-8 py-4 shadow-2xl">
                 <div className="text-2xl md:text-3xl font-black text-gray-800">
                   {taskInfo}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
-          {/* Feedback */}
-          {(appState === 'tutorial' || appState === 'task') && (
-            <div className="flex justify-center mb-6">
-              <div
-                className={`min-w-[320px] text-xl font-bold text-center px-6 py-4 rounded-2xl min-h-[60px] flex items-center justify-center transition-all duration-300 shadow-lg ${
-                  feedbackType === 'correct'
-                    ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white scale-105 shadow-green-500/50'
-                    : feedbackType === 'incorrect'
-                    ? 'bg-gradient-to-r from-red-400 to-pink-500 text-white scale-105 shadow-red-500/50 animate-shake'
-                    : feedbackType === 'timeout'
-                    ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white scale-105 shadow-yellow-500/50'
-                    : 'bg-white/50 backdrop-blur-sm text-transparent'
-                }`}
+          {/* フィードバック表示 */}
+          <AnimatePresence mode="wait">
+            {feedback && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="flex justify-center mb-6"
               >
-                {feedback || '\u00A0'}
-              </div>
-            </div>
-          )}
+                <div className="relative max-w-xl w-full px-4">
+                  <div
+                    className={`absolute -inset-2 rounded-2xl blur-xl opacity-75 ${
+                      feedbackType === 'correct'
+                        ? 'bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400'
+                        : feedbackType === 'incorrect'
+                        ? 'bg-gradient-to-r from-red-400 via-pink-400 to-rose-400'
+                        : 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400'
+                    }`}
+                  />
 
-          {/* Menu */}
-          {(appState === 'tutorial' || appState === 'task') && categories.length > 0 && (
-            <div className="flex justify-center pb-10">
+                  <motion.div
+                    animate={feedbackType === 'incorrect' ? { x: [-5, 5, -5, 5, 0] } : {}}
+                    transition={{ duration: 0.4 }}
+                    className={`relative px-8 py-5 rounded-2xl shadow-2xl ${
+                      feedbackType === 'correct'
+                        ? 'bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400'
+                        : feedbackType === 'incorrect'
+                        ? 'bg-gradient-to-r from-red-400 via-pink-400 to-rose-400'
+                        : 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-3 text-white">
+                      <motion.span
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                        className="text-3xl"
+                      >
+                        {feedbackType === 'correct' ? '✓' : feedbackType === 'incorrect' ? '✗' : '⏱'}
+                      </motion.span>
+                      <span className="font-bold text-xl">{feedback}</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* タスクメニュー表示 */}
+          {categories.length > 0 && (
+            <div className="flex justify-center mb-10">
               <TaskMenu
                 categories={categories}
                 currentEasing={currentEasing}
                 correctPath={currentCorrectPath}
                 isTutorial={appState === 'tutorial'}
-                onItemClick={
-                  appState === 'tutorial' ? handleTutorialItemClick : handleTaskItemClick
-                }
+                onItemClick={appState === 'tutorial' ? handleTutorialItemClick : handleTaskItemClick}
               />
             </div>
           )}
         </div>
       )}
-
-      {/* Reward Screen */}
-      {appState === 'reward' && (
-        <RewardScreen
-          allLogs={allLogs}
-          lang={lang}
-          onContinue={handleRewardContinue}
-        />
-      )}
-
-      {/* Hidden Netlify Form */}
-      <form name="results" data-netlify="true" hidden>
-        <input type="hidden" name="form-name" value="results" />
-        <input type="hidden" name="participant" />
-        <textarea name="jsonData"></textarea>
-      </form>
     </div>
   );
 }
-
-export default App;

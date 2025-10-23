@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { t, Lang } from '../utils/i18n';
+import { t } from '../utils/i18n';
+import type { Lang } from '../utils/i18n';
 
 interface TutorialIntroOverlayProps {
   isVisible: boolean;
@@ -15,29 +16,56 @@ export function TutorialIntroOverlay({ isVisible, lang, onClose }: TutorialIntro
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-lg p-8 max-w-4xl mx-4 text-center"
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="glass-effect rounded-3xl p-8 max-w-4xl w-full shadow-2xl"
           >
-            <img
+            <motion.h2
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl font-black mb-6 text-center gradient-text"
+            >
+              📚 {lang === 'ja' ? 'チュートリアル' : 'Tutorial'}
+            </motion.h2>
+
+            <motion.img
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
               src="/tutorial.png"
               alt="Tutorial"
-              className="max-w-full h-auto rounded-lg mb-6"
+              className="max-w-full h-auto rounded-2xl mb-6 shadow-lg"
             />
-            <div
-              className="text-gray-700 mb-6 leading-relaxed"
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-700 mb-6 leading-relaxed text-lg text-center bg-white/60 rounded-2xl p-6"
               dangerouslySetInnerHTML={{ __html: t(lang, 'tutorialIntroText') }}
             />
-            <button
-              onClick={onClose}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg font-bold hover:from-blue-700 hover:to-blue-600 transition-all"
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-center"
             >
-              {t(lang, 'tutorialIntroClose')}
-            </button>
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(16, 185, 129, 0.4)' }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onClose}
+                className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-bold text-lg shadow-xl"
+              >
+                {t(lang, 'tutorialIntroClose')} ▶
+              </motion.button>
+            </motion.div>
           </motion.div>
         </motion.div>
       )}

@@ -34,7 +34,6 @@ export function TaskEndOverlay({ isVisible, lang, isLastTask, onContinue }: Task
       comments,
     });
 
-    // Reset form
     setAnimationEaseRating('');
     setTaskDifficultyRating('');
     setAnimationDifferenceRating('');
@@ -48,137 +47,181 @@ export function TaskEndOverlay({ isVisible, lang, isLastTask, onContinue }: Task
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 overflow-y-auto"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto p-4"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-lg p-8 max-w-4xl mx-4 my-8"
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="glass-effect rounded-3xl p-8 max-w-4xl w-full shadow-2xl my-8"
           >
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              {t(lang, 'surveyTitle')}
+            <h2 className="text-3xl font-black mb-8 text-center gradient-text">
+              📋 {t(lang, 'surveyTitle')}
             </h2>
 
             <div className="space-y-6">
-              <table className="w-full border-separate" style={{ borderSpacing: '0 12px' }}>
-                <tbody className="bg-gray-50">
-                  {/* Q1 */}
-                  <tr>
-                    <td className="p-3 align-middle">
-                      <div className="font-bold text-left">
-                        {t(lang, 'surveyQ1')}
-                        <br />
-                        <span className="text-sm text-gray-600 font-normal">
-                          {t(lang, 'surveyScale1')}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-3 align-middle">
-                      <div className="flex gap-4">
-                        {[1, 2, 3, 4, 5].map(value => (
-                          <label key={value} className="flex items-center gap-1 text-lg">
-                            <input
-                              type="radio"
-                              name="animationEase"
-                              value={value}
-                              checked={animationEaseRating === String(value)}
-                              onChange={(e) => setAnimationEaseRating(e.target.value)}
-                              className="w-4 h-4 accent-blue-600"
-                            />
-                            {value}
-                          </label>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Q2 */}
-                  <tr>
-                    <td className="p-3 align-middle">
-                      <div className="font-bold text-left">
-                        {t(lang, 'surveyQ2')}
-                        <br />
-                        <span className="text-sm text-gray-600 font-normal">
-                          {t(lang, 'surveyScale2')}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-3 align-middle">
-                      <div className="flex gap-4">
-                        {[1, 2, 3, 4, 5].map(value => (
-                          <label key={value} className="flex items-center gap-1 text-lg">
-                            <input
-                              type="radio"
-                              name="taskDifficulty"
-                              value={value}
-                              checked={taskDifficultyRating === String(value)}
-                              onChange={(e) => setTaskDifficultyRating(e.target.value)}
-                              className="w-4 h-4 accent-blue-600"
-                            />
-                            {value}
-                          </label>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Q3 */}
-                  <tr>
-                    <td className="p-3 align-middle">
-                      <div className="font-bold text-left">
-                        {t(lang, 'surveyQ3')}
-                        <br />
-                        <span className="text-sm text-gray-600 font-normal">
-                          {t(lang, 'surveyScale3')}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-3 align-middle">
-                      <div className="flex gap-4">
-                        {[1, 2, 3, 4, 5].map(value => (
-                          <label key={value} className="flex items-center gap-1 text-lg">
-                            <input
-                              type="radio"
-                              name="animationDifference"
-                              value={value}
-                              checked={animationDifferenceRating === String(value)}
-                              onChange={(e) => setAnimationDifferenceRating(e.target.value)}
-                              className="w-4 h-4 accent-blue-600"
-                            />
-                            {value}
-                          </label>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Comments */}
-                  <tr>
-                    <td className="p-3 align-middle font-bold text-left">
-                      {t(lang, 'surveyComments')}
-                    </td>
-                    <td className="p-3 align-middle">
-                      <textarea
-                        value={comments}
-                        onChange={(e) => setComments(e.target.value)}
-                        rows={3}
-                        className="w-full p-2 border border-gray-300 rounded text-base resize-vertical"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-6 text-center">
-              <button
-                onClick={handleSubmit}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg font-bold text-lg hover:from-blue-700 hover:to-blue-600 transition-all"
+              {/* Q1 */}
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white/60 rounded-2xl p-6 shadow-lg"
               >
-                {isLastTask ? t(lang, 'toResult') : t(lang, 'continue')}
-              </button>
+                <div className="font-bold text-gray-800 mb-3">
+                  {t(lang, 'surveyQ1')}
+                  <div className="text-sm text-gray-600 font-normal mt-1">
+                    {t(lang, 'surveyScale1')}
+                  </div>
+                </div>
+                <div className="flex gap-4 justify-center">
+                  {[1, 2, 3, 4, 5].map(value => (
+                    <motion.label
+                      key={value}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`
+                        flex items-center justify-center w-14 h-14 rounded-xl cursor-pointer
+                        font-bold text-xl transition-all duration-200
+                        ${animationEaseRating === String(value)
+                          ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg scale-110'
+                          : 'bg-white/80 text-gray-700 hover:bg-purple-100'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name="animationEase"
+                        value={value}
+                        checked={animationEaseRating === String(value)}
+                        onChange={(e) => setAnimationEaseRating(e.target.value)}
+                        className="hidden"
+                      />
+                      {value}
+                    </motion.label>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Q2 */}
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white/60 rounded-2xl p-6 shadow-lg"
+              >
+                <div className="font-bold text-gray-800 mb-3">
+                  {t(lang, 'surveyQ2')}
+                  <div className="text-sm text-gray-600 font-normal mt-1">
+                    {t(lang, 'surveyScale2')}
+                  </div>
+                </div>
+                <div className="flex gap-4 justify-center">
+                  {[1, 2, 3, 4, 5].map(value => (
+                    <motion.label
+                      key={value}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`
+                        flex items-center justify-center w-14 h-14 rounded-xl cursor-pointer
+                        font-bold text-xl transition-all duration-200
+                        ${taskDifficultyRating === String(value)
+                          ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg scale-110'
+                          : 'bg-white/80 text-gray-700 hover:bg-blue-100'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name="taskDifficulty"
+                        value={value}
+                        checked={taskDifficultyRating === String(value)}
+                        onChange={(e) => setTaskDifficultyRating(e.target.value)}
+                        className="hidden"
+                      />
+                      {value}
+                    </motion.label>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Q3 */}
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white/60 rounded-2xl p-6 shadow-lg"
+              >
+                <div className="font-bold text-gray-800 mb-3">
+                  {t(lang, 'surveyQ3')}
+                  <div className="text-sm text-gray-600 font-normal mt-1">
+                    {t(lang, 'surveyScale3')}
+                  </div>
+                </div>
+                <div className="flex gap-4 justify-center">
+                  {[1, 2, 3, 4, 5].map(value => (
+                    <motion.label
+                      key={value}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`
+                        flex items-center justify-center w-14 h-14 rounded-xl cursor-pointer
+                        font-bold text-xl transition-all duration-200
+                        ${animationDifferenceRating === String(value)
+                          ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-lg scale-110'
+                          : 'bg-white/80 text-gray-700 hover:bg-green-100'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name="animationDifference"
+                        value={value}
+                        checked={animationDifferenceRating === String(value)}
+                        onChange={(e) => setAnimationDifferenceRating(e.target.value)}
+                        className="hidden"
+                      />
+                      {value}
+                    </motion.label>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Comments */}
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="bg-white/60 rounded-2xl p-6 shadow-lg"
+              >
+                <div className="font-bold text-gray-800 mb-3">
+                  {t(lang, 'surveyComments')}
+                </div>
+                <textarea
+                  value={comments}
+                  onChange={(e) => setComments(e.target.value)}
+                  rows={4}
+                  placeholder={lang === 'ja' ? '自由にご記入ください...' : 'Feel free to write...'}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl text-base resize-vertical focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 bg-white/80"
+                />
+              </motion.div>
             </div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 text-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(147, 51, 234, 0.4)' }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleSubmit}
+                className="px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold text-xl shadow-xl"
+              >
+                {isLastTask ? `${t(lang, 'toResult')} 🎊` : `${t(lang, 'continue')} ➜`}
+              </motion.button>
+            </motion.div>
           </motion.div>
         </motion.div>
       )}

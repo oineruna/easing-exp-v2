@@ -48,8 +48,6 @@ function findPathToLeaf(
   return null;
 }
 
-// ... 既存のインポートは同じ ...
-
 export default function App() {
   const lang: Lang = detectLang();
   
@@ -69,7 +67,6 @@ export default function App() {
 
   const taskLogger = useTaskLogger();
 
-  // カテゴリ読み込み（既存のまま）
   useEffect(() => {
     const categoryFile = lang === 'en' ? '/menu_categories_en.json' : '/menu_categories.json';
     fetch(categoryFile)
@@ -87,30 +84,22 @@ export default function App() {
       .catch(err => console.error('カテゴリー取得エラー:', err));
   }, [lang]);
 
-  // 🔥 修正：同意後は事前アンケートへ
   const handleConsentAgree = useCallback(() => {
-    setAppState('pre-survey');  // 'ready' → 'pre-survey' に変更
+    setAppState('ready');
   }, []);
 
-  const handleConsentDisagree = useCallback(() => {
-    alert(t(lang, 'disagreeAlert'));
-  }, [lang]);
+  const handleStartTutorial = useCallback(() => {
+    setAppState('pre-survey');
+  }, []);
 
-  // 🔥 修正：事前アンケート完了後にreadyへ
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
     setPreSurveyData(data);
     console.log('事前アンケート結果:', data);
-    setAppState('ready');  // これでOK
-  }, []);
-
-  // 🔥 修正：チュートリアル開始時はイントロへ
-  const handleStartTutorial = useCallback(() => {
-    setAppState('tutorial-intro');  // 'pre-survey' → 'tutorial-intro' に変更
+    setAppState('ready');
   }, []);
 
   const handleTutorialIntroClose = useCallback(() => {
     setAppState('tutorial');
-    taskLogger.resetTask();  // 🔥 追加
     setTaskInfo(t(lang, 'tutorialInfo', lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー'));
     setFeedback(null);
     setFeedbackType('');
@@ -118,11 +107,9 @@ export default function App() {
       setFeedback(t(lang, 'tutorialTimeout'));
       setFeedbackType('timeout');
     }, TIME_LIMIT_MS);
-  }, [lang, taskLogger]);
+  }, [lang]);
 
   const handleTutorialItemClick = useCallback((itemName: string) => {
-    taskLogger.recordClick(itemName, categories);  // 🔥 追加
-
     if (itemName !== (lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー')) {
       setFeedback(t(lang, 'tutorialWrong'));
       setFeedbackType('incorrect');
@@ -139,7 +126,7 @@ export default function App() {
     setFeedback(t(lang, 'tutorialCorrect'));
     setFeedbackType('correct');
     setAppState('tutorial-complete');
-  }, [lang, categories, taskLogger]);  // 🔥 依存配列を追加
+  }, [lang]);
 
   const handleTutorialCompleteClose = useCallback(() => {
     setAppState('ready');
@@ -149,17 +136,117 @@ export default function App() {
   }, []);
 
   const handleStartTask = useCallback(() => {
-    if (!confirm(t(lang, 'startTaskConfirm'))) return;  // 🔥 確認ダイアログを追加
     setAllLogs([]);
     setCurrentTaskIndex(1);
     setAppState('task');
-  }, [lang]);
+  }, []);
 
-  // ... 残りのコードは既存のまま ...
+  const { currentEasing: assignedEasing, currentTask } = useLatinSquare(participantId, currentTaskIndex, lang);
+
+  useEffect(() => {
+    if (appState === 'task' && currentTaskIndex > 0 && currentTaskIndex <= MAX_TASKS) {
+      taskLogger.resetTask();
+      setFeedback(null);
+      setFeedbackType('');
+      const item = currentTask.item;
+      setTargetItem(item);
+      setCurrentEasing(assignedEasing);
+      setTaskInfo(t(lang, 'taskInfo', currentTaskIndex, MAX_TASKS, item));
+      const correctPath = findPathToLeaf(categories, item) || [];
+      setCurrentCorrectPath(correctPath);
+
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
+      timeoutIdRef.current = window.setTimeout(() => {
+        const newLog: TaskLog = {
+          taskIndex: currentTaskIndex,
+          correctItem: item,
+          correctPath: correctPath,
+          totalTime: (TIME_LIMIT_MS / 1000).toFixed(2),
+          errorCount: taskLogger.errorCount,
+          timedOut: true,
+          usedEasing: assignedEasing,
+          firstClickTime: taskLogger.firstClickTime,
+          menuTravelDistance: taskLogger.menuTravelDistance,
+          clicks: taskLogger.clicksThisTask,
+        };
+        setAllLogs(prev => [...prev, newLog]);
+        setFeedback(t(lang, 'timeout'));
+        setFeedbackType('timeout');
+        setAppState('task-end');
+      }, TIME_LIMIT_MS);
+    }
+  }, [appState, currentTaskIndex, assignedEasing, currentTask, categories, lang, taskLogger]);
+
+  const handleTaskItemClick = useCallback((itemName: string, isCorrectPath: boolean) => {
+    taskLogger.recordClick(itemName, categories);
+    if (!isCorrectPath) {
+      taskLogger.incrementError();
+    }
+    if (itemName === targetItem) {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
+      setFeedback(t(lang, 'correct'));
+      setFeedbackType('correct');
+
+      const newLog: TaskLog = {
+        taskIndex: currentTaskIndex,
+        correctItem: targetItem,
+        correctPath: currentCorrectPath,
+        totalTime: ((performance.now() - taskLogger.startTimeRef.current) / 1000).toFixed(2),
+        errorCount: taskLogger.errorCount,
+        timedOut: false,
+        usedEasing: currentEasing,
+        firstClickTime: taskLogger.firstClickTime,
+        menuTravelDistance: taskLogger.menuTravelDistance,
+        clicks: taskLogger.clicksThisTask,
+      };
+      setAllLogs(prev => [...prev, newLog]);
+      setAppState('task-end');
+    } else if (!isCorrectPath) {
+      setFeedback(t(lang, 'wrong'));
+      setFeedbackType('incorrect');
+      setTimeout(() => {
+        setFeedback(null);
+        setFeedbackType('');
+      }, 2000);
+    }
+  }, [categories, currentCorrectPath, currentEasing, currentTaskIndex, lang, targetItem, taskLogger]);
+
+  const handleTaskEndContinue = useCallback((survey: any) => {
+    setAllLogs(prev => {
+      const newLogs = [...prev];
+      const lastLog = newLogs[newLogs.length - 1];
+      if (lastLog) {
+        lastLog.animationEaseRating = survey.animationEaseRating;
+        lastLog.taskDifficultyRating = survey.taskDifficultyRating;
+        lastLog.animationDifferenceRating = survey.animationDifferenceRating;
+        lastLog.comments = survey.comments;
+        lastLog.timestamp = new Date().toISOString();
+      }
+      return newLogs;
+    });
+
+    if (currentTaskIndex >= MAX_TASKS) {
+      if (!confirm(t(lang, 'toResultConfirm'))) return;
+      setAppState('reward');
+    } else {
+      if (!confirm(t(lang, 'nextConfirm'))) return;
+      setCurrentTaskIndex(prev => prev + 1);
+      setAppState('task');
+    }
+  }, [currentTaskIndex, lang]);
+
+  const handleRewardContinue = useCallback(() => {
+    submitToNetlify(allLogs, String(participantId));
+  }, [allLogs, participantId]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* 背景（既存のまま） */}
+      {/* 🎨 アニメーション背景 */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 animate-gradient-shift"></div>
         <div className="absolute inset-0 opacity-30">
@@ -169,19 +256,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* 言語スイッチャー - 🔥 常に表示 */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2 glass-effect rounded-full px-4 py-2 shadow-lg">
-        <a href="?lang=ja" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇯🇵 日本語
-        </a>
-        <span className="text-gray-400">|</span>
-        <a href="?lang=en" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇺🇸 English
-        </a>
-      </div>
-
       {/* タイトル */}
-      {appState !== 'consent' && appState !== 'pre-survey' && appState !== 'reward' && (
+      {appState !== 'consent' && appState !== 'reward' && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -193,17 +269,12 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* 🔥 同意画面 */}
+      {/* Consent画面 */}
       {appState === 'consent' && (
-        <ConsentOverlay 
-          isVisible={true} 
-          lang={lang} 
-          onAgree={handleConsentAgree}
-          onDisagree={handleConsentDisagree}
-        />
+        <ConsentOverlay isVisible={true} lang={lang} onAgree={handleConsentAgree} />
       )}
 
-      {/* 🔥 事前アンケート */}
+      {/* 事前アンケート */}
       {appState === 'pre-survey' && (
         <PreSurveyOverlay 
           isVisible={true} 
@@ -280,7 +351,7 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* タスク説明とメニュー（既存のまま） */}
+      {/* タスク説明とメニュー */}
       {(appState === 'tutorial' || appState === 'task') && (
         <div className="max-w-6xl mx-auto px-4">
           {/* タスク情報 */}

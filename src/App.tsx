@@ -15,7 +15,6 @@ import { useLatinSquare } from './hooks/useLatinSquare';
 import { detectLang, t } from './utils/i18n';
 import type { Lang } from './utils/i18n';
 
-import { submitToNetlify } from './utils/netlify';
 import type { Category, TaskLog, EasingFunction } from './types/experiment';
 import { MAX_TASKS, TIME_LIMIT_MS, FIXED_TASKS_JA, FIXED_TASKS_EN } from './utils/taskData';
 
@@ -48,8 +47,6 @@ function findPathToLeaf(
   return null;
 }
 
-// ... 既存のインポートは同じ ...
-
 export default function App() {
   const lang: Lang = detectLang();
   
@@ -66,7 +63,9 @@ export default function App() {
   const [currentEasing, setCurrentEasing] = useState<EasingFunction>('linear');
   const [targetItem, setTargetItem] = useState('');
   const timeoutIdRef = useRef<number | null>(null);
-
+  const handleTaskEndContinue = () => {};
+  const handleRewardContinue = () => {};
+  const handleTaskItemClick = () => {};
   const taskLogger = useTaskLogger();
 
   // カテゴリ読み込み（既存のまま）
@@ -154,8 +153,6 @@ export default function App() {
     setCurrentTaskIndex(1);
     setAppState('task');
   }, [lang]);
-
-  // ... 残りのコードは既存のまま ...
 
   return (
     <div className="min-h-screen relative overflow-hidden">

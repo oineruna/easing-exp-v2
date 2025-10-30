@@ -129,8 +129,8 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
-              className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 text-white shadow-xl"
-            >
+              style={{ background: 'var(--gradient-success)' }}
+              className="rounded-2xl p-6 text-white shadow-xl">
               <div className="text-sm font-semibold opacity-90 mb-2">{t(lang, 'totalAccuracy')}</div>
               <div className="text-5xl font-black">{stats.accuracy}</div>
               <div className="text-sm mt-2 opacity-80">
@@ -294,7 +294,7 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
             }}
             whileTap={{ scale: 0.95 }}
             onClick={onContinue}
-            className="px-16 py-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white rounded-full font-black text-2xl shadow-2xl relative overflow-hidden group"
+            className="px-16 py-6 btn-primary text-white rounded-full font-black text-2xl shadow-2xl relative overflow-hidden group"
           >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600"

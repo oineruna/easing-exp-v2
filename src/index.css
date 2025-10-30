@@ -1,15 +1,26 @@
 @import 'tailwindcss';
 
 :root {
+  /* イージング関数 */
   --linear: cubic-bezier(0.25, 0.25, 0.75, 0.75);
   --easeInOutQuad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
   --easeInOutQuint: cubic-bezier(0.86, 0, 0.07, 1);
   --easeInOutExpo: cubic-bezier(1, 0, 0, 1);
   --easeInOutBack: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* 🎨 統一カラーパレット */
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(200, 200, 200, 0.4);
+  
+  /* グラデーション - すべて紫〜ピンク系に統一 */
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ec4899 100%);
 }
 
 body {
-  
   margin: 0;
   padding: 0;
   font-family: "Hiragino Kaku Gothic Pro", "Helvetica Neue", Arial, "Hiragino Sans", Meiryo, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -19,21 +30,34 @@ body {
   overflow-x: hidden;
 }
 
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* 🎨 統一スタイル */
 .glass-effect {
-  background: rgba(240, 240, 240, 0.95);  /* 明るいグレー */
+  background: var(--card-bg);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(200, 200, 200, 0.4);  /* グレー系ボーダー */
+  border: 1px solid var(--card-border);
+}
+
+.overlay-bg {
+  background: var(--overlay-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: #f5f5f5;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #333333 0%, #999999 100%);  /* ブラック〜グレー */
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-
 
 .animation-delay-2000 {
   animation-delay: 2s;
@@ -42,6 +66,39 @@ body {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* index.css */
+.btn-primary {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.25rem;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  transition: background-color 0.3s;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+  font-weight: bold;
+  font-size: 1.25rem;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  transition: background-color 0.3s;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
 
 @keyframes blob {
   0%, 100% {

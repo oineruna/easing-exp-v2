@@ -64,14 +64,8 @@ export function TaskMenu({ categories, currentEasing, correctPath, isTutorial: _
             onMouseLeave={() => setHoveredItem(null)}
             whileHover={{ scale: 1.02, x: 4 }}
             whileTap={{ scale: 0.98 }}
-            className={`
-              w-full text-left px-6 py-4 rounded-xl mb-2 font-semibold text-base
-              transition-all duration-300 relative overflow-hidden group
-              ${depth === 0 
-                ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
-                : 'bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-md shadow-cyan-500/50'
-              }
-            `}
+            style={{ background: depth === 0 ? 'var(--gradient-primary)' : 'var(--gradient-secondary)' }}
+            className="w-full text-left px-6 py-4 rounded-xl mb-2 font-semibold text-base transition-all duration-300 relative overflow-hidden group text-white shadow-lg"
           >
             {/* シマーエフェクトを追加 */}
             <motion.div
@@ -134,7 +128,7 @@ export function TaskMenu({ categories, currentEasing, correctPath, isTutorial: _
       className="relative"
     >
       {/* グロー効果を追加 */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-75"></div>
+      <div className="absolute -inset-1 rounded-2xl blur-xl opacity-75" style={{ background: 'var(--gradient-primary)' }}></div>
 
       <div className="relative w-[380px] bg-white/95 backdrop-blur-2xl rounded-2xl p-4 shadow-2xl border border-white/50">
         <ul className="list-none p-0 m-0 space-y-1">

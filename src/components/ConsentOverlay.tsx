@@ -15,9 +15,7 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
   return (
     <>
       {/* 背景レイヤー（ナチュラルな淡色に） */}
-      <div className="fixed inset-0 z-40" style={{
-        background: "#f5f5f5"
-      }} />
+      <div className="fixed inset-0 z-40 overlay-bg" />
 
       {/* 中央カード */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -64,29 +62,29 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
 
             {/* 同意ボタン（青系単色） */}
             <motion.button
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onAgree}
-              className="w-full relative rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-white font-bold text-xl py-4"
-            >
-              ✓ {t(lang, 'agree')}
-            </motion.button>
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onAgree}
+            className="btn-primary"
+          >
+            ✓ {t(lang, 'agree')}
+          </motion.button>
 
-            {/* 同意しないボタン（グレー系単色） */}
-            <motion.button
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.55 }}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onDisagree}
-              className="w-full mt-4 relative rounded-2xl bg-gray-200 hover:bg-gray-300 transition text-gray-700 font-bold text-xl py-4"
-            >
-              ✗ {t(lang, 'disagree')}
-            </motion.button>
+          <motion.button
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.55 }}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onDisagree}
+            className="btn-secondary"
+          >
+            ✗ {t(lang, 'disagree')}
+          </motion.button>
+
           </div>
         </motion.div>
       </div>

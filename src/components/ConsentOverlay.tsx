@@ -14,18 +14,13 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
 
   return (
     <>
-      <motion.div 
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-40 overlay-bg" 
-      />
-      <motion.div
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      >
+      {/* 背景レイヤー（ナチュラルな淡色に） */}
+      <div className="fixed inset-0 z-40" style={{
+        background: "#f5f5f5"
+      }} />
+
+      {/* 中央カード */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.8, opacity: 0, y: 50 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -34,6 +29,7 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
           className="relative max-w-2xl w-full"
         >
           <div className="relative bg-white border border-gray-200 rounded-3xl p-10 shadow-xl">
+            {/* アイコン背景をグレー単色に */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -43,6 +39,7 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
               <span className="text-4xl">📋</span>
             </motion.div>
 
+            {/* タイトルも普通の太字大文字に */}
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -52,6 +49,7 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
               {t(lang, 'consentTitle')}
             </motion.h2>
 
+            {/* 本文説明部分 */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -64,6 +62,7 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
               />
             </motion.div>
 
+            {/* 同意ボタン（青系単色） */}
             <motion.button
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -71,11 +70,12 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               onClick={onAgree}
-              className="btn-primary"
+              className="w-full relative rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-white font-bold text-xl py-4"
             >
               ✓ {t(lang, 'agree')}
             </motion.button>
 
+            {/* 同意しないボタン（グレー系単色） */}
             <motion.button
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -83,13 +83,13 @@ export function ConsentOverlay({ isVisible, lang, onAgree, onDisagree }: Consent
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               onClick={onDisagree}
-              className="btn-secondary"
+              className="w-full mt-4 relative rounded-2xl bg-gray-200 hover:bg-gray-300 transition text-gray-700 font-bold text-xl py-4"
             >
               ✗ {t(lang, 'disagree')}
             </motion.button>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </>
   );
 }

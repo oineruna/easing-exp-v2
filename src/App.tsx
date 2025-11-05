@@ -42,8 +42,34 @@ function findPathToLeaf(
   return null;
 }
 
+// --- 追加: 言語スイッチャーのコンポーネント ---
+const LanguageSwitcher = ({ currentLang, onLangChange }: { currentLang: Lang; onLangChange: (lang: Lang) => void }) => {
+  return (
+    <div className="fixed top-4 right-4 z-[100] flex gap-2 p-1 bg-white/30 backdrop-blur-sm rounded-full shadow-lg">
+      <button
+        onClick={() => onLangChange('ja')}
+        className={`px-3 py-1.5 text-sm font-bold rounded-full transition-all ${
+          currentLang === 'ja' ? 'bg-white text-purple-600 shadow-md' : 'bg-transparent text-black/70 hover:bg-white/50'
+        }`}
+      >
+        日本語
+      </button>
+      <button
+        onClick={() => onLangChange('en')}
+        className={`px-3 py-1.5 text-sm font-bold rounded-full transition-all ${
+          currentLang === 'en' ? 'bg-white text-purple-600 shadow-md' : 'bg-transparent text-black/70 hover:bg-white/50'
+        }`}
+      >
+        English
+      </button>
+    </div>
+  );
+};
+
+
 export default function App() {
-  const lang: Lang = detectLang();
+  // --- 変更: langをuseStateで管理 ---
+  const [lang, setLang] = useState<Lang>(detectLang());
   const [appState, setAppState] = useState<AppState>('consent');
   const [participantId] = useState(() => Math.floor(Math.random() * 10000));
   const [categories, setCategories] = useState<Category[]>([]);
@@ -58,6 +84,11 @@ export default function App() {
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
 
+  // --- 追加: langを更新する関数 ---
+  const handleLangChange = (newLang: Lang) => {
+    setLang(newLang);
+  };
+
   useEffect(() => {
     const categoryFile = lang === 'en' ? '/menu_categories_en.json' : '/menu_categories.json';
     fetch(categoryFile)
@@ -68,12 +99,12 @@ export default function App() {
         FIXED_TASKS.forEach((task, index) => {
           const path = findPathToLeaf(data.categories, task.item);
           if (!path) {
-            console.warn(`タスク${index + 1}のアイテム (${task.item})がメニューにありません`);
+            console.warn(`[translate:タスク]${index + 1}[translate:のアイテム] (${task.item})[translate:がメニューにありません]`);
           }
         });
       })
-      .catch(err => console.error('カテゴリー取得エラー:', err));
-  }, [lang]);
+      .catch(err => console.error('[translate:カテゴリー取得エラー:]', err));
+  }, [lang]); // 依存配列にlangを指定
 
   const handleConsentAgree = useCallback(() => {
     setAppState('pre-survey');
@@ -85,7 +116,7 @@ export default function App() {
 
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
     setPreSurveyData(data);
-    console.log('事前アンケート結果:', data);
+    console.log('[translate:事前アンケート結果:]', data);
     setAppState('ready');
   }, []);
 
@@ -96,9 +127,10 @@ export default function App() {
   const handleTutorialIntroClose = useCallback(() => {
     setAppState('tutorial');
     taskLogger.resetTask();
-    setTaskInfo(t(lang, 'tutorialInfo', lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー'));
+    setTaskInfo(t(lang, 'tutorialInfo', lang === 'en' ? 'Toilet Paper' : '[translate:トイレットペーパー]'));
     setFeedback(null);
     setFeedbackType('');
+    if(timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     timeoutIdRef.current = window.setTimeout(() => {
       setFeedback(t(lang, 'tutorialTimeout'));
       setFeedbackType('timeout');
@@ -108,7 +140,7 @@ export default function App() {
   const handleTutorialItemClick = useCallback((itemName: string) => {
     taskLogger.recordClick(itemName, categories);
 
-    if (itemName !== (lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー')) {
+    if (itemName !== (lang === 'en' ? 'Toilet Paper' : '[translate:トイレットペーパー]')) {
       setFeedback(t(lang, 'tutorialWrong'));
       setFeedbackType('incorrect');
       setTimeout(() => {
@@ -141,17 +173,11 @@ export default function App() {
   }, [lang]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="fixed top-4 right-4 z-50 flex gap-2 glass-effect rounded-full px-4 py-2 shadow-lg">
-        <a href="?lang=ja" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇯🇵 日本語
-        </a>
-        <span className="text-gray-400">|</span>
-        <a href="?lang=en" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
-          🇺🇸 English
-        </a>
-      </div>
+    // 元のコードにあったdivを1つに統合し、LanguageSwitcherを配置
+    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+      
+      {/* --- 追加: 言語スイッチャー --- */}
+      <LanguageSwitcher currentLang={lang} onLangChange={handleLangChange} />
 
       {appState !== 'consent' && appState !== 'pre-survey' && appState !== 'reward' && (
         <motion.div
@@ -159,43 +185,39 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="pt-8 pb-6"
         >
-          <h1 className="text-4xl md:text-5xl font-black text-center text-white drop-shadow-2xl">
+          <h1 className="text-4xl md:text-5xl font-black text-center text-gray-800 drop-shadow-lg">
             {t(lang, 'experimentTitle')}
           </h1>
         </motion.div>
       )}
 
-      {appState === 'consent' && (
-        <AnimatePresence mode="wait">
+      {/* isVisibleの管理をAnimatePresenceで行うため、propsから削除 */}
+      <AnimatePresence mode="wait">
+        {appState === 'consent' && (
           <ConsentOverlay
             key="consent"
-            isVisible={true} 
+            isVisible={true}
             lang={lang} 
             onAgree={handleConsentAgree}
             onDisagree={handleConsentDisagree}
           />
-        </AnimatePresence>
-      )}
+        )}
+      </AnimatePresence>
 
-      {appState === 'pre-survey' && (
-        <AnimatePresence mode="wait">
+      <AnimatePresence>
+        {appState === 'pre-survey' && (
           <PreSurveyOverlay
             key="pre-survey"  
             isVisible={true} 
             lang={lang} 
             onComplete={handlePreSurveyComplete} 
           />
-        </AnimatePresence>
-      )}
+        )}
+      </AnimatePresence>
 
-      {appState === 'tutorial-intro' && (
-        <TutorialIntroOverlay isVisible={true} lang={lang} onClose={handleTutorialIntroClose} />
-      )}
-
-      {appState === 'tutorial-complete' && (
-        <TutorialCompleteOverlay isVisible={true} lang={lang} onClose={handleTutorialCompleteClose} />
-      )}
-
+      <TutorialIntroOverlay isVisible={appState === 'tutorial-intro'} lang={lang} onClose={handleTutorialIntroClose} />
+      <TutorialCompleteOverlay isVisible={appState === 'tutorial-complete'} lang={lang} onClose={handleTutorialCompleteClose} />
+      
       {appState === 'task-end' && (
         <TaskEndOverlay
           isVisible={true}
@@ -206,7 +228,7 @@ export default function App() {
       )}
 
       {appState === 'reward' && (
-        <RewardScreen lang={lang} onContinue={() => {}} allLogs={allLogs} />
+        <RewardScreen lang={lang} allLogs={allLogs} preSurveyData={preSurveyData} />
       )}
 
       {appState === 'ready' && (
@@ -286,11 +308,10 @@ export default function App() {
                         : 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400'
                     }`}
                   />
-
                   <motion.div
                     animate={feedbackType === 'incorrect' ? { x: [-5, 5, -5, 5, 0] } : {}}
                     transition={{ duration: 0.4 }}
-                    className={`relative px-8 py-5 rounded-2xl shadow-2xl ${
+                    className={`relative px-8 py-5 rounded-2xl shadow-2xl text-white ${
                       feedbackType === 'correct'
                         ? 'bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400'
                         : feedbackType === 'incorrect'
@@ -298,7 +319,7 @@ export default function App() {
                         : 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400'
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-3 text-white">
+                    <div className="flex items-center justify-center gap-3">
                       <motion.span
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
@@ -326,7 +347,6 @@ export default function App() {
           </div>
         </div>
       )}
-      </div>
-      </div>
+    </div>
   );
 }

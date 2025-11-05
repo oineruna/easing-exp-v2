@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-
 import { ConsentOverlay } from './components/ConsentOverlay';
 import { TutorialIntroOverlay } from './components/TutorialIntroOverlay';
 import { TutorialCompleteOverlay } from './components/TutorialCompleteOverlay';
@@ -8,13 +7,9 @@ import { TaskMenu } from './components/TaskMenu';
 import { TaskEndOverlay } from './components/TaskEndOverlay';
 import { RewardScreen } from './components/RewardScreen';
 import { PreSurveyOverlay, PreSurveyData } from './components/PreSurveyOverlay';
-
 import { useTaskLogger } from './hooks/useTaskLogger';
-import { useLatinSquare } from './hooks/useLatinSquare';
-
 import { detectLang, t } from './utils/i18n';
 import type { Lang } from './utils/i18n';
-
 import type { Category, TaskLog, EasingFunction } from './types/experiment';
 import { MAX_TASKS, TIME_LIMIT_MS, FIXED_TASKS_JA, FIXED_TASKS_EN } from './utils/taskData';
 
@@ -49,7 +44,6 @@ function findPathToLeaf(
 
 export default function App() {
   const lang: Lang = detectLang();
-  
   const [appState, setAppState] = useState<AppState>('consent');
   const [participantId] = useState(() => Math.floor(Math.random() * 10000));
   const [categories, setCategories] = useState<Category[]>([]);
@@ -61,14 +55,9 @@ export default function App() {
   const [feedbackType, setFeedbackType] = useState<'correct' | 'incorrect' | 'timeout' | ''>('');
   const [currentCorrectPath, setCurrentCorrectPath] = useState<string[]>([]);
   const [currentEasing, setCurrentEasing] = useState<EasingFunction>('linear');
-  const [targetItem, setTargetItem] = useState('');
   const timeoutIdRef = useRef<number | null>(null);
-  const handleTaskEndContinue = () => {};
-  const handleRewardContinue = () => {};
-  const handleTaskItemClick = () => {};
   const taskLogger = useTaskLogger();
 
-  // カテゴリ読み込み（既存のまま）
   useEffect(() => {
     const categoryFile = lang === 'en' ? '/menu_categories_en.json' : '/menu_categories.json';
     fetch(categoryFile)
@@ -86,30 +75,27 @@ export default function App() {
       .catch(err => console.error('カテゴリー取得エラー:', err));
   }, [lang]);
 
-  // 🔥 修正：同意後は事前アンケートへ
   const handleConsentAgree = useCallback(() => {
-    setAppState('pre-survey');  // 'ready' → 'pre-survey' に変更
+    setAppState('pre-survey');
   }, []);
 
   const handleConsentDisagree = useCallback(() => {
     alert(t(lang, 'disagreeAlert'));
   }, [lang]);
 
-  // 🔥 修正：事前アンケート完了後にreadyへ
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
     setPreSurveyData(data);
     console.log('事前アンケート結果:', data);
-    setAppState('ready');  // これでOK
+    setAppState('ready');
   }, []);
 
-  // 🔥 修正：チュートリアル開始時はイントロへ
   const handleStartTutorial = useCallback(() => {
-    setAppState('tutorial-intro');  // 'pre-survey' → 'tutorial-intro' に変更
+    setAppState('tutorial-intro');
   }, []);
 
   const handleTutorialIntroClose = useCallback(() => {
     setAppState('tutorial');
-    taskLogger.resetTask();  // 🔥 追加
+    taskLogger.resetTask();
     setTaskInfo(t(lang, 'tutorialInfo', lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー'));
     setFeedback(null);
     setFeedbackType('');
@@ -120,7 +106,7 @@ export default function App() {
   }, [lang, taskLogger]);
 
   const handleTutorialItemClick = useCallback((itemName: string) => {
-    taskLogger.recordClick(itemName, categories);  // 🔥 追加
+    taskLogger.recordClick(itemName, categories);
 
     if (itemName !== (lang === 'en' ? 'Toilet Paper' : 'トイレットペーパー')) {
       setFeedback(t(lang, 'tutorialWrong'));
@@ -138,7 +124,7 @@ export default function App() {
     setFeedback(t(lang, 'tutorialCorrect'));
     setFeedbackType('correct');
     setAppState('tutorial-complete');
-  }, [lang, categories, taskLogger]);  // 🔥 依存配列を追加
+  }, [lang, categories, taskLogger]);
 
   const handleTutorialCompleteClose = useCallback(() => {
     setAppState('ready');
@@ -148,25 +134,15 @@ export default function App() {
   }, []);
 
   const handleStartTask = useCallback(() => {
-    if (!confirm(t(lang, 'startTaskConfirm'))) return;  // 🔥 確認ダイアログを追加
+    if (!confirm(t(lang, 'startTaskConfirm'))) return;
     setAllLogs([]);
     setCurrentTaskIndex(1);
     setAppState('task');
   }, [lang]);
 
   return (
+    <div className="min-h-screen bg-gray-50">
     <div className="min-h-screen relative overflow-hidden">
-      {/* 背景（既存のまま） */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 animate-gradient-shift"></div>
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob"></div>
-          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000"></div>
-        </div>
-      </div>
-
-      {/* 言語スイッチャー - 🔥 常に表示 */}
       <div className="fixed top-4 right-4 z-50 flex gap-2 glass-effect rounded-full px-4 py-2 shadow-lg">
         <a href="?lang=ja" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-colors">
           🇯🇵 日本語
@@ -177,7 +153,6 @@ export default function App() {
         </a>
       </div>
 
-      {/* タイトル */}
       {appState !== 'consent' && appState !== 'pre-survey' && appState !== 'reward' && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -190,51 +165,50 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* 🔥 同意画面 */}
       {appState === 'consent' && (
-        <ConsentOverlay 
-          isVisible={true} 
-          lang={lang} 
-          onAgree={handleConsentAgree}
-          onDisagree={handleConsentDisagree}
-        />
+        <AnimatePresence mode="wait">
+          <ConsentOverlay
+            key="consent"
+            isVisible={true} 
+            lang={lang} 
+            onAgree={handleConsentAgree}
+            onDisagree={handleConsentDisagree}
+          />
+        </AnimatePresence>
       )}
 
-      {/* 🔥 事前アンケート */}
       {appState === 'pre-survey' && (
-        <PreSurveyOverlay 
-          isVisible={true} 
-          lang={lang} 
-          onComplete={handlePreSurveyComplete} 
-        />
+        <AnimatePresence mode="wait">
+          <PreSurveyOverlay
+            key="pre-survey"  
+            isVisible={true} 
+            lang={lang} 
+            onComplete={handlePreSurveyComplete} 
+          />
+        </AnimatePresence>
       )}
 
-      {/* チュートリアルイントロ */}
       {appState === 'tutorial-intro' && (
         <TutorialIntroOverlay isVisible={true} lang={lang} onClose={handleTutorialIntroClose} />
       )}
 
-      {/* チュートリアル完了 */}
       {appState === 'tutorial-complete' && (
         <TutorialCompleteOverlay isVisible={true} lang={lang} onClose={handleTutorialCompleteClose} />
       )}
 
-      {/* タスク終了画面 */}
       {appState === 'task-end' && (
         <TaskEndOverlay
           isVisible={true}
           lang={lang}
           isLastTask={currentTaskIndex === MAX_TASKS}
-          onContinue={handleTaskEndContinue}
+          onContinue={() => {}}
         />
       )}
 
-      {/* 報酬画面 */}
       {appState === 'reward' && (
-        <RewardScreen lang={lang} onContinue={handleRewardContinue} allLogs={allLogs} />
+        <RewardScreen lang={lang} onContinue={() => {}} allLogs={allLogs} />
       )}
 
-      {/* 準備OK画面 */}
       {appState === 'ready' && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -277,10 +251,8 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* タスク説明とメニュー（既存のまま） */}
-      {(appState === 'tutorial' || appState === 'task') && (
+      {(appState === 'tutorial' || appState === 'task') && categories.length > 0 && (
         <div className="max-w-6xl mx-auto px-4">
-          {/* タスク情報 */}
           {taskInfo && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -295,7 +267,6 @@ export default function App() {
             </motion.div>
           )}
 
-          {/* フィードバック表示 */}
           <AnimatePresence mode="wait">
             {feedback && (
               <motion.div
@@ -344,20 +315,18 @@ export default function App() {
             )}
           </AnimatePresence>
 
-          {/* タスクメニュー表示 */}
-          {categories.length > 0 && (
-            <div className="flex justify-center mb-10">
-              <TaskMenu
-                categories={categories}
-                currentEasing={currentEasing}
-                correctPath={currentCorrectPath}
-                isTutorial={appState === 'tutorial'}
-                onItemClick={appState === 'tutorial' ? handleTutorialItemClick : handleTaskItemClick}
-              />
-            </div>
-          )}
+          <div className="flex justify-center mb-10">
+            <TaskMenu
+              categories={categories}
+              currentEasing={currentEasing}
+              correctPath={currentCorrectPath}
+              isTutorial={appState === 'tutorial'}
+              onItemClick={appState === 'tutorial' ? handleTutorialItemClick : () => {}}
+            />
+          </div>
         </div>
       )}
-    </div>
+      </div>
+      </div>
   );
 }

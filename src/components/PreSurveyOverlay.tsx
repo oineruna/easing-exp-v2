@@ -227,8 +227,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                           </p>
                         </div>
 
-
-                        {/* 評価 */}
                         <div className="flex-shrink-0">
                           <div className="text-xs text-gray-600 mb-1 text-center">
                             {lang === 'ja' ? '好み度' : 'Preference'}

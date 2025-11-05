@@ -4,7 +4,6 @@ import { t } from '../utils/i18n';
 import type { Lang } from '../utils/i18n';
 import type { EasingFunction } from '../types/experiment';
 
-
 interface PreSurveyOverlayProps {
   isVisible: boolean;
   lang: Lang;

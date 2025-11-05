@@ -3,8 +3,7 @@ import { useMemo } from 'react';
 import type { TaskLog, EasingFunction } from '../types/experiment';
 import { t } from '../utils/i18n';
 import type { Lang } from '../utils/i18n';
-import { PreSurveyData } from "../types/PreSurveyData";
-
+import type { PreSurveyData } from './PreSurveyOverlay';
 interface RewardScreenProps {
   allLogs: TaskLog[];
   lang: Lang;

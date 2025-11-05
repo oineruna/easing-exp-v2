@@ -19,7 +19,6 @@ export interface PreSurveyData {
   comments: string;
 }
 
-
 const EASING_DEMOS: Array<{
   name: EasingFunction;
   label: { ja: string; en: string };
@@ -366,7 +365,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                     className="w-full p-3 border-2 border-gray-200 rounded-lg text-sm resize-vertical focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white/80"
                   />
                 </div>
-
 
                 <div className="text-center">
                   {/* --- 変更点: ボタンのサイズとフォントサイズを縮小 --- */}

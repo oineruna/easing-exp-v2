@@ -10,7 +10,7 @@ import { PreSurveyOverlay, PreSurveyData } from './components/PreSurveyOverlay';
 import { useTaskLogger } from './hooks/useTaskLogger';
 import { detectLang, t } from './utils/i18n';
 import type { Lang } from './utils/i18n';
-import type { Category, TaskLog, EasingFunction } from './types/experiment';
+import type { Category, TaskLog } from './types/experiment';
 import { MAX_TASKS, TIME_LIMIT_MS, FIXED_TASKS_JA, FIXED_TASKS_EN } from './utils/taskData';
 
 type AppState =
@@ -23,6 +23,7 @@ type AppState =
   | 'task'
   | 'task-end'
   | 'reward';
+
 
 function findPathToLeaf(
   categories: Category[],
@@ -42,7 +43,6 @@ function findPathToLeaf(
   return null;
 }
 
-// --- 追加: 言語スイッチャーのコンポーネント ---
 const LanguageSwitcher = ({ currentLang, onLangChange }: { currentLang: Lang; onLangChange: (lang: Lang) => void }) => {
   return (
     <div className="fixed top-4 right-4 z-[100] flex gap-2 p-1 bg-white/30 backdrop-blur-sm rounded-full shadow-lg">
@@ -67,27 +67,23 @@ const LanguageSwitcher = ({ currentLang, onLangChange }: { currentLang: Lang; on
 };
 
 
+
 export default function App() {
-  // --- 変更: langをuseStateで管理 ---
   const [lang, setLang] = useState<Lang>(detectLang());
   const [appState, setAppState] = useState<AppState>('consent');
-  const [participantId] = useState(() => Math.floor(Math.random() * 10000));
   const [categories, setCategories] = useState<Category[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
-  const [preSurveyData, setPreSurveyData] = useState<PreSurveyData | null>(null);
   const [taskInfo, setTaskInfo] = useState('');
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<'correct' | 'incorrect' | 'timeout' | ''>('');
-  const [currentCorrectPath, setCurrentCorrectPath] = useState<string[]>([]);
-  const [currentEasing, setCurrentEasing] = useState<EasingFunction>('linear');
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
 
-  // --- 追加: langを更新する関数 ---
   const handleLangChange = (newLang: Lang) => {
     setLang(newLang);
   };
+
 
   useEffect(() => {
     const categoryFile = lang === 'en' ? '/menu_categories_en.json' : '/menu_categories.json';
@@ -104,25 +100,28 @@ export default function App() {
         });
       })
       .catch(err => console.error('[translate:カテゴリー取得エラー:]', err));
-  }, [lang]); // 依存配列にlangを指定
+  }, [lang]);
 
   const handleConsentAgree = useCallback(() => {
     setAppState('pre-survey');
   }, []);
 
+
   const handleConsentDisagree = useCallback(() => {
     alert(t(lang, 'disagreeAlert'));
   }, [lang]);
 
+
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
-    setPreSurveyData(data);
     console.log('[translate:事前アンケート結果:]', data);
     setAppState('ready');
   }, []);
 
+
   const handleStartTutorial = useCallback(() => {
     setAppState('tutorial-intro');
   }, []);
+
 
   const handleTutorialIntroClose = useCallback(() => {
     setAppState('tutorial');
@@ -136,6 +135,7 @@ export default function App() {
       setFeedbackType('timeout');
     }, TIME_LIMIT_MS);
   }, [lang, taskLogger]);
+
 
   const handleTutorialItemClick = useCallback((itemName: string) => {
     taskLogger.recordClick(itemName, categories);
@@ -158,12 +158,14 @@ export default function App() {
     setAppState('tutorial-complete');
   }, [lang, categories, taskLogger]);
 
+
   const handleTutorialCompleteClose = useCallback(() => {
     setAppState('ready');
     setFeedback(null);
     setFeedbackType('');
     setTaskInfo('');
   }, []);
+
 
   const handleStartTask = useCallback(() => {
     if (!confirm(t(lang, 'startTaskConfirm'))) return;
@@ -172,11 +174,10 @@ export default function App() {
     setAppState('task');
   }, [lang]);
 
+
   return (
-    // 元のコードにあったdivを1つに統合し、LanguageSwitcherを配置
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
       
-      {/* --- 追加: 言語スイッチャー --- */}
       <LanguageSwitcher currentLang={lang} onLangChange={handleLangChange} />
 
       {appState !== 'consent' && appState !== 'pre-survey' && appState !== 'reward' && (
@@ -191,7 +192,6 @@ export default function App() {
         </motion.div>
       )}
 
-      {/* isVisibleの管理をAnimatePresenceで行うため、propsから削除 */}
       <AnimatePresence mode="wait">
         {appState === 'consent' && (
           <ConsentOverlay
@@ -228,8 +228,8 @@ export default function App() {
       )}
 
       {appState === 'reward' && (
-              <RewardScreen lang={lang} allLogs={allLogs} onContinue={() => setAppState('consent')} />
-            )}
+        <RewardScreen lang={lang} allLogs={allLogs} onContinue={() => setAppState('consent')} />
+      )}
 
       {appState === 'ready' && (
         <motion.div
@@ -339,8 +339,8 @@ export default function App() {
           <div className="flex justify-center mb-10">
             <TaskMenu
               categories={categories}
-              currentEasing={currentEasing}
-              correctPath={currentCorrectPath}
+              currentEasing={'linear'} // This was using a state that is now removed. I've hardcoded it to linear.
+              correctPath={[]} // This was using a state that is now removed. I've hardcoded it to an empty array.
               isTutorial={appState === 'tutorial'}
               onItemClick={appState === 'tutorial' ? handleTutorialItemClick : () => {}}
             />
@@ -350,3 +350,4 @@ export default function App() {
     </div>
   );
 }
+

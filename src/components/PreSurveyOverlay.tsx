@@ -10,7 +10,6 @@ interface PreSurveyOverlayProps {
   onComplete: (data: PreSurveyData) => void;
 }
 
-
 export interface PreSurveyData {
   preferences: Record<EasingFunction, number>; // 1-5の評価
   ranking: EasingFunction[]; // 好みの順位

@@ -228,8 +228,8 @@ export default function App() {
       )}
 
       {appState === 'reward' && (
-        <RewardScreen lang={lang} allLogs={allLogs} preSurveyData={preSurveyData} />
-      )}
+              <RewardScreen lang={lang} allLogs={allLogs} onContinue={() => setAppState('consent')} />
+            )}
 
       {appState === 'ready' && (
         <motion.div

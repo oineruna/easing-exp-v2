@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { t } from '../utils/i18n';
+// import { t } from '../utils/i18n';
 import type { Lang } from '../utils/i18n';
 import type { EasingFunction } from '../types/experiment';
 

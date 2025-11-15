@@ -31,13 +31,13 @@ const EASING_DEMOS: Array<{
   },
   {
     name: 'easeInOutQuad',
-    label: { ja: '滑らか（弱）', en: 'Smooth (Weak)' },
+    label: { ja: '滑らか(弱)', en: 'Smooth (Weak)' },
     description: { ja: 'ゆっくり加速・減速', en: 'Gentle acceleration' },
     bezier: [0.455, 0.03, 0.515, 0.955]
   },
   {
     name: 'easeInOutQuint',
-    label: { ja: '滑らか（強）', en: 'Smooth (Strong)' },
+    label: { ja: '滑らか(強)', en: 'Smooth (Strong)' },
     description: { ja: 'とても滑らか', en: 'Very smooth' },
     bezier: [0.86, 0, 0.07, 1]
   },
@@ -106,9 +106,9 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
     const snappyScore = snappyEasings.reduce((sum, e) => sum + (preferences[e] || 0), 0);
     
     let preferenceType: 'smooth' | 'snappy' | 'other';
-    if (smoothScore > snappyScore + 1) { // 差の閾値を調整
+    if (smoothScore > snappyScore + 1) {
       preferenceType = 'smooth';
-    } else if (snappyScore > smoothScore + 1) { // 差の閾値を調整
+    } else if (snappyScore > smoothScore + 1) {
       preferenceType = 'snappy';
     } else {
       preferenceType = 'other';
@@ -138,18 +138,15 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            // --- 変更点: 全体のサイズとパディングを縮小 ---
             className="glass-effect rounded-3xl p-6 max-w-3xl w-full shadow-2xl my-4" 
           >
             {/* イントロ */}
             {currentStep === 'intro' && (
               <div>
-                {/* --- 変更点: フォントサイズとマージンを縮小 --- */}
                 <h2 className="text-2xl font-black mb-4 text-center gradient-text">
                   📊 {lang === 'ja' ? '事前アンケート' : 'Pre-Survey'}
                 </h2>
                 <div className="bg-white/60 rounded-2xl p-4 mb-5 text-gray-800">
-                  {/* --- 変更点: フォントサイズとマージンを縮小 --- */}
                   <p className="text-base mb-2">
                     {lang === 'ja' 
                       ? 'これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。'
@@ -164,7 +161,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                   </p>
                 </div>
                 <div className="text-center">
-                  {/* --- 変更点: ボタンのサイズとフォントサイズを縮小 --- */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -181,12 +177,10 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
             {/* デモと評価 */}
             {currentStep === 'demo' && (
               <div>
-                 {/* --- 変更点: フォントサイズとマージンを縮小 --- */}
                 <h2 className="text-2xl font-black mb-6 text-center gradient-text">
                   {lang === 'ja' ? 'あなたの好みをもとにアニメーションを評価してください' : 'Rate Each Animation based on your preference'}
                 </h2>
                 
-                {/* --- 変更点: 要素間のスペースを縮小 --- */}
                 <div className="space-y-4 mb-6">
                   {EASING_DEMOS.map((demo, index) => (
                     <motion.div
@@ -194,15 +188,13 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index * 0.1 }}
-                      // --- 変更点: パディングを縮小 ---
                       className="bg-white/80 rounded-2xl p-4 shadow-md" 
                     >
                       <div className="flex items-center gap-4">
                         {/* アニメーションデモ */}
-                        {/* --- 変更点: デモエリアとボールのサイズ、移動距離を縮小 --- */}
                         <div className="flex-shrink-0 w-48 h-20 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg relative overflow-hidden">
                           <motion.div
-                            animate={{ x: [0, 152, 0] }} // w-48 (192px) - w-10 (40px) = 152px
+                            animate={{ x: [0, 152, 0] }}
                             transition={{
                               duration: 2,
                               repeat: Infinity,
@@ -216,7 +208,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
 
                         {/* 説明 */}
                         <div className="flex-1">
-                          {/* --- 変更点: フォントサイズを縮小 --- */}
                           <h3 className="text-lg font-bold text-gray-800">
                             {demo.label[lang]}
                           </h3>
@@ -231,7 +222,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                           </div>
                           <div className="flex gap-1.5">
                             {[1, 2, 3, 4, 5].map(value => (
-                               // --- 変更点: ボタンサイズを縮小 ---
                               <motion.button
                                 key={value}
                                 whileHover={{ scale: 1.1 }}
@@ -261,7 +251,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
 
 
                 <div className="text-center">
-                  {/* --- 変更点: ボタンのサイズとフォントサイズを縮小 --- */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -278,21 +267,18 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
             {/* ランキング */}
             {currentStep === 'ranking' && (
               <div>
-                {/* --- 変更点: フォントサイズとマージンを縮小 --- */}
                 <h2 className="text-2xl font-black mb-4 text-center gradient-text">
                   {lang === 'ja' ? '好みの順に並べ替えてください' : 'Rank by Preference'}
                 </h2>
                 
-                {/* --- 変更点: パディングとマージンを縮小 --- */}
                 <div className="bg-white/60 rounded-2xl p-4 mb-5">
                   <p className="text-center text-sm text-gray-700 mb-3">
                     {lang === 'ja' 
-                      ? 'ドラッグ＆ドロップで順位を変更できます（1位が最も好き）'
+                      ? 'ドラッグ＆ドロップで順位を変更できます(1位が最も好き)'
                       : 'Drag & drop to reorder (1st = most preferred)'
                     }
                   </p>
                   
-                  {/* --- 変更点: 要素間のスペースを縮小 --- */}
                   <div className="space-y-2">
                     {ranking.map((easing, index) => {
                       const demo = EASING_DEMOS.find(d => d.name === easing)!;
@@ -304,18 +290,34 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                           onDragOver={(e) => e.preventDefault()}
                           onDrop={() => handleDrop(index)}
                           whileHover={{ scale: 1.02 }}
-                          // --- 変更点: パディングを縮小 ---
                           className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm cursor-move"
                         >
-                          {/* --- 変更点: 順位表示のサイズとフォントを縮小 --- */}
+                          {/* 順位表示 */}
                           <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-md flex items-center justify-center font-bold text-lg">
                             {index + 1}
                           </div>
+                          
+                          {/* 🆕 アニメーションプレビューを追加 */}
+                          <div className="flex-shrink-0 w-32 h-12 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg relative overflow-hidden">
+                            <motion.div
+                              animate={{ x: [0, 96, 0] }} // w-32 (128px) - w-8 (32px) = 96px
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                ease: demo.bezier as any,
+                                repeatDelay: 0.3
+                              }}
+                              className="absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md shadow-md"
+                            />
+                          </div>
+                          
+                          {/* ラベルと説明 */}
                           <div className="flex-1">
                             <div className="font-bold text-base text-gray-800">{demo.label[lang]}</div>
                             <div className="text-xs text-gray-600">{demo.description[lang]}</div>
                           </div>
-                          {/* --- 変更点: フォントサイズを縮小 --- */}
+                          
+                          {/* ドラッグハンドル */}
                           <div className="text-xl text-gray-400">⋮⋮</div>
                         </motion.div>
                       );
@@ -325,7 +327,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
 
 
                 <div className="text-center">
-                   {/* --- 変更点: ボタンのサイズとフォントサイズを縮小 --- */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -342,17 +343,14 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
             {/* コメント */}
             {currentStep === 'comments' && (
               <div>
-                {/* --- 変更点: フォントサイズとマージンを縮小 --- */}
                 <h2 className="text-2xl font-black mb-4 text-center gradient-text">
-                  {lang === 'ja' ? '最後に一言（任意）' : 'Additional Comments (Optional)'}
+                  {lang === 'ja' ? '最後に一言(任意)' : 'Additional Comments (Optional)'}
                 </h2>
                 
-                {/* --- 変更点: パディングとマージンを縮小 --- */}
                 <div className="bg-white/60 rounded-2xl p-4 mb-5">
                   <textarea
                     value={comments}
                     onChange={(e) => setComments(e.target.value)}
-                    // --- 変更点: textareaの高さを縮小 ---
                     rows={4}
                     placeholder={lang === 'ja' 
                       ? 'アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...'
@@ -363,7 +361,6 @@ export function PreSurveyOverlay({ isVisible, lang, onComplete }: PreSurveyOverl
                 </div>
 
                 <div className="text-center">
-                  {/* --- 変更点: ボタンのサイズとフォントサイズを縮小 --- */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

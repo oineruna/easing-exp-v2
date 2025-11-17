@@ -10,14 +10,9 @@ import { PreSurveyOverlay, PreSurveyData } from "./components/PreSurveyOverlay";
 import { useTaskLogger } from "./hooks/useTaskLogger";
 import { detectLang, t } from "./utils/i18n";
 import type { Lang } from "./utils/i18n";
-import type { Category, TaskLog } from "./types/experiment";
-import {
-  MAX_TASKS,
-  TIME_LIMIT_MS,
-  FIXED_TASKS_JA,
-  FIXED_TASKS_EN,
-  EXPERIMENTTASKS, //追加（taskData.tsに要定義）
-} from "./utils/taskData";
+import type { Category, TaskLog, Task } from "./types/experiment";
+import { generateLatinSquareTasks } from "./data/task";
+import { TIME_LIMIT_MS } from "./utils/taskData";
 
 type AppState =
   | "consent"
@@ -79,13 +74,32 @@ const LanguageSwitcher = ({
   </div>
 );
 
+// チュートリアル用カテゴリー
+const TUTORIAL_CATEGORIES: Category[] = [
+  {
+    name: "日用品",
+    subcategories: [
+      { name: "トイレットペーパー" },
+      { name: "ティッシュ" },
+      { name: "洗剤" },
+    ],
+  },
+  {
+    name: "食品",
+    subcategories: [
+      { name: "お米" },
+      { name: "パン" },
+    ],
+  },
+];
+
 export default function App() {
   const [lang, setLang] = useState<Lang>(detectLang());
   const [appState, setAppState] = useState<AppState>("ready");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [experimentTasks, setExperimentTasks] = useState<Task[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
-  const [taskInfo, setTaskInfo] = useState<any>(null); // taskInfo型は要調整
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<
     "correct" | "incorrect" | "timeout" | ""
@@ -94,29 +108,6 @@ export default function App() {
   const taskLogger = useTaskLogger();
 
   const handleLangChange = (newLang: Lang) => setLang(newLang);
-
-  // categoriesの取得とtaskInfo初期化
-  useEffect(() => {
-    const categoryFile =
-      lang === "en" ? "/menu_categories_en.json" : "/menu_categories.json";
-    fetch(categoryFile)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data.categories);
-        const FIXED_TASKS = lang === "en" ? FIXED_TASKS_EN : FIXED_TASKS_JA;
-        FIXED_TASKS.forEach((task, index) => {
-          const path = findPathToLeaf(data.categories, task.item);
-          if (!path) {
-            console.warn(
-              `[タスク${index + 1}のアイテム (${
-                task.item
-              }) がメニューにありません]`
-            );
-          }
-        });
-      })
-      .catch((err) => console.error("[カテゴリー取得エラー:]", err));
-  }, [lang]);
 
   const handleConsentAgree = useCallback(() => setAppState("pre-survey"), []);
   const handleConsentDisagree = useCallback(
@@ -127,34 +118,39 @@ export default function App() {
     console.log("[事前アンケート結果:]", data);
     setAppState("ready");
   }, []);
+
   const handleStartTutorial = useCallback(
     () => setAppState("tutorial-intro"),
     []
   );
+
   const handleTutorialIntroClose = useCallback(() => {
     setAppState("tutorial");
     taskLogger.resetTask();
-    setTaskInfo(
-      t(
-        lang,
-        "tutorialInfo",
-        lang === "en" ? "Toilet Paper" : "トイレットペーパー"
-      )
-    );
     setFeedback(null);
     setFeedbackType("");
+    
+    // タイムアウト設定
     if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     timeoutIdRef.current = window.setTimeout(() => {
       setFeedback(t(lang, "tutorialTimeout"));
       setFeedbackType("timeout");
+      // タイムアウト後、2秒待ってからチュートリアル完了画面へ
+      setTimeout(() => {
+        setAppState("tutorial-complete");
+        setFeedback(null);
+        setFeedbackType("");
+      }, 2000);
     }, TIME_LIMIT_MS);
   }, [lang, taskLogger]);
+
   const handleTutorialItemClick = useCallback(
     (itemName: string) => {
-      taskLogger.recordClick(itemName, categories);
-      if (
-        itemName !== (lang === "en" ? "Toilet Paper" : "トイレットペーパー")
-      ) {
+      taskLogger.recordClick(itemName, TUTORIAL_CATEGORIES);
+      
+      const targetItem = lang === "en" ? "Toilet Paper" : "トイレットペーパー";
+      
+      if (itemName !== targetItem) {
         setFeedback(t(lang, "tutorialWrong"));
         setFeedbackType("incorrect");
         setTimeout(() => {
@@ -163,52 +159,128 @@ export default function App() {
         }, 2000);
         return;
       }
+      
+      // 正解
       if (timeoutIdRef.current) {
         clearTimeout(timeoutIdRef.current);
         timeoutIdRef.current = null;
       }
       setFeedback(t(lang, "tutorialCorrect"));
       setFeedbackType("correct");
-      setAppState("tutorial-complete");
+      
+      setTimeout(() => {
+        setAppState("tutorial-complete");
+      }, 1500);
     },
-    [lang, categories, taskLogger]
+    [lang, taskLogger]
   );
+
   const handleTutorialCompleteClose = useCallback(() => {
     setAppState("ready");
     setFeedback(null);
     setFeedbackType("");
-    setTaskInfo("");
   }, []);
+
   const handleStartTask = useCallback(() => {
     if (!confirm(t(lang, "startTaskConfirm"))) return;
+    
+    // ラテン方格でタスク生成（参加者番号は仮に1を使用）
+    const participantId = Date.now() % 100; // 簡易的な参加者ID
+    const tasks = generateLatinSquareTasks(participantId);
+    
+    setExperimentTasks(tasks);
     setAllLogs([]);
     setCurrentTaskIndex(0);
+    setCurrentTask(tasks[0]);
     setAppState("task");
-    setTaskInfo(EXPERIMENTTASKS[0]); // EXPERIMENTTASKSの初期タスクへ
+    taskLogger.resetTask();
+    
+    // タイムアウト設定
+    if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+    timeoutIdRef.current = window.setTimeout(() => {
+      handleTaskTimeout();
+    }, TIME_LIMIT_MS);
   }, [lang]);
+
+  // タスクタイムアウト処理
+  const handleTaskTimeout = useCallback(() => {
+    console.log("[タイムアウト]");
+    
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
+    }
+    
+    setFeedback("タイムアウト!");
+    setFeedbackType("timeout");
+    
+    setTimeout(() => {
+      setFeedback(null);
+      setFeedbackType("");
+      
+      const nextIndex = currentTaskIndex + 1;
+      if (nextIndex < experimentTasks.length) {
+        // 次のタスクへ
+        setCurrentTaskIndex(nextIndex);
+        setCurrentTask(experimentTasks[nextIndex]);
+        taskLogger.resetTask();
+        
+        // 新しいタイムアウトを設定
+        timeoutIdRef.current = window.setTimeout(() => {
+          handleTaskTimeout();
+        }, TIME_LIMIT_MS);
+      } else {
+        // 全タスク完了
+        setAppState("task-end");
+      }
+    }, 2000);
+  }, [currentTaskIndex, experimentTasks, taskLogger]);
 
   // タスク実行用onItemClick
   const handleTaskItemClick = useCallback(
     (itemName: string, isCorrectPath: boolean) => {
-      taskLogger.recordClick(itemName, categories);
-      if (!taskInfo) return;
-
-      // 正解判定
-      if (isCorrectPath) {
-        setFeedback("正解！");
+      if (!currentTask) return;
+      
+      taskLogger.recordClick(itemName, currentTask.categories);
+      
+      // 目標アイテム（targetPathの最後の要素）
+      const targetItem = currentTask.targetPath[currentTask.targetPath.length - 1];
+      
+      console.log("[クリック]", itemName, "目標:", targetItem, "正しいパス:", isCorrectPath);
+      
+      // 最終目標に到達したかチェック
+      if (itemName === targetItem) {
+        // 正解!
+        if (timeoutIdRef.current) {
+          clearTimeout(timeoutIdRef.current);
+          timeoutIdRef.current = null;
+        }
+        
+        setFeedback("正解!");
         setFeedbackType("correct");
+        
         setTimeout(() => {
           setFeedback(null);
           setFeedbackType("");
+          
           const nextIndex = currentTaskIndex + 1;
-          if (nextIndex < EXPERIMENTTASKS.length) {
+          if (nextIndex < experimentTasks.length) {
+            // 次のタスクへ
             setCurrentTaskIndex(nextIndex);
-            setTaskInfo(EXPERIMENTTASKS[nextIndex]);
+            setCurrentTask(experimentTasks[nextIndex]);
+            taskLogger.resetTask();
+            
+            // 新しいタイムアウトを設定
+            timeoutIdRef.current = window.setTimeout(() => {
+              handleTaskTimeout();
+            }, TIME_LIMIT_MS);
           } else {
+            // 全タスク完了
             setAppState("task-end");
           }
         }, 1500);
-      } else {
+      } else if (!isCorrectPath) {
+        // 間違ったパス
         setFeedback("不正解");
         setFeedbackType("incorrect");
         setTimeout(() => {
@@ -216,19 +288,24 @@ export default function App() {
           setFeedbackType("");
         }, 1000);
       }
+      // isCorrectPathがtrueだが目標でない場合は、中間フォルダを開いただけなので何もしない
     },
-    [taskInfo, currentTaskIndex, categories, taskLogger]
+    [currentTask, currentTaskIndex, experimentTasks, taskLogger, handleTaskTimeout]
   );
 
+  // appStateが変わった時のクリーンアップ
   useEffect(() => {
-    if (appState === "task") {
-      setTaskInfo(EXPERIMENTTASKS[currentTaskIndex]);
-    }
-  }, [appState, currentTaskIndex]);
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
+    };
+  }, [appState]);
 
   // 画面描画
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden">
       <LanguageSwitcher currentLang={lang} onLangChange={handleLangChange} />
 
       {appState !== "consent" &&
@@ -242,6 +319,16 @@ export default function App() {
             <h1 className="text-4xl md:text-5xl font-black text-center text-gray-800 drop-shadow-lg">
               {t(lang, "experimentTitle")}
             </h1>
+            {appState === "task" && currentTask && (
+              <div className="text-center mt-4">
+                <span className="text-lg font-semibold text-gray-600">
+                  タスク {currentTaskIndex + 1} / {experimentTasks.length}
+                </span>
+                <span className="ml-4 text-sm text-gray-500">
+                  難易度: {currentTask.difficulty === "easy" ? "簡単" : currentTask.difficulty === "medium" ? "中程度" : "難しい"}
+                </span>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -283,7 +370,7 @@ export default function App() {
         <TaskEndOverlay
           isVisible={true}
           lang={lang}
-          isLastTask={currentTaskIndex === MAX_TASKS}
+          isLastTask={true}
           onContinue={() => setAppState("reward")}
         />
       )}
@@ -338,94 +425,167 @@ export default function App() {
         </motion.div>
       )}
 
-      {(appState === "tutorial" || appState === "task") &&
-        categories.length > 0 && (
-          <div className="max-w-6xl mx-auto px-4">
-            {taskInfo && (
+      {appState === "tutorial" && (
+        <div className="max-w-6xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 text-center"
+          >
+            <div className="inline-block glass-effect rounded-2xl px-8 py-4 shadow-2xl">
+              <div className="text-2xl md:text-3xl font-black text-gray-800">
+                「トイレットペーパー」を探してクリックしてください
+              </div>
+            </div>
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            {feedback && (
               <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 text-center"
+                initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="flex justify-center mb-6"
               >
-                <div className="inline-block glass-effect rounded-2xl px-8 py-4 shadow-2xl">
-                  <div className="text-2xl md:text-3xl font-black text-gray-800">
-                    {taskInfo.description || taskInfo}
-                  </div>
+                <div className="relative max-w-xl w-full px-4">
+                  <div
+                    className={`absolute -inset-2 rounded-2xl blur-xl opacity-75 ${
+                      feedbackType === "correct"
+                        ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
+                        : feedbackType === "incorrect"
+                        ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
+                        : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
+                    }`}
+                  />
+                  <motion.div
+                    animate={
+                      feedbackType === "incorrect"
+                        ? { x: [-5, 5, -5, 5, 0] }
+                        : {}
+                    }
+                    transition={{ duration: 0.4 }}
+                    className={`relative px-8 py-5 rounded-2xl shadow-2xl text-white ${
+                      feedbackType === "correct"
+                        ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
+                        : feedbackType === "incorrect"
+                        ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
+                        : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <motion.span
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                        className="text-3xl"
+                      >
+                        {feedbackType === "correct"
+                          ? "✓"
+                          : feedbackType === "incorrect"
+                          ? "✗"
+                          : "⏱"}
+                      </motion.span>
+                      <span className="font-bold text-xl">{feedback}</span>
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
             )}
+          </AnimatePresence>
 
-            <AnimatePresence mode="wait">
-              {feedback && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8, y: -20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.8, y: -20 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="flex justify-center mb-6"
-                >
-                  <div className="relative max-w-xl w-full px-4">
-                    <div
-                      className={`absolute -inset-2 rounded-2xl blur-xl opacity-75 ${
-                        feedbackType === "correct"
-                          ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
-                          : feedbackType === "incorrect"
-                          ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
-                          : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
-                      }`}
-                    />
-                    <motion.div
-                      animate={
-                        feedbackType === "incorrect"
-                          ? { x: [-5, 5, -5, 5, 0] }
-                          : {}
-                      }
-                      transition={{ duration: 0.4 }}
-                      className={`relative px-8 py-5 rounded-2xl shadow-2xl text-white ${
-                        feedbackType === "correct"
-                          ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
-                          : feedbackType === "incorrect"
-                          ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
-                          : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
-                      }`}
-                    >
-                      <div className="flex items-center justify-center gap-3">
-                        <motion.span
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          transition={{ type: "spring", stiffness: 200 }}
-                          className="text-3xl"
-                        >
-                          {feedbackType === "correct"
-                            ? "✓"
-                            : feedbackType === "incorrect"
-                            ? "✗"
-                            : "⏱"}
-                        </motion.span>
-                        <span className="font-bold text-xl">{feedback}</span>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="flex justify-center mb-10">
-              <TaskMenu
-                categories={categories}
-                currentEasing={"linear"}
-                correctPath={taskInfo?.targetPath?.split("/") || []}
-                isTutorial={appState === "tutorial"}
-                // 分岐: チュートリアルorタスク
-                onItemClick={
-                  appState === "tutorial"
-                    ? handleTutorialItemClick
-                    : handleTaskItemClick
-                }
-              />
-            </div>
+          <div className="flex justify-center mb-10">
+            <TaskMenu
+              categories={TUTORIAL_CATEGORIES}
+              currentEasing={"linear"}
+              correctPath={["日用品", "トイレットペーパー"]}
+              isTutorial={true}
+              onItemClick={handleTutorialItemClick}
+            />
           </div>
-        )}
+        </div>
+      )}
+
+      {appState === "task" && currentTask && (
+        <div className="max-w-6xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 text-center"
+          >
+            <div className="inline-block glass-effect rounded-2xl px-8 py-4 shadow-2xl">
+              <div className="text-2xl md:text-3xl font-black text-gray-800">
+                {currentTask.description}
+              </div>
+            </div>
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            {feedback && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="flex justify-center mb-6"
+              >
+                <div className="relative max-w-xl w-full px-4">
+                  <div
+                    className={`absolute -inset-2 rounded-2xl blur-xl opacity-75 ${
+                      feedbackType === "correct"
+                        ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
+                        : feedbackType === "incorrect"
+                        ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
+                        : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
+                    }`}
+                  />
+                  <motion.div
+                    animate={
+                      feedbackType === "incorrect"
+                        ? { x: [-5, 5, -5, 5, 0] }
+                        : {}
+                    }
+                    transition={{ duration: 0.4 }}
+                    className={`relative px-8 py-5 rounded-2xl shadow-2xl text-white ${
+                      feedbackType === "correct"
+                        ? "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400"
+                        : feedbackType === "incorrect"
+                        ? "bg-gradient-to-r from-red-400 via-pink-400 to-rose-400"
+                        : "bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <motion.span
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                        className="text-3xl"
+                      >
+                        {feedbackType === "correct"
+                          ? "✓"
+                          : feedbackType === "incorrect"
+                          ? "✗"
+                          : "⏱"}
+                      </motion.span>
+                      <span className="font-bold text-xl">{feedback}</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex justify-center mb-10">
+            <TaskMenu
+              categories={currentTask.categories}
+              currentEasing={"linear"}
+              correctPath={currentTask.targetPath}
+              isTutorial={false}
+              onItemClick={handleTaskItemClick}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

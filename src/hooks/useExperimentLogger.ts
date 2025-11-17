@@ -83,23 +83,48 @@ export function useExperimentLogger({
   );
 
   /**
-   * クリックを記録
+   * クリックを記録（既存のuseTaskLoggerと統合）
    */
   const recordClick = useCallback(
-    (itemName: string, depth: number, isCorrect: boolean) => {
+    (
+      itemName: string,
+      depth: number,
+      isCorrect: boolean,
+      categories?: Category[]
+    ) => {
       setCurrentTaskLog((prev) => {
         if (!prev) return prev;
 
         const now = Date.now();
+
+        // 深さの自動計算（categoriesが提供された場合）
+        const actualDepth = categories
+          ? getCategoryDepth(categories, itemName)
+          : depth;
+
+        // バックトラック検出
         const isBacktrack = lastClickRef.current === itemName;
+
+        // 滞在時間の計算
+        const stayTime =
+          lastClickTimeRef.current !== 0
+            ? (now - lastClickTimeRef.current) / 1000
+            : 0;
 
         const clickRecord: ClickRecord = {
           timestamp: now,
           itemName,
-          depth,
+          depth: actualDepth,
           isCorrect,
           isBacktrack,
+          duringAnimation: isAnimatingRef.current,
+          stayTime: parseFloat(stayTime.toFixed(2)),
         };
+
+        // メニュー移動距離の計算
+        setMenuTravelDistance(
+          (prev) => prev + Math.abs(actualDepth - lastClickDepthRef.current)
+        );
 
         const newLog = {
           ...prev,
@@ -108,13 +133,17 @@ export function useExperimentLogger({
           totalClicks: prev.totalClicks + 1,
           errorClicks: prev.errorClicks + (isCorrect ? 0 : 1),
           backtrackCount: prev.backtrackCount + (isBacktrack ? 1 : 0),
+          menuTravelDistance: menuTravelDistance,
         };
 
         lastClickRef.current = itemName;
+        lastClickDepthRef.current = actualDepth;
+        lastClickTimeRef.current = now;
+
         return newLog;
       });
     },
-    []
+    [getCategoryDepth, menuTravelDistance]
   );
 
   /**
@@ -178,12 +207,23 @@ export function useExperimentLogger({
   }, [allTaskLogs]);
 
   /**
+   * アニメーション状態を設定（既存のuseTaskLoggerから移植）
+   */
+  const setAnimating = useCallback((animating: boolean) => {
+    isAnimatingRef.current = animating;
+  }, []);
+
+  /**
    * ログをリセット（新しい参加者用）
    */
   const resetLogs = useCallback(() => {
     setCurrentTaskLog(null);
     setAllTaskLogs([]);
+    setMenuTravelDistance(0);
     lastClickRef.current = null;
+    lastClickDepthRef.current = 0;
+    lastClickTimeRef.current = 0;
+    isAnimatingRef.current = false;
   }, []);
 
   /**
@@ -219,6 +259,7 @@ export function useExperimentLogger({
     // 状態
     currentTaskLog,
     allTaskLogs,
+    menuTravelDistance,
 
     // アクション
     startTask,
@@ -226,6 +267,7 @@ export function useExperimentLogger({
     recordFirstClick,
     completeTask,
     recordSEQ,
+    setAnimating,
 
     // エクスポート
     exportCurrentLog,

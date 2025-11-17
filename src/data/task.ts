@@ -258,15 +258,13 @@ export function selectRandomTasks(): [Task, Task, Task] {
 /**
  * ラテン方格に基づいてタスク順序を生成
  */
+// generateLatinSquareTasks関数内
 export function generateLatinSquareTasks(participantNumber: number): Task[] {
   const tasks: Task[] = [];
-  const offset = participantNumber % 5;
+  // offsetを削除または使用する
 
   for (let i = 0; i < 5; i++) {
-    const easingIndex = (i + offset) % 5;
     const [easy, medium, hard] = selectRandomTasks();
-
-    // 各イージング関数で3タスク（easy, medium, hard）
     tasks.push(easy, medium, hard);
   }
 

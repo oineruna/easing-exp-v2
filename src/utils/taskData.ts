@@ -208,5 +208,18 @@ export const FIXED_TASKS_JA = EXPERIMENT_TASKS.slice(5, 10).map(
   convertToOldTaskFormat
 );
 
+// 🆕 英語版タスク（Phase 1互換）
+export const FIXED_TASKS_EN = [
+  { category: "Sports & Outdoors", subcat: "Golf", item: "Golf Balls" },
+  { category: "Groceries", subcat: "Fruits", item: "Apple" },
+  { category: "Pet Supplies", subcat: "Pet Food", item: "Dog Food" },
+  {
+    category: "Gardening & DIY",
+    subcat: "Gardening Supplies",
+    item: "Planters",
+  },
+  { category: "Books", subcat: "Books", item: "Novels" },
+];
+
 export const MAX_TASKS = 15; // Phase 2は15タスク
 export const TIME_LIMIT_MS = 20000; // 20秒に延長（3階層対応）

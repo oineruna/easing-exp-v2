@@ -13,6 +13,16 @@ export interface Category {
 
 export type Lang = "ja" | "en";
 
+// 🆕 Phase 1との互換性のための型（既存コードで使用）
+export interface ClickLog {
+  step: number;
+  action: string;
+  depth: number;
+  duringAnimation: boolean;
+  stayTime: number;
+  timestamp: string;
+}
+
 // 🆕 実験用の型定義
 
 /** タスク難易度 */
@@ -66,6 +76,23 @@ export interface TaskLog {
 
   // 成功判定
   isCompleted: boolean;
+
+  // 🆕 Phase 1互換性のための追加プロパティ
+  totalTime?: string; // 文字列形式の時間（Phase 1用）
+  clicks?: ClickLog[]; // Phase 1のクリックログ
+  menuTravelDistance?: number; // メニュー移動距離
+  errorCount?: number; // エラー数
+  timedOut?: boolean; // タイムアウトフラグ
+  usedEasing?: EasingFunction; // 使用したイージング
+}
+
+/** イージング関数別の事後評価 */
+export interface EasingEvaluation {
+  easingFunction: EasingFunction;
+  usability: number; // 使いやすさ (1-7)
+  smoothness: number; // 滑らかさ (1-7)
+  responsiveness: number; // 応答性 (1-7)
+  preference: number; // 総合的好み (1-7)
 }
 
 /** イージング関数別の事後評価 */

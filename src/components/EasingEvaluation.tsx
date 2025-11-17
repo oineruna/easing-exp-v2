@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import type {
-  Lang,
-  EasingFunction,
-  EasingEvaluation,
-} from "../types/experiment";
+import type { Lang, EasingFunction } from "../types/experiment";
+
+// 🔧 型名を変更して衝突を回避
+export interface EasingEvaluationData {
+  easingFunction: EasingFunction;
+  usability: number;
+  smoothness: number;
+  responsiveness: number;
+  preference: number;
+}
 
 interface EasingEvaluationProps {
   lang: Lang;
   easingFunctions: EasingFunction[];
-  onSubmit: (evaluations: EasingEvaluation[]) => void;
+  onSubmit: (evaluations: EasingEvaluationData[]) => void;
 }
 
 const easingLabels: Record<EasingFunction, { ja: string; en: string }> = {
@@ -20,16 +25,13 @@ const easingLabels: Record<EasingFunction, { ja: string; en: string }> = {
   easeInOutBack: { ja: "バウンス", en: "Bounce" },
 };
 
-/**
- * 各イージング関数に対する事後評価
- */
 export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
   lang,
   easingFunctions,
   onSubmit,
 }) => {
   const [evaluations, setEvaluations] = useState<
-    Record<EasingFunction, Partial<EasingEvaluation>>
+    Record<string, Partial<EasingEvaluationData>>
   >({});
 
   const labels = {
@@ -63,7 +65,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
 
   const handleRating = (
     easing: EasingFunction,
-    criterion: keyof EasingEvaluation,
+    criterion: keyof EasingEvaluationData,
     value: number
   ) => {
     setEvaluations((prev) => ({
@@ -78,12 +80,12 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
 
   const isComplete = () => {
     return easingFunctions.every((easing) => {
-      const eval = evaluations[easing];
+      const evaluation = evaluations[easing];
       return (
-        eval?.usability &&
-        eval?.smoothness &&
-        eval?.responsiveness &&
-        eval?.preference
+        evaluation?.usability &&
+        evaluation?.smoothness &&
+        evaluation?.responsiveness &&
+        evaluation?.preference
       );
     });
   };
@@ -101,7 +103,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
     }
   };
 
-  const criteria: Array<{ key: keyof EasingEvaluation; label: string }> = [
+  const criteria: Array<{ key: keyof EasingEvaluationData; label: string }> = [
     { key: "usability", label: text.usability },
     { key: "smoothness", label: text.smoothness },
     { key: "responsiveness", label: text.responsiveness },
@@ -124,7 +126,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
 
             <div className="space-y-4">
               {criteria.map((criterion) => (
-                <div key={criterion.key}>
+                <div key={String(criterion.key)}>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium text-gray-700">
                       {criterion.label}

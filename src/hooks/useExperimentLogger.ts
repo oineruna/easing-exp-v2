@@ -1,11 +1,16 @@
+// useExperimentLogger.ts
+
 import { useState, useCallback, useRef } from "react";
 import type {
   TaskLog,
   ClickRecord,
   EasingFunction,
-  TaskDifficulty,
+  // ❌ 削除: TaskDifficulty,
   PreferenceType,
   Category,
+  ExperimentSession,
+  EasingEvaluation,
+  NASATLXScore,
 } from "../types/experiment";
 
 interface UseExperimentLoggerProps {
@@ -21,13 +26,20 @@ export function useExperimentLogger({
   const [allTaskLogs, setAllTaskLogs] = useState<TaskLog[]>([]);
   const [menuTravelDistance, setMenuTravelDistance] = useState(0);
 
+  // ログ記録用のRef
   const lastClickRef = useRef<string | null>(null);
   const lastClickDepthRef = useRef<number>(0);
-  const lastClickTimeRef = useRef<number>(0);
+  const lastClickTimeRef = useRef<number>(0); // performance.now() の値
   const isAnimatingRef = useRef<boolean>(false);
 
+  // === ヘルパー関数 ===
+
   /**
-   * カテゴリーの深さを取得（既存のuseTaskLoggerから移植）
+   * カテゴリーの深さを取得（メニューの階層レベル）
+   * @param categories - 現在のカテゴリーリスト
+   * @param targetName - 検索対象のカテゴリー名
+   * @param depth - 現在の階層（0始まり）
+   * @returns 見つかった場合の深さ、見つからなかった場合は -1
    */
   const getCategoryDepth = useCallback(
     (categories: Category[], targetName: string, depth = 0): number => {
@@ -50,168 +62,238 @@ export function useExperimentLogger({
   );
 
   /**
-   * 新しいタスクを開始
+   * タスク開始時の状態を初期化
+   * @param taskId - タスクID
+   * @param easingFunction - 使用するイージング関数
    */
-  const startTask = useCallback(
+  const startNewTask = useCallback(
     (
       taskId: string,
-      easingFunction: EasingFunction,
-      difficulty: TaskDifficulty
+      easingFunction: EasingFunction
+      // ❌ difficulty 引数を削除
     ) => {
-      const newLog: TaskLog = {
+      // 既存のログを TaskLog の配列に移動（もし残っていれば）
+      if (currentTaskLog) {
+        setAllTaskLogs((prev) => [...prev, currentTaskLog]);
+      }
+
+      const newTaskLog: TaskLog = {
         taskId,
         participantId,
         easingFunction,
-        difficulty,
+        // ❌ difficulty プロパティを削除
+
+        // PreferenceTypeは実験を通して固定
         preferenceType,
-        startTime: Date.now(),
+
+        startTime: performance.now(),
         firstClickTime: null,
         completionTime: null,
         totalDuration: null,
+
         clickSequence: [],
         totalClicks: 0,
         errorClicks: 0,
         backtrackCount: 0,
+
         singleEaseScore: null,
         isCompleted: false,
+
+        // Phase 1 互換性用プロパティを初期化
+        totalTime: undefined,
+        clicks: undefined,
+        menuTravelDistance: undefined,
+        errorCount: undefined,
+        timedOut: undefined,
+        usedEasing: undefined,
       };
 
-      setCurrentTaskLog(newLog);
+      setCurrentTaskLog(newTaskLog);
+
+      // Refの初期化
       lastClickRef.current = null;
+      lastClickDepthRef.current = 0;
+      lastClickTimeRef.current = 0;
+      isAnimatingRef.current = false;
+      setMenuTravelDistance(0); // タスクメニューの移動距離もリセット
     },
-    [participantId, preferenceType]
+    [currentTaskLog, participantId, preferenceType]
   );
 
   /**
-   * クリックを記録（既存のuseTaskLoggerと統合）
+   * クリックイベントを記録
+   * @param categoryName - クリックされたカテゴリー名
+   * @param categories - 現在のメニュー構造
+   * @param correctPath - 正解のパス
    */
   const recordClick = useCallback(
     (
-      itemName: string,
-      depth: number,
-      isCorrect: boolean,
-      categories?: Category[]
-    ) => {
-      setCurrentTaskLog((prev) => {
-        if (!prev) return prev;
+      categoryName: string,
+      categories: Category[],
+      correctPath: string[]
+    ): boolean => {
+      if (!currentTaskLog) return false;
 
-        const now = Date.now();
+      const currentClickTime = performance.now();
+      const currentDepth = getCategoryDepth(categories, categoryName);
+      const isCorrectClick = correctPath[currentDepth] === categoryName;
+      const isFinalClick =
+        isCorrectClick && currentDepth === correctPath.length - 1;
+      const isBacktrack = currentDepth < lastClickDepthRef.current; // 戻る操作
 
-        // 深さの自動計算（categoriesが提供された場合）
-        const actualDepth = categories
-          ? getCategoryDepth(categories, itemName)
-          : depth;
+      const prevTime = lastClickTimeRef.current || currentTaskLog.startTime;
+      const stayTime = (currentClickTime - prevTime) / 1000;
 
-        // バックトラック検出
-        const isBacktrack = lastClickRef.current === itemName;
-
-        // 滞在時間の計算
-        const stayTime =
-          lastClickTimeRef.current !== 0
-            ? (now - lastClickTimeRef.current) / 1000
-            : 0;
-
-        const clickRecord: ClickRecord = {
-          timestamp: now,
-          itemName,
-          depth: actualDepth,
-          isCorrect,
-          isBacktrack,
-          duringAnimation: isAnimatingRef.current,
-          stayTime: parseFloat(stayTime.toFixed(2)),
-        };
-
-        // メニュー移動距離の計算
-        setMenuTravelDistance(
-          (prev) => prev + Math.abs(actualDepth - lastClickDepthRef.current)
+      // 初回クリック時間の記録
+      if (currentTaskLog.firstClickTime === null) {
+        // startTimeからの差分を記録
+        const firstClickDelay = currentClickTime - currentTaskLog.startTime;
+        setCurrentTaskLog((prev) =>
+          prev ? { ...prev, firstClickTime: firstClickDelay } : null
         );
+      }
 
-        const newLog = {
+      const newClick: ClickRecord = {
+        timestamp: currentClickTime,
+        itemName: categoryName,
+        depth: currentDepth,
+        isCorrect: isCorrectClick,
+        isBacktrack: isBacktrack,
+        duringAnimation: isAnimatingRef.current,
+        stayTime: parseFloat(stayTime.toFixed(3)),
+      };
+
+      setCurrentTaskLog((prev) => {
+        if (!prev) return null;
+
+        const newTotalClicks = prev.totalClicks + 1;
+        const newErrorClicks = isCorrectClick
+          ? prev.errorClicks
+          : prev.errorClicks + 1;
+        const newBacktrackCount = isBacktrack
+          ? prev.backtrackCount + 1
+          : prev.backtrackCount;
+
+        return {
           ...prev,
-          firstClickTime: prev.firstClickTime || now,
-          clickSequence: [...prev.clickSequence, clickRecord],
-          totalClicks: prev.totalClicks + 1,
-          errorClicks: prev.errorClicks + (isCorrect ? 0 : 1),
-          backtrackCount: prev.backtrackCount + (isBacktrack ? 1 : 0),
-          menuTravelDistance: menuTravelDistance,
+          clickSequence: [...prev.clickSequence, newClick],
+          totalClicks: newTotalClicks,
+          errorClicks: newErrorClicks,
+          backtrackCount: newBacktrackCount,
         };
-
-        lastClickRef.current = itemName;
-        lastClickDepthRef.current = actualDepth;
-        lastClickTimeRef.current = now;
-
-        return newLog;
       });
+
+      // メニュー移動距離の更新 (絶対距離)
+      setMenuTravelDistance(
+        (prev) => prev + Math.abs(currentDepth - lastClickDepthRef.current)
+      );
+
+      // Refの更新
+      lastClickRef.current = categoryName;
+      lastClickDepthRef.current = currentDepth;
+      lastClickTimeRef.current = currentClickTime;
+
+      return isFinalClick;
     },
-    [getCategoryDepth, menuTravelDistance]
+    [currentTaskLog, getCategoryDepth]
   );
 
   /**
-   * 初回クリックを記録
+   * タスク完了時またはタイムアウト時にログを確定
    */
-  const recordFirstClick = useCallback(() => {
-    setCurrentTaskLog((prev) => {
-      if (!prev || prev.firstClickTime) return prev;
-      return {
-        ...prev,
-        firstClickTime: Date.now(),
-      };
-    });
-  }, []);
+  const completeTask = useCallback(
+    (isCompleted: boolean, singleEaseScore: number | null) => {
+      setCurrentTaskLog((prev) => {
+        if (!prev) return null;
+
+        const completionTime = performance.now();
+        const totalDuration = completionTime - prev.startTime;
+
+        // Phase 1 互換性データを作成 (必要な場合のみ)
+        const clicksPhase1 = prev.clickSequence.map((c, index) => ({
+          step: index + 1,
+          action: c.itemName,
+          depth: c.depth,
+          duringAnimation: c.duringAnimation,
+          stayTime: c.stayTime,
+          timestamp: new Date(c.timestamp).toISOString(),
+        }));
+        const totalTimePhase1 = (totalDuration / 1000).toFixed(2);
+
+        return {
+          ...prev,
+          completionTime,
+          totalDuration,
+          isCompleted,
+          singleEaseScore,
+
+          // Phase 1 互換性用プロパティをセット
+          totalTime: totalTimePhase1,
+          clicks: clicksPhase1,
+          menuTravelDistance: menuTravelDistance,
+          errorCount: prev.errorClicks,
+          timedOut: !isCompleted, // 完了しなかった = タイムアウトと見なす
+          usedEasing: prev.easingFunction,
+        };
+      });
+      // TaskMenu の移動距離は次のタスク開始時にリセットされる
+    },
+    [menuTravelDistance]
+  );
 
   /**
-   * タスク完了
+   * 確定したタスクログを全ログリストに追加
    */
-  const completeTask = useCallback((isSuccess: boolean = true) => {
-    setCurrentTaskLog((prev) => {
-      if (!prev) return prev;
-
-      const now = Date.now();
-      const completedLog: TaskLog = {
-        ...prev,
-        completionTime: now,
-        totalDuration: now - prev.startTime,
-        isCompleted: isSuccess,
-      };
-
-      setAllTaskLogs((logs) => [...logs, completedLog]);
-      return completedLog;
-    });
-  }, []);
-
-  /**
-   * SEQスコアを記録
-   */
-  const recordSEQ = useCallback((score: number) => {
-    setCurrentTaskLog((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        singleEaseScore: score,
-      };
-    });
-  }, []);
-
-  /**
-   * 現在のタスクログをエクスポート
-   */
-  const exportCurrentLog = useCallback(() => {
-    return currentTaskLog;
+  const saveCurrentTaskLog = useCallback(() => {
+    if (currentTaskLog) {
+      setAllTaskLogs((prev) => [...prev, currentTaskLog]);
+      setCurrentTaskLog(null);
+    }
   }, [currentTaskLog]);
 
   /**
-   * 全タスクログをエクスポート
-   */
-  const exportAllLogs = useCallback(() => {
-    return allTaskLogs;
-  }, [allTaskLogs]);
-
-  /**
-   * アニメーション状態を設定（既存のuseTaskLoggerから移植）
+   * アニメーション状態の追跡
    */
   const setAnimating = useCallback((animating: boolean) => {
     isAnimatingRef.current = animating;
   }, []);
+
+  /**
+   * 最終的な ExperimentSession データを作成
+   */
+  const generateFinalSession = useCallback(
+    (
+      preSurveyData: any, // PreSurveyOverlayから渡されるデータ
+      easingEvaluations: EasingEvaluation[],
+      nasaTLX: NASATLXScore,
+      postComments: string
+    ): ExperimentSession => {
+      // 最後に currentTaskLog に残っているデータがあれば、allTaskLogsに移動させる
+      const finalTaskLogs = currentTaskLog
+        ? [...allTaskLogs, currentTaskLog]
+        : allTaskLogs;
+
+      return {
+        participantId,
+        preferenceType,
+        startTime: finalTaskLogs[0]?.startTime ?? Date.now(), // 最初のタスクログの開始時間を設定
+        endTime: Date.now(),
+
+        preSurvey: {
+          preferences: preSurveyData.preferences,
+          ranking: preSurveyData.ranking,
+          comments: preSurveyData.comments,
+        },
+
+        taskLogs: finalTaskLogs,
+
+        easingEvaluations,
+        nasaTLX,
+        postComments,
+      };
+    },
+    [participantId, preferenceType, allTaskLogs, currentTaskLog]
+  );
 
   /**
    * ログをリセット（新しい参加者用）
@@ -226,55 +308,18 @@ export function useExperimentLogger({
     isAnimatingRef.current = false;
   }, []);
 
-  /**
-   * タスクの統計情報を計算
-   */
-  const getTaskStats = useCallback(() => {
-    if (!currentTaskLog) return null;
-
-    const firstClickDelay = currentTaskLog.firstClickTime
-      ? currentTaskLog.firstClickTime - currentTaskLog.startTime
-      : null;
-
-    const averageClickInterval =
-      currentTaskLog.clickSequence.length > 1
-        ? (currentTaskLog.totalDuration || 0) /
-          currentTaskLog.clickSequence.length
-        : null;
-
-    return {
-      firstClickDelay,
-      averageClickInterval,
-      errorRate:
-        currentTaskLog.totalClicks > 0
-          ? currentTaskLog.errorClicks / currentTaskLog.totalClicks
-          : 0,
-      efficiency:
-        currentTaskLog.clickSequence.filter((c) => c.isCorrect).length /
-        (currentTaskLog.totalClicks || 1),
-    };
-  }, [currentTaskLog]);
-
   return {
     // 状態
     currentTaskLog,
     allTaskLogs,
-    menuTravelDistance,
 
     // アクション
-    startTask,
+    startNewTask,
     recordClick,
-    recordFirstClick,
     completeTask,
-    recordSEQ,
+    saveCurrentTaskLog,
     setAnimating,
-
-    // エクスポート
-    exportCurrentLog,
-    exportAllLogs,
+    generateFinalSession,
     resetLogs,
-
-    // 統計
-    getTaskStats,
   };
 }

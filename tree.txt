@@ -1,0 +1,1587 @@
+Microsoft Windows [Version 10.0.19045.6456]
+
+(c) Microsoft Corporation. All rights reserved.
+
+
+C:\Windows\system32>cd D:\OneDrive - Kyushu Institute Of Technolgy\easing-exp-v2
+
+
+C:\Windows\system32>tree
+
+フォルダー パスの一覧
+
+ボリューム シリアル番号は E819-00A7 です
+
+C:.
+
+├─$HOME
+
+│  └─.pyenv
+
+│      ├─.github
+
+│      │  ├─ISSUE_TEMPLATE
+
+│      │  ├─scripts
+
+│      │  └─workflows
+
+│      ├─docs
+
+│      ├─pyenv-win
+
+│      │  ├─bin
+
+│      │  │  └─WiX
+
+│      │  └─libexec
+
+│      │      └─libs
+
+│      └─tests
+
+│          └─bat_files
+
+├─%userprofile%
+
+│  └─OneDrive
+
+├─0409
+
+├─AdvancedInstallers
+
+├─am-et
+
+├─AppLocker
+
+├─appraiser
+
+├─ar-SA
+
+├─bg-BG
+
+├─Boot
+
+│  ├─en-US
+
+│  └─ja-JP
+
+├─Bthprops
+
+├─CatRoot
+
+│  ├─{127D0A1D-4EF2-11D1-8608-00C04FC295EE}
+
+│  └─{F750E6C3-38EE-11D1-85E5-00C04FC295EE}
+
+├─catroot2
+
+│  ├─{127D0A1D-4EF2-11D1-8608-00C04FC295EE}
+
+│  └─{F750E6C3-38EE-11D1-85E5-00C04FC295EE}
+
+├─CodeIntegrity
+
+│  ├─CiPolicies
+
+│  │  ├─Active
+
+│  │  ├─Internal
+
+│  │  └─Staged
+
+│  └─Tokens
+
+│      ├─Active
+
+│      └─Staged
+
+├─Com
+
+│  ├─dmp
+
+│  ├─en-US
+
+│  └─ja-JP
+
+├─compatrel
+
+├─config
+
+│  ├─Journal
+
+│  ├─RegBack
+
+│  ├─systemprofile
+
+│  └─TxR
+
+├─ContainerSettingsProviders
+
+├─cs-CZ
+
+├─da-DK
+
+├─DAX2
+
+├─DDFs
+
+├─de-DE
+
+├─Dism
+
+│  ├─en-US
+
+│  └─ja-JP
+
+├─downlevel
+
+├─drivers
+
+│  ├─DriverData
+
+│  ├─en-GB
+
+│  ├─en-US
+
+│  ├─etc
+
+│  ├─ja-JP
+
+│  ├─mde
+
+│  ├─NVIDIA Corporation
+
+│  │  └─Drs
+
+│  ├─UMDF
+
+│  │  ├─en-GB
+
+│  │  ├─en-US
+
+│  │  └─ja-JP
+
+│  └─wd
+
+├─DriverState
+
+│  └─Devices
+
+├─DriverStore
+
+│  ├─en-GB
+
+│  ├─en-US
+
+│  ├─FileRepository
+
+│  │  ├─1394.inf_amd64_a08737ea39f5790b
+
+│  │  ├─3ware.inf_amd64_408ceed6ec8ab6cd
+
+│  │  ├─61883.inf_amd64_789f35bee584a939
+
+│  │  ├─acpi.inf_amd64_5eb9402fa41cbe2f
+
+│  │  ├─acpidev.inf_amd64_0f7f041f33bd01cc
+
+│  │  ├─acpipagr.inf_amd64_a3248d35e6aba0f3
+
+│  │  ├─acpipmi.inf_amd64_310dc613a7e31ec8
+
+│  │  ├─acpitime.inf_amd64_e1498a974ab95ea7
+
+│  │  ├─acxhdaudiop.inf_amd64_4998b15ad9e88fb7
+
+│  │  ├─adp80xx.inf_amd64_efb36fdc260e8bc8
+
+│  │  ├─amdgpio2.inf_amd64_808fe94735c4c6b3
+
+│  │  ├─amdi2c.inf_amd64_d7ae71f8eb52c084
+
+│  │  ├─amdsata.inf_amd64_ea60132f1a9a7a62
+
+│  │  ├─amdsbs.inf_amd64_e2a1e49127fb17ef
+
+│  │  ├─appleusb.inf_amd64_58854158183af679
+
+│  │  ├─appleusb.inf_amd64_dbdeb39f14f38d7a
+
+│  │  ├─arcsas.inf_amd64_b3d75f82c617ac6a
+
+│  │  ├─athw8x.inf_amd64_55014eff4ceefbdf
+
+│  │  ├─audioendpoint.inf_amd64_4fc4a632c1490033
+
+│  │  ├─avc.inf_amd64_0eaf27d749819837
+
+│  │  ├─b57nd60a.inf_amd64_77a731ab08be20a5
+
+│  │  ├─basicdisplay.inf_amd64_19e58b6267591a82
+
+│  │  ├─basicrender.inf_amd64_eebb5a8467eb88ec
+
+│  │  ├─battery.inf_amd64_a239bc596073092a
+
+│  │  ├─bcmdhd64.inf_amd64_e0bae6831f60ea5f
+
+│  │  ├─bcmfn2.inf_amd64_5ebadf201c5b5845
+
+│  │  ├─bcmwdidhdpcie.inf_amd64_977dcc915465b0e9
+
+│  │  ├─bda.inf_amd64_d32fe6b1c2b7b2a5
+
+│  │  ├─btampm.inf_amd64_5ac4d73ded7041d4
+
+│  │  ├─bth.inf_amd64_4bae36cc9672513d
+
+│  │  ├─bthlcpen.inf_amd64_a2917ed464cbbc93
+
+│  │  ├─bthleenum.inf_amd64_537421752c2d18ef
+
+│  │  ├─bthmtpenum.inf_amd64_3abc48e730d08fde
+
+│  │  ├─bthoob.inf_amd64_c6923052f60677d9
+
+│  │  ├─bthpan.inf_amd64_b807dbf022cb8a26
+
+│  │  ├─bthprint.inf_amd64_4a1b026c7ef99750
+
+│  │  ├─bthspp.inf_amd64_bdb56f181ef6934c
+
+│  │  ├─buttonconverter.inf_amd64_73b807c3bed63b18
+
+│  │  ├─cdrom.inf_amd64_f618268e6b943f2d
+
+│  │  ├─chargearbitration.inf_amd64_a0097842bcc7e487
+
+│  │  ├─cht4nulx64.inf_amd64_641bf08bee8ac46d
+
+│  │  ├─cht4sx64.inf_amd64_3a69b9b79f49eb50
+
+│  │  ├─cht4vx64.inf_amd64_b03448ba0b72ec47
+
+│  │  ├─circlass.inf_amd64_9f3f831d13d3df1f
+
+│  │  ├─cmbatt.inf_amd64_554d46f6008bc631
+
+│  │  ├─cometlakepch-vsystem.inf_amd64_5ed9e5716d6db7f6
+
+│  │  ├─cometlakesystem.inf_amd64_18aab72bd08752aa
+
+│  │  ├─compositebus.inf_amd64_7500cffa210c6946
+
+│  │  ├─cpu.inf_amd64_df60880565828e51
+
+│  │  ├─c_1394.inf_amd64_cac08af12caec647
+
+│  │  ├─c_61883.inf_amd64_2c1769df23d261a5
+
+│  │  ├─c_apo.inf_amd64_a261b6effa32e5a2
+
+│  │  ├─c_avc.inf_amd64_8ee511eb19322856
+
+│  │  ├─c_barcodescanner.inf_amd64_266a07997c075b30
+
+│  │  ├─c_battery.inf_amd64_5637e58e54fb24bb
+
+│  │  ├─c_biometric.inf_amd64_edc558d403ab30c1
+
+│  │  ├─c_bluetooth.inf_amd64_7e49a68f06c14d10
+
+│  │  ├─c_camera.inf_amd64_7b52a9607d24ece6
+
+│  │  ├─c_cashdrawer.inf_amd64_a648ee708660440c
+
+│  │  ├─c_cdrom.inf_amd64_f08f2fe1cde58aef
+
+│  │  ├─c_computeaccelerator.inf_amd64_9d34992b3634b396
+
+│  │  ├─c_computer.inf_amd64_aa72c8894a821b32
+
+│  │  ├─c_diskdrive.inf_amd64_b9514774871140a4
+
+│  │  ├─c_display.inf_amd64_c7457a37d16eaadf
+
+│  │  ├─c_dot4.inf_amd64_55905bb33692cd84
+
+│  │  ├─c_dot4print.inf_amd64_33c48c563d7541f7
+
+│  │  ├─c_extension.inf_amd64_7891c7d003f5e96b
+
+│  │  ├─c_fdc.inf_amd64_fe3599e7eac09e7f
+
+│  │  ├─c_firmware.inf_amd64_36e4e17f210128ab
+
+│  │  ├─c_floppydisk.inf_amd64_bc7bd9dca28933ec
+
+│  │  ├─c_fsactivitymonitor.inf_amd64_cccd1b2cb61d2440
+
+│  │  ├─c_fsantivirus.inf_amd64_632d2ac0d68cf3ed
+
+│  │  ├─c_fscfsmetadataserver.inf_amd64_ef3485e85c5c1b11
+
+│  │  ├─c_fscompression.inf_amd64_2aa5f249d7ee104a
+
+│  │  ├─c_fscontentscreener.inf_amd64_bd1517e25f3e419f
+
+│  │  ├─c_fscontinuousbackup.inf_amd64_4db9ca877f67dd36
+
+│  │  ├─c_fscopyprotection.inf_amd64_9c108d8ac558a80d
+
+│  │  ├─c_fsencryption.inf_amd64_b4b4845819a23338
+
+│  │  ├─c_fshsm.inf_amd64_48c6ccb73844d3bb
+
+│  │  ├─c_fsinfrastructure.inf_amd64_1ef682cfd6fc7d1c
+
+│  │  ├─c_fsopenfilebackup.inf_amd64_2174d2189fc8f164
+
+│  │  ├─c_fsphysicalquotamgmt.inf_amd64_796516c18b264f1e
+
+│  │  ├─c_fsquotamgmt.inf_amd64_5f092e2a496f61af
+
+│  │  ├─c_fsreplication.inf_amd64_cadbd20a667cf903
+
+│  │  ├─c_fssecurityenhancer.inf_amd64_e84a289dd0df20ff
+
+│  │  ├─c_fssystem.inf_amd64_89e15d7e662d6584
+
+│  │  ├─c_fssystemrecovery.inf_amd64_aa57df1ffa9aace0
+
+│  │  ├─c_fsundelete.inf_amd64_741f159cc6ce7814
+
+│  │  ├─c_fsvirtualization.inf_amd64_078671a0cdfe2870
+
+│  │  ├─c_hdc.inf_amd64_6e00e835fbceac58
+
+│  │  ├─c_hidclass.inf_amd64_b37df5bd0922aeef
+
+│  │  ├─c_holographic.inf_amd64_6ab9629b23deb837
+
+│  │  ├─c_image.inf_amd64_31731e48047fa274
+
+│  │  ├─c_infrared.inf_amd64_3160910a003e1f11
+
+│  │  ├─c_keyboard.inf_amd64_56ea9763e933f7c5
+
+│  │  ├─c_legacydriver.inf_amd64_c07aa9c633b5271e
+
+│  │  ├─c_linedisplay.inf_amd64_a720ddb820f10790
+
+│  │  ├─c_magneticstripereader.inf_amd64_86e291110e37418b
+
+│  │  ├─c_mcx.inf_amd64_fcbcc3807cbf63ec
+
+│  │  ├─c_media.inf_amd64_2dec3adbda5f7bb6
+
+│  │  ├─c_mediumchanger.inf_amd64_69ea0d8614286224
+
+│  │  ├─c_memory.inf_amd64_6fa9664593233d6e
+
+│  │  ├─c_modem.inf_amd64_8cddb75e34142905
+
+│  │  ├─c_monitor.inf_amd64_f02375bf47a4adb2
+
+│  │  ├─c_mouse.inf_amd64_822333b41326bc2f
+
+│  │  ├─c_mtd.inf_amd64_2f8cc39571965376
+
+│  │  ├─c_multifunction.inf_amd64_8bf0fd2423b20b97
+
+│  │  ├─c_multiportserial.inf_amd64_e92b6921fca885d5
+
+│  │  ├─c_net.inf_amd64_32a9ad23c1ecc42d
+
+│  │  ├─c_netclient.inf_amd64_b7f9bb71730aaf1a
+
+│  │  ├─c_netdriver.inf_amd64_2d569d832b41b8df
+
+│  │  ├─c_netservice.inf_amd64_9ab9cf10857f7349
+
+│  │  ├─c_nettrans.inf_amd64_b6d30279f382fa4b
+
+│  │  ├─c_pcmcia.inf_amd64_92be188847324ddb
+
+│  │  ├─c_pnpprinters.inf_amd64_0c653d53a35b896c
+
+│  │  ├─c_ports.inf_amd64_181d494584779290
+
+│  │  ├─c_printer.inf_amd64_cfb2c47c5677c442
+
+│  │  ├─c_processor.inf_amd64_4431cc603de6e020
+
+│  │  ├─c_proximity.inf_amd64_e42355875c34e406
+
+│  │  ├─c_receiptprinter.inf_amd64_7952e4baaee88d58
+
+│  │  ├─c_sbp2.inf_amd64_db7034ac4806cf05
+
+│  │  ├─c_scmdisk.inf_amd64_d8f75a9c87c2f7c4
+
+│  │  ├─c_scmvolume.inf_amd64_de693592afe8a496
+
+│  │  ├─c_scsiadapter.inf_amd64_efffb8c026d3abc5
+
+│  │  ├─c_sdhost.inf_amd64_b71f983cb35bfde3
+
+│  │  ├─c_securitydevices.inf_amd64_f10a5650b96630b9
+
+│  │  ├─c_sensor.inf_amd64_b8789b63cc1d26b5
+
+│  │  ├─c_smartcard.inf_amd64_bf5afc5892966e30
+
+│  │  ├─c_smartcardfilter.inf_amd64_3573afe136371e51
+
+│  │  ├─c_smartcardreader.inf_amd64_33a0db63c0afb351
+
+│  │  ├─c_smrdisk.inf_amd64_bbef253cecafbb1a
+
+│  │  ├─c_smrvolume.inf_amd64_1d430c5b72323a1c
+
+│  │  ├─c_sslaccel.inf_amd64_ed6849ad81a24c48
+
+│  │  ├─c_swcomponent.inf_amd64_f378d70fa39d3577
+
+│  │  ├─c_swdevice.inf_amd64_12050f4158021fcb
+
+│  │  ├─c_system.inf_amd64_184528953a6fb673
+
+│  │  ├─c_tapedrive.inf_amd64_a3a36e8f2c921ed7
+
+│  │  ├─c_ucm.inf_amd64_c30468a947db0fa8
+
+│  │  ├─c_unknown.inf_amd64_9f92c189b415c003
+
+│  │  ├─c_usb.inf_amd64_17c270ca25f45542
+
+│  │  ├─c_usbdevice.inf_amd64_815550fc328ea85b
+
+│  │  ├─c_usbfn.inf_amd64_64da5751ebd2f2f4
+
+│  │  ├─c_volsnap.inf_amd64_47e3741bbf4d6b06
+
+│  │  ├─c_volume.inf_amd64_a2da2b286ed77704
+
+│  │  ├─c_wceusbs.inf_amd64_1ba398d9da634d3f
+
+│  │  ├─c_wpd.inf_amd64_0245a364d71cf6b5
+
+│  │  ├─dal.inf_amd64_af50fdb80983f7bc
+
+│  │  ├─dal.inf_amd64_b5484efd38adbe8d
+
+│  │  ├─dc1-controller.inf_amd64_5f5a4694d0b5b341
+
+│  │  ├─dc21x4vm.inf_amd64_3294fc34256dbb0e
+
+│  │  ├─digitalmediadevice.inf_amd64_5b64b65052c3a32a
+
+│  │  ├─disk.inf_amd64_8398eaa246ab3f17
+
+│  │  ├─display.inf_amd64_35d5534e5de21a4b
+
+│  │  ├─displayoverride.inf_amd64_c7a5777273c98ebf
+
+│  │  ├─dtlitescsibus.inf_amd64_1e9e0203e659905c
+
+│  │  ├─dtliteusbbus.inf_amd64_b93a4bae453eb0cf
+
+│  │  ├─dtliteusbbus.inf_amd64_c60bb6f964925bc7
+
+│  │  ├─e2xw10x64.inf_amd64_04c2ae40613a06ff
+
+│  │  ├─eaphost.inf_amd64_d37080dfb66d830b
+
+│  │  ├─ehstorpwddrv.inf_amd64_a90493ff6434682e
+
+│  │  ├─ehstortcgdrv.inf_amd64_5cb0c23f45dac01c
+
+│  │  ├─errdev.inf_amd64_616c5168a5b1807a
+
+│  │  ├─fakerinput.inf_amd64_4a4f2dfbd0439ab4
+
+│  │  ├─fdc.inf_amd64_7534987814b257b2
+
+│  │  ├─fidohid.inf_amd64_c446be9403cdcdb1
+
+│  │  ├─flpydisk.inf_amd64_acb1691126c93472
+
+│  │  ├─fusionv2.inf_amd64_a47d9636ce0d7dab
+
+│  │  ├─gameflt.inf_amd64_152b7ad8bf20bdc5
+
+│  │  ├─gameflt.inf_amd64_25b1fe3637126834
+
+│  │  ├─gameflt.inf_amd64_63b883f25bff8750
+
+│  │  ├─gameflt.inf_amd64_7a99b6d694df393c
+
+│  │  ├─gameport.inf_amd64_edfd5301fe3972d5
+
+│  │  ├─genericusbfn.inf_amd64_53931f0ae21d6d2c
+
+│  │  ├─hal.inf_amd64_fd0ae947345ac7bf
+
+│  │  ├─halextintclpiodma.inf_amd64_7f59f2c73a7fab14
+
+│  │  ├─halextpl080.inf_amd64_15251233835ef753
+
+│  │  ├─hdaudbus.inf_amd64_fe1b9107a6b38e04
+
+│  │  ├─hdaudio.inf_amd64_98fd5b0ddcb79b7d
+
+│  │  ├─hdaudss.inf_amd64_76a0499c8a4b3752
+
+│  │  ├─hdxasus.inf_amd64_76844c27f6a9e5ed
+
+│  │  ├─hdxrt4.inf_amd64_c7efd94b4c5f41e8
+
+│  │  ├─hdx_asusext_rtk.inf_amd64_ab813d40496a6f6a
+
+│  │  ├─heat.inf_amd64_b73306c081719f1f
+
+│  │  ├─heci.inf_amd64_6b6e8cc42a3d1f09
+
+│  │  │  └─x64
+
+│  │  ├─heci.inf_amd64_c22251d5ea82b3c3
+
+│  │  │  └─x64
+
+│  │  ├─hidbatt.inf_amd64_a6fa9bcee39a694f
+
+│  │  ├─hidbth.inf_amd64_b5de0e7e45555968
+
+│  │  ├─hidbthle.inf_amd64_17c9ab3e600cbd22
+
+│  │  ├─hidcfu.inf_amd64_409fe85a7af72672
+
+│  │  ├─hiddigi.inf_amd64_dde7255b040ac897
+
+│  │  ├─hidi2c.inf_amd64_61e8ec2ae1fc2111
+
+│  │  ├─hidinterrupt.inf_amd64_eeb986311b3a5b16
+
+│  │  ├─hidir.inf_amd64_7bf4a320e4ec8b3d
+
+│  │  ├─hidirkbd.inf_amd64_20ad4886826af1d2
+
+│  │  ├─hidscanner.inf_amd64_b4d877fbd7faf471
+
+│  │  ├─hidserv.inf_amd64_c20a3bb7ac1cd207
+
+│  │  ├─hidspi_km.inf_amd64_886a0a18aa097582
+
+│  │  ├─hidtelephonydriver.inf_amd64_3a53178ee4e5481e
+
+│  │  ├─hidvhf.inf_amd64_0a924aec7600dcde
+
+│  │  ├─hpsamd.inf_amd64_0784fd3ef0d7ec93
+
+│  │  ├─iagpio.inf_amd64_07b64df61e783bfe
+
+│  │  ├─iai2c.inf_amd64_a77c815b2999404d
+
+│  │  ├─ialpss2i_gpio2_bxt_p.inf_amd64_8be317e01b44bf5a
+
+│  │  ├─ialpss2i_gpio2_cnl.inf_amd64_a60833fda31e9831
+
+│  │  ├─ialpss2i_gpio2_glk.inf_amd64_dad1e0a2b185e32b
+
+│  │  ├─ialpss2i_gpio2_skl.inf_amd64_b68199ad84607c21
+
+│  │  ├─ialpss2i_i2c_bxt_p.inf_amd64_190858fd8e931883
+
+│  │  ├─ialpss2i_i2c_cnl.inf_amd64_f668309b543472eb
+
+│  │  ├─ialpss2i_i2c_glk.inf_amd64_7b6c08738ca8a856
+
+│  │  ├─ialpss2i_i2c_skl.inf_amd64_9d9dbb01837eba23
+
+│  │  ├─ialpssi_gpio.inf_amd64_62ffa3c95446bcfc
+
+│  │  ├─ialpssi_i2c.inf_amd64_8e00e1aed7fbdf70
+
+│  │  ├─iastorac.inf_amd64_3cbddcc68b1c0da2
+
+│  │  ├─iastorav.inf_amd64_87f761c07c99d5e7
+
+│  │  ├─iastorhsacomponent.inf_amd64_e71d9547b143e8b7
+
+│  │  ├─iastorhsa_ext.inf_amd64_1d307e7bccea1e8f
+
+│  │  ├─iastorpinningcomponent.inf_amd64_651bb78e61d538aa
+
+│  │  ├─iastorv.inf_amd64_9c09bd1df352f065
+
+│  │  ├─iclsclient.inf_amd64_76523213b78d9046
+
+│  │  │  ├─conf
+
+│  │  │  ├─Documents
+
+│  │  │  └─lib
+
+│  │  ├─iclsclient.inf_amd64_fc84dfa25a6a7727
+
+│  │  │  ├─conf
+
+│  │  │  ├─Documents
+
+│  │  │  └─lib
+
+│  │  ├─idtsec.inf_amd64_9321d33f1997dbfd
+
+│  │  ├─image.inf_amd64_d2006c0517ddc60c
+
+│  │  ├─input.inf_amd64_71e43a6eaa912e56
+
+│  │  ├─intelpep.inf_amd64_a4f1e99d9c4ad9d6
+
+│  │  ├─intelpmax.inf_amd64_2ddee95f7a5d85db
+
+│  │  ├─intelta.inf_amd64_bf3c0f37c937104d
+
+│  │  ├─ipmidrv.inf_amd64_14c2291b73fdd12b
+
+│  │  ├─ipoib6x.inf_amd64_ef71073a5867971f
+
+│  │  ├─iscsi.inf_amd64_260e9b4b7d61bc83
+
+│  │  ├─itsas35i.inf_amd64_4f5850c71046b0cb
+
+│  │  ├─jbtcoins.inf_amd64_e7f572424e9e85b3
+
+│  │  ├─jcsrbthk.inf_amd64_6376c64007610b26
+
+│  │  ├─jfeqdusb.inf_amd64_32d11190a6bf1159
+
+│  │  ├─jfhideqd.inf_amd64_8879b56874d713d0
+
+│  │  ├─jfhidhid.inf_amd64_6f6b42288486597c
+
+│  │  ├─jfhidusb.inf_amd64_8346819081c0cc66
+
+│  │  ├─jfkbdhid.inf_amd64_18845ceb04b3e4da
+
+│  │  ├─jfmouhid.inf_amd64_a174c2e0a3b04b66
+
+│  │  ├─jfunkraw.inf_amd64_663991e9259ccc84
+
+│  │  ├─jrcvbthk.inf_amd64_adb3430e4496c1a5
+
+│  │  ├─kdnic.inf_amd64_6649425cdcae9b5f
+
+│  │  ├─keyboard.inf_amd64_5938c699b80ebb8f
+
+│  │  ├─ks.inf_amd64_9fac168e1cbea90c
+
+│  │  ├─kscaptur.inf_amd64_b95d9f4691816045
+
+│  │  ├─ksfilter.inf_amd64_d5c8b2a031c7d5c5
+
+│  │  ├─lltdio.inf_amd64_4faf5a37ebdbec2b
+
+│  │  ├─logi_joy_bus_enum.inf_amd64_31b0ed65334d4f16
+
+│  │  ├─logi_joy_hid.inf_amd64_66435b0f755eebe7
+
+│  │  ├─logi_joy_vir_hid.inf_amd64_428cda64b49ce2e8
+
+│  │  ├─logi_joy_vir_hid.inf_amd64_9f941d7e3c42f879
+
+│  │  ├─lsi_sas.inf_amd64_74bb5e3e01cfd526
+
+│  │  ├─lsi_sas2i.inf_amd64_b4e933c4540ad3cc
+
+│  │  ├─lsi_sas3i.inf_amd64_79c7a4d8be0a9744
+
+│  │  ├─lsi_sss.inf_amd64_503a2398f4c86893
+
+│  │  ├─machine.inf_amd64_72ab89a5cc3218be
+
+│  │  ├─mausbhost.inf_amd64_34c86c15777c913b
+
+│  │  ├─mbtr8897w81x64.inf_amd64_0d8225e7d2696ece
+
+│  │  ├─mchgr.inf_amd64_399f04975a0af112
+
+│  │  ├─mdm3com.inf_amd64_7a75739c411a71d6
+
+│  │  ├─mdm5674a.inf_amd64_ec8de8952888a618
+
+│  │  ├─mdmadc.inf_amd64_7b6fc0e15997ce81
+
+│  │  ├─mdmagm64.inf_amd64_596c8fd6d9bb0499
+
+│  │  ├─mdmags64.inf_amd64_767b2d723d0fe83b
+
+│  │  ├─mdmairte.inf_amd64_a99a7ecb03853141
+
+│  │  ├─mdmaiwa.inf_amd64_7cfab61cbab23e11
+
+│  │  ├─mdmaiwa3.inf_amd64_ff37da248ddd748a
+
+│  │  ├─mdmaiwa4.inf_amd64_b74e18ebf47de72a
+
+│  │  ├─mdmaiwa5.inf_amd64_8416dd97e1ecb6dc
+
+│  │  ├─mdmaiwat.inf_amd64_3bb2e5702f25a518
+
+│  │  ├─mdmar1.inf_amd64_b2ebe9229789b181
+
+│  │  ├─mdmarch.inf_amd64_1ae6ea0bf54c0f5c
+
+│  │  ├─mdmarn.inf_amd64_947cdd3822225c16
+
+│  │  ├─mdmati.inf_amd64_16fbf6520a254fad
+
+│  │  ├─mdmatm2k.inf_amd64_de71647ec29a6bc2
+
+│  │  ├─mdmaus.inf_amd64_f9b71b1d9c8643e2
+
+│  │  ├─mdmboca.inf_amd64_c4ed3602d3c754f2
+
+│  │  ├─mdmbsb.inf_amd64_0e44beb9cebe5a1e
+
+│  │  ├─mdmbtmdm.inf_amd64_866e6a2600605be4
+
+│  │  ├─mdmbug3.inf_amd64_aef240978776cd0b
+
+│  │  ├─mdmbw561.inf_amd64_0406b31e81bea0d1
+
+│  │  ├─mdmc26a.inf_amd64_dd85a83bc442ed33
+
+│  │  ├─mdmcdp.inf_amd64_919b7beec2c70482
+
+│  │  ├─mdmcm28.inf_amd64_4b833c2630a2a287
+
+│  │  ├─mdmcodex.inf_amd64_f5594a2af66d11ab
+
+│  │  ├─mdmcom1.inf_amd64_cfd501781ae941c0
+
+│  │  ├─mdmcommu.inf_amd64_9d8718c8b82a0aeb
+
+│  │  ├─mdmcomp.inf_amd64_bf289615d063c627
+
+│  │  ├─mdmcpq.inf_amd64_3acec385f5d67bdf
+
+│  │  ├─mdmcpq2.inf_amd64_2115846fffc22bb2
+
+│  │  ├─mdmcpv.inf_amd64_906547002cc7c58e
+
+│  │  ├─mdmcrtix.inf_amd64_e3ded2b26d662526
+
+│  │  ├─mdmcxhv6.inf_amd64_f1a7a2fbd6554d60
+
+│  │  ├─mdmcxpv6.inf_amd64_46a3b42507e9d29e
+
+│  │  ├─mdmdcm5.inf_amd64_a432be022b5f8139
+
+│  │  ├─mdmdcm6.inf_amd64_8b49cb79b258e1ab
+
+│  │  ├─mdmdf56f.inf_amd64_1e78e192efc26192
+
+│  │  ├─mdmdgitn.inf_amd64_6360d736a6f64e35
+
+│  │  ├─mdmdp2.inf_amd64_6550f790ed88c7ba
+
+│  │  ├─mdmdsi.inf_amd64_0b96cc4cfeb2cbf8
+
+│  │  ├─mdmdyna.inf_amd64_d89605b6b478d768
+
+│  │  ├─mdmeiger.inf_amd64_05ca2a1836c16cab
+
+│  │  ├─mdmelsa.inf_amd64_f187fca538857daa
+
+│  │  ├─mdmeric.inf_amd64_41ae7c84b8d94de0
+
+│  │  ├─mdmeric2.inf_amd64_facbddcbb097c790
+
+│  │  ├─mdmetech.inf_amd64_bbd46500a9d0e020
+
+│  │  ├─mdmfj2.inf_amd64_167948d0c94abc27
+
+│  │  ├─mdmgatew.inf_amd64_7e6c377859cfcb7c
+
+│  │  ├─mdmgcs.inf_amd64_e47e06e16f2aad12
+
+│  │  ├─mdmgen.inf_amd64_977aa23dfab87f15
+
+│  │  ├─mdmgl001.inf_amd64_e09ac82d497a19c5
+
+│  │  ├─mdmgl002.inf_amd64_9076ffc34f080cc1
+
+│  │  ├─mdmgl003.inf_amd64_6b639ff361f628eb
+
+│  │  ├─mdmgl004.inf_amd64_189d0189716edeb1
+
+│  │  ├─mdmgl005.inf_amd64_d9886a7bbe9e55ca
+
+│  │  ├─mdmgl006.inf_amd64_130cd40b355024c9
+
+│  │  ├─mdmgl007.inf_amd64_41e31b5786c6884d
+
+│  │  ├─mdmgl008.inf_amd64_c0d977e565fdc839
+
+│  │  ├─mdmgl009.inf_amd64_3bab34655afeb7e4
+
+│  │  ├─mdmgl010.inf_amd64_b4f4b670a266fda5
+
+│  │  ├─mdmgsm.inf_amd64_d7b1959484ec8228
+
+│  │  ├─mdmhaeu.inf_amd64_e0c209c891e162a4
+
+│  │  ├─mdmhandy.inf_amd64_d2feb24c2d3b69d4
+
+│  │  ├─mdmhay2.inf_amd64_e87e378eb673af65
+
+│  │  ├─mdmhayes.inf_amd64_055d85baabbda8f6
+
+│  │  ├─mdminfot.inf_amd64_564561a23e05c7ee
+
+│  │  ├─mdmiodat.inf_amd64_95e01117eb9c1bd2
+
+│  │  ├─mdmirmdm.inf_amd64_ae1f167e12ddb854
+
+│  │  ├─mdmisdn.inf_amd64_ded39545dc6c301b
+
+│  │  ├─mdmjf56e.inf_amd64_07bca0bfd5173050
+
+│  │  ├─mdmke.inf_amd64_b83f029888180def
+
+│  │  ├─mdmkortx.inf_amd64_93b84ecb5fd1cc85
+
+│  │  ├─mdmlasat.inf_amd64_36a71a022d8bb0bb
+
+│  │  ├─mdmlasno.inf_amd64_61370f3a47f08ebd
+
+│  │  ├─mdmlucnt.inf_amd64_f4769cb994ece833
+
+│  │  ├─mdmmc288.inf_amd64_3e3f05a8a446e75f
+
+│  │  ├─mdmmcd.inf_amd64_43b149b35876b241
+
+│  │  ├─mdmmcom.inf_amd64_9179c145f01530e4
+
+│  │  ├─mdmmct.inf_amd64_0f3268711a5b2622
+
+│  │  ├─mdmmega.inf_amd64_f35131186d3026aa
+
+│  │  ├─mdmmetri.inf_amd64_50397e28bbcd6514
+
+│  │  ├─mdmmhrtz.inf_amd64_aa2738d63955f632
+
+│  │  ├─mdmmhzel.inf_amd64_e90a0a4c8e15815d
+
+│  │  ├─mdmminij.inf_amd64_a85c8e1fe15a9532
+
+│  │  ├─mdmmod.inf_amd64_51d6c57c66e3de87
+
+│  │  ├─mdmmot64.inf_amd64_2afbe7d3ad20f42a
+
+│  │  ├─mdmmoto1.inf_amd64_5b5f11128afa2611
+
+│  │  ├─mdmmotou.inf_amd64_8370fa408706074c
+
+│  │  ├─mdmmts.inf_amd64_bc07e137c52c529a
+
+│  │  ├─mdmneuhs.inf_amd64_eb59a40d88060ada
+
+│  │  ├─mdmnis1u.inf_amd64_64035dd8a7571ba7
+
+│  │  ├─mdmnis2u.inf_amd64_0c5757ecd1574b3d
+
+│  │  ├─mdmnis3t.inf_amd64_9f214efed426c12a
+
+│  │  ├─mdmnis5t.inf_amd64_c6e181de81a59b54
+
+│  │  ├─mdmnokia.inf_amd64_9be5ff0f15b15eb7
+
+│  │  ├─mdmnova.inf_amd64_4da8a5889bbd1a21
+
+│  │  ├─mdmntt1.inf_amd64_263b3076d78209be
+
+│  │  ├─mdmnttd2.inf_amd64_76ccb77f33c66c43
+
+│  │  ├─mdmnttd6.inf_amd64_28e2bee7229aaf9f
+
+│  │  ├─mdmnttme.inf_amd64_edc94fc65bef3d27
+
+│  │  ├─mdmnttp.inf_amd64_527c415254a7e378
+
+│  │  ├─mdmnttp2.inf_amd64_8c1e04ee38482578
+
+│  │  ├─mdmnttte.inf_amd64_f017e7b18ec67a97
+
+│  │  ├─mdmolic.inf_amd64_7f84203a67c210e4
+
+│  │  ├─mdmomrn3.inf_amd64_c2314613ba3f3585
+
+│  │  ├─mdmoptn.inf_amd64_583bd0f3892e01df
+
+│  │  ├─mdmosi.inf_amd64_fce30a36dbc4596c
+
+│  │  ├─mdmpace.inf_amd64_5e0fbd01da4f7c7b
+
+│  │  ├─mdmpenr.inf_amd64_20c8782372e47bd2
+
+│  │  ├─mdmpin.inf_amd64_be5d923b5e701b62
+
+│  │  ├─mdmpn1.inf_amd64_7e6108426fdce03a
+
+│  │  ├─mdmpp.inf_amd64_e196624c9ed43e83
+
+│  │  ├─mdmpsion.inf_amd64_28542b9aafacda15
+
+│  │  ├─mdmracal.inf_amd64_dd534e815632509c
+
+│  │  ├─mdmrock.inf_amd64_9b13bcc1f320d1ad
+
+│  │  ├─mdmrock3.inf_amd64_9977beff54a96490
+
+│  │  ├─mdmrock4.inf_amd64_bc507add47f436ae
+
+│  │  ├─mdmrock5.inf_amd64_e485f7ac03009434
+
+│  │  ├─mdmsier.inf_amd64_3ae2ea3a55ec0279
+
+│  │  ├─mdmsii64.inf_amd64_0f02175b17cd3f66
+
+│  │  ├─mdmsmart.inf_amd64_3ca4b12cda56232e
+
+│  │  ├─mdmsonyu.inf_amd64_0e77868deff0b0cd
+
+│  │  ├─mdmsun1.inf_amd64_5b6db32fd04403a3
+
+│  │  ├─mdmsun2.inf_amd64_de323a35134348a2
+
+│  │  ├─mdmsupr3.inf_amd64_9cb7ddc26e30b52c
+
+│  │  ├─mdmsupra.inf_amd64_ed209c9a3da66777
+
+│  │  ├─mdmsuprv.inf_amd64_696bb57f8e3bab65
+
+│  │  ├─mdmtdk.inf_amd64_9e49da794995b361
+
+│  │  ├─mdmtdkj2.inf_amd64_46dd0342577f43cd
+
+│  │  ├─mdmtdkj3.inf_amd64_9658f2eb83f061c9
+
+│  │  ├─mdmtdkj4.inf_amd64_3bc71c4327f9f94e
+
+│  │  ├─mdmtdkj5.inf_amd64_6f327fe9ac4fdb28
+
+│  │  ├─mdmtdkj6.inf_amd64_5a503c811e650e70
+
+│  │  ├─mdmtdkj7.inf_amd64_161e1375bcff85d9
+
+│  │  ├─mdmtexas.inf_amd64_ed0ab85128ed7a01
+
+│  │  ├─mdmti.inf_amd64_bcde2913bb6ccf3d
+
+│  │  ├─mdmtkr.inf_amd64_a8a4ecec7082e1aa
+
+│  │  ├─mdmtron.inf_amd64_0b075e1cb11005f4
+
+│  │  ├─mdmusrf.inf_amd64_ddaa09c6103bc6ce
+
+│  │  ├─mdmusrg.inf_amd64_bb7c44c7bb3664d0
+
+│  │  ├─mdmusrgl.inf_amd64_19bd1d6c2b642b6f
+
+│  │  ├─mdmusrk1.inf_amd64_050c7496eacdd103
+
+│  │  ├─mdmusrsp.inf_amd64_4c83ce3a06d0048e
+
+│  │  ├─mdmvdot.inf_amd64_04863374c9db2052
+
+│  │  ├─mdmvv.inf_amd64_26dc960cc4c84207
+
+│  │  ├─mdmwhql0.inf_amd64_db80a6e1be3a2d08
+
+│  │  ├─mdmx5560.inf_amd64_209486f1c39d4b46
+
+│  │  ├─mdmzoom.inf_amd64_37bf8591584019e1
+
+│  │  ├─mdmzyp.inf_amd64_19eb30e94285f2a6
+
+│  │  ├─mdmzyxel.inf_amd64_1edcf626fd489056
+
+│  │  ├─mdmzyxlg.inf_amd64_c5ee07feb8dae038
+
+│  │  ├─megasas.inf_amd64_289e18fb610dd883
+
+│  │  ├─megasas2i.inf_amd64_ed501deb0beeb5cb
+
+│  │  ├─megasas35i.inf_amd64_4df7f6223ebcd28d
+
+│  │  ├─megasr.inf_amd64_72258921635be994
+
+│  │  ├─memory.inf_amd64_9af3a8a63d4cb5f9
+
+│  │  ├─mewmiprov.inf_amd64_cad1db73e8c782a6
+
+│  │  │  └─ME
+
+│  │  │      ├─MEMofs
+
+│  │  │      └─s
+
+│  │  │          ├─Core
+
+│  │  │          ├─System
+
+│  │  │          └─User
+
+│  │  ├─mewmiprov.inf_amd64_d51901c26227fb29
+
+│  │  │  └─ME
+
+│  │  │      ├─MEMofs
+
+│  │  │      └─s
+
+│  │  │          ├─Core
+
+│  │  │          ├─System
+
+│  │  │          └─User
+
+│  │  ├─mf.inf_amd64_e3c6d8265de5138c
+
+│  │  ├─mgtdyn.inf_amd64_a6235e923dc4047c
+
+│  │  ├─microsoft_bluetooth_a2dp.inf_amd64_b2e16a3e473a4a6a
+
+│  │  ├─microsoft_bluetooth_a2dp_snk.inf_amd64_213eeba98cc6f2f4
+
+│  │  ├─microsoft_bluetooth_a2dp_src.inf_amd64_0bdbb11733d87f9a
+
+│  │  ├─microsoft_bluetooth_avrcptransport.inf_amd64_3654b1e927c93743
+
+│  │  ├─microsoft_bluetooth_hfp.inf_amd64_9ff3bab41e6dcf05
+
+│  │  ├─microsoft_bluetooth_hfp_ag.inf_amd64_d2736f1d9bc815e1
+
+│  │  ├─microsoft_bluetooth_hfp_hf.inf_amd64_0c00f8f3a465c9a4
+
+│  │  ├─miradisp.inf_amd64_7f254eee92b9fd3d
+
+│  │  ├─mlx4_bus.inf_amd64_4c426f3bebc68844
+
+│  │  ├─modemcsa.inf_amd64_0ead899aeb6cb9a8
+
+│  │  ├─monitor.inf_amd64_619fca89b0812a99
+
+│  │  ├─mrvlpcie8897.inf_amd64_07fc330c5a5730ca
+
+│  │  ├─msclmd.inf_amd64_d677afecc5e43162
+
+│  │  ├─msdri.inf_amd64_97bef65a8432edd4
+
+│  │  ├─msdv.inf_amd64_5c153f7ff7d0d00a
+
+│  │  ├─msgpiowin32.inf_amd64_46634fa071d1db0d
+
+│  │  ├─mshdc.inf_amd64_f6ccd5b2c8226c4a
+
+│  │  ├─msmouse.inf_amd64_1793a485b491b199
+
+│  │  ├─msports.inf_amd64_f2e8231e8b60f214
+
+│  │  ├─mssmbios.inf_amd64_9fc7fe03de136fc1
+
+│  │  ├─mstape.inf_amd64_3e2c4fa2d4cbb487
+
+│  │  ├─msux64w10.inf_amd64_5aa81644af5957b3
+
+│  │  ├─mtconfig.inf_amd64_fe91941ed205cd9b
+
+│  │  ├─multiprt.inf_amd64_a9b96d6c7813082a
+
+│  │  ├─mvumis.inf_amd64_f0f4d0c799bb854a
+
+│  │  ├─mwlu97w8x64.inf_amd64_23bc3dc6d91eebdc
+
+│  │  ├─ndiscap.inf_amd64_a009d240f9b4a192
+
+│  │  ├─ndisimplatform.inf_amd64_b6b644565437983a
+
+│  │  ├─ndisimplatformmp.inf_amd64_8de1181bfd1f1628
+
+│  │  ├─ndisuio.inf_amd64_6096fd74a67ccd5d
+
+│  │  ├─ndisvirtualbus.inf_amd64_e8d548ad6f0a613a
+
+│  │  ├─neo6_x64_vpn.inf_amd64_4528eb08163b0e7d
+
+│  │  ├─net1ic64.inf_amd64_5f033e913d34d111
+
+│  │  ├─net1yx64.inf_amd64_8604d8a50804b9c1
+
+│  │  ├─net44amd.inf_amd64_450d4b1e35cc8e0d
+
+│  │  ├─net7400-x64-n650.inf_amd64_557ce3b37c3e0e3b
+
+│  │  ├─net7500-x64-n650f.inf_amd64_cc87c915f33d1c27
+
+│  │  ├─net7800-x64-n650f.inf_amd64_178f1bdb49a6e2fd
+
+│  │  ├─net8185.inf_amd64_7a30f5a9441cd55b
+
+│  │  ├─net8187bv64.inf_amd64_bc859d32f3e2f0d5
+
+│  │  ├─net8187se64.inf_amd64_99a4ca261f585f17
+
+│  │  ├─net8192se64.inf_amd64_167684f9283b4eca
+
+│  │  ├─net8192su64.inf_amd64_66c8bfc7a4b1feed
+
+│  │  ├─net819xp.inf_amd64_ff7a5dd4f9b1ceba
+
+│  │  ├─net9500-x64-n650f.inf_amd64_e92c5a65e41993f9
+
+│  │  ├─netaapl64.inf_amd64_56f23639c9617984
+
+│  │  ├─netathr10x.inf_amd64_2691c4f95b80eb3b
+
+│  │  ├─netathrx.inf_amd64_220db23f5419ea8d
+
+│  │  ├─netavpna.inf_amd64_f6f0831ba09dd9f5
+
+│  │  ├─netax88179_178a.inf_amd64_b6748bc8bb8ccf4d
+
+│  │  ├─netax88772.inf_amd64_5d1c92f42d958529
+
+│  │  ├─netbc63a.inf_amd64_7ba6c9cea77dd549
+
+│  │  ├─netbc64.inf_amd64_b96cdf411c43c00c
+
+│  │  ├─netbrdg.inf_amd64_8a737d38f201aeb1
+
+│  │  ├─netbvbda.inf_amd64_06bc8afcd2617abf
+
+│  │  ├─netbxnda.inf_amd64_1fff3bc87a99b0f1
+
+│  │  ├─nete1e3e.inf_amd64_895623810c19146a
+
+│  │  ├─nete1g3e.inf_amd64_af58b4e19562a3f9
+
+│  │  ├─netefe3e.inf_amd64_7830581a689ef40d
+
+│  │  ├─netelx.inf_amd64_7812e4e45c4a5eb1
+
+│  │  ├─netevbda.inf_amd64_1503f4d5a0d6ba56
+
+│  │  ├─netg664.inf_amd64_84cd7b2798e0a666
+
+│  │  ├─netimm.inf_amd64_8b2087393aaef952
+
+│  │  ├─netip6.inf_amd64_f29ffcd2b14f21f5
+
+│  │  ├─netirda.inf_amd64_186702cd081cddb0
+
+│  │  ├─netjme.inf_amd64_752bf22f1598bb7e
+
+│  │  ├─netk57a.inf_amd64_d823e3edc27ae17c
+
+│  │  ├─netl160a.inf_amd64_e4cbe375963a69e9
+
+│  │  ├─netl1c63x64.inf_amd64_4d6630ce07a4fb42
+
+│  │  ├─netl1e64.inf_amd64_8d5ca5ab1472fc44
+
+│  │  ├─netl260a.inf_amd64_783312763f8749c7
+
+│  │  ├─netlldp.inf_amd64_fbd4bbbad72f0e6b
+
+│  │  ├─netloop.inf_amd64_762588e32974f9e8
+
+│  │  ├─netmlx4eth63.inf_amd64_3809a4a3e7e07703
+
+│  │  ├─netmlx5.inf_amd64_101a408e6cb1d8f8
+
+│  │  ├─netmscli.inf_amd64_b39ea5f4658998de
+
+│  │  ├─netmyk64.inf_amd64_1f949c30555f4111
+
+│  │  ├─netnb.inf_amd64_0dc913ad00b14824
+
+│  │  ├─netnvm64.inf_amd64_35bbbe80dec15683
+
+│  │  ├─netnvma.inf_amd64_7080f6b8ea1744fb
+
+│  │  ├─netnwifi.inf_amd64_a2bfd066656fe297
+
+│  │  ├─netpacer.inf_amd64_7d294c7fa012d315
+
+│  │  ├─netpgm.inf_amd64_e099e4a7092b374c
+
+│  │  ├─netr28ux.inf_amd64_d5996f2a9d9aa9e3
+
+│  │  ├─netr28x.inf_amd64_5d63c7bcbf29107f
+
+│  │  ├─netr7364.inf_amd64_310ee0bc0af86ba3
+
+│  │  ├─netrasa.inf_amd64_1bdf7a435cb3580d
+
+│  │  ├─netrass.inf_amd64_7f701cb29b5389d3
+
+│  │  ├─netrast.inf_amd64_935f1046c28ea0dc
+
+│  │  ├─netrndis.inf_amd64_02db5c384e07aa47
+
+│  │  ├─netrtl64.inf_amd64_8e9c2368fe308df2
+
+│  │  ├─netrtwlane.inf_amd64_20caba88bd7f0bb3
+
+│  │  ├─netrtwlane01.inf_amd64_b02695ef070d7a42
+
+│  │  ├─netrtwlane_13.inf_amd64_992f4f46e65f30d4
+
+│  │  ├─netrtwlans.inf_amd64_97cd1a72c2a7829c
+
+│  │  ├─netrtwlanu.inf_amd64_1815bafd14dc59f0
+
+│  │  ├─netrtwlanu.inf_amd64_747b9ff6407644ba
+
+│  │  ├─netserv.inf_amd64_73adce5afe861093
+
+│  │  ├─netsstpa.inf_amd64_e76c5387d67e3fd6
+
+│  │  ├─nett4x64.inf_amd64_54eacac1858c78ab
+
+│  │  ├─nettcpip.inf_amd64_96215b82eaa40fd5
+
+│  │  ├─netv1x64.inf_amd64_30040c3eb9d7ade4
+
+│  │  ├─netvchannel.inf_amd64_ba3e73aa330c95d6
+
+│  │  ├─netvf63a.inf_amd64_a090e6cfaf18cb5c
+
+│  │  ├─netvg63a.inf_amd64_9f5493180b1252cf
+
+│  │  ├─netvwifibus.inf_amd64_f52d5ad58116f6f0
+
+│  │  ├─netvwififlt.inf_amd64_c5e19aab2305f37f
+
+│  │  ├─netvwifimp.inf_amd64_ec11d0ad3c5b262a
+
+│  │  ├─netvwwanmp.inf_amd64_f9e30429669d7fff
+
+│  │  ├─netwbw02.inf_amd64_1c4077fa004e73b4
+
+│  │  ├─netwew00.inf_amd64_325c0bd6349ed81c
+
+│  │  ├─netwew01.inf_amd64_153e01d761813df2
+
+│  │  ├─netwlv64.inf_amd64_0b9818131664d91e
+
+│  │  ├─netwmbclass.inf_amd64_6b443bc10f9a96b8
+
+│  │  ├─netwns64.inf_amd64_162bb49f925c6463
+
+│  │  ├─netwsw00.inf_amd64_24d55504ae3587aa
+
+│  │  ├─netwtw02.inf_amd64_42e02bae858d0fbd
+
+│  │  ├─netwtw04.inf_amd64_c8f5ae6576289a2d
+
+│  │  ├─netwtw06.inf_amd64_2edd50e7a54d503b
+
+│  │  ├─netwtw08.inf_amd64_7c0c516fb22456cd
+
+│  │  ├─netxex64.inf_amd64_ede00b448bfe8099
+
+│  │  ├─npcap.inf_amd64_234c5ff4bad41de2
+
+│  │  ├─npsvctrig.inf_amd64_b98e9a5325075265
+
+│  │  ├─ntprint.inf_amd64_20ea026aadec8898
+
+│  │  │  └─Amd64
+
+│  │  ├─ntprint.inf_x86_20ea026aadec8898
+
+│  │  │  └─I386
+
+│  │  ├─ntprint4.inf_amd64_75b5ae7e2463f6bf
+
+│  │  │  └─Amd64
+
+│  │  ├─nulhpopr.inf_amd64_9839c838c72c0594
+
+│  │  ├─nulhprs8.inf_amd64_e65ae5a38cb839e5
+
+│  │  ├─nvdimm.inf_amd64_9bb46b0de5ea33cd
+
+│  │  ├─nvhda.inf_amd64_17d2b40c60a9e838
+
+│  │  ├─nvmdi.inf_amd64_13e0ffdc778a9096
+
+│  │  │  ├─Display.NvContainer
+
+│  │  │  │  └─plugins
+
+│  │  │  │      ├─LocalSystem
+
+│  │  │  │      └─Session
+
+│  │  │  ├─NvCamera
+
+│  │  │  └─NVWMI
+
+│  │  ├─nvmoduletracker.inf_amd64_0c1cc60a4b422185
+
+│  │  ├─nvraid.inf_amd64_144351277838b429
+
+│  │  ├─nvvad.inf_amd64_35079c3b2e98dd66
+
+│  │  ├─oemvista.inf_amd64_ba4c0fa2d195a7ca
+
+│  │  ├─oposdrv.inf_amd64_9090a824ce0d0e68
+
+│  │  ├─pci.inf_amd64_8f3dda2ec2f2e027
+
+│  │  ├─pcmcia.inf_amd64_cb18bba4788e47f7
+
+│  │  ├─perceptionsimulationheadset.inf_amd64_e7042aa4fa59db57
+
+│  │  ├─perceptionsimulationsixdof.inf_amd64_3ff016f4df6d2b8a
+
+│  │  ├─perceptionsimulationsixdofmodels.inf_amd64_acff50a7960b7d19
+
+│  │  ├─percsas2i.inf_amd64_a7f5d94e6751c911
+
+│  │  ├─percsas3i.inf_amd64_c17a63dada1eaa02
+
+│  │  ├─pmem.inf_amd64_2cca8a439f8a71e8
+
+│  │  ├─pnpxinternetgatewaydevices.inf_amd64_82b90e51473d48ea
+
+│  │  ├─printqueue.inf_amd64_12d9f43eb5d02987
+
+│  │  ├─prnge001.inf_amd64_c9bde63301aec628
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms001.inf_amd64_8bc1bda6cf47380c
+
+│  │  ├─prnms002.inf_amd64_ca788d7344f17bbe
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms003.inf_amd64_fe878017f474877a
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms003.inf_x86_60589e1e769a15c6
+
+│  │  │  └─I386
+
+│  │  ├─prnms004.inf_amd64_8ea93edd3b1d7675
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms005.inf_amd64_29c1ba800ab0538c
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms006.inf_amd64_c3bdcb6fc975b614
+
+│  │  ├─prnms007.inf_amd64_e771b8d72fc68502
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms008.inf_amd64_755d1e455ddadb59
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms009.inf_amd64_a7412a554c9bc1fd
+
+│  │  ├─prnms010.inf_amd64_1ab4b5e7e0df249d
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms011.inf_amd64_e4577ce932649c7e
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms012.inf_amd64_0c1cc538f0358883
+
+│  │  │  └─Amd64
+
+│  │  ├─prnms013.inf_amd64_2b1aa5c0f193f278
+
+│  │  ├─prnms014.inf_amd64_222cb6c96fb4d512
+
+│  │  │  └─Amd64
+
+│  │  ├─qd3x64.inf_amd64_fd7b06296b7ac679
+
+│  │  ├─rawsilo.inf_amd64_1cbfddc97a663ba6
+
+│  │  ├─rdcameradriver.inf_amd64_6b96af32ac739e86
+
+│  │  ├─rdlsbuscbs.inf_amd64_0eb96a1741539c14
+
+│  │  ├─rdpbus.inf_amd64_05ebd3b4422f62ba
+
+│  │  ├─rdpidd.inf_amd64_eebd7428e7688799
+
+│  │  ├─rdvgwddmdx11.inf_amd64_e13e2b9679795ab8
+
+│  │  ├─realtekapo.inf_amd64_c235a0a5e05bf2fd
+
+│  │  ├─realtekasio.inf_amd64_d8d14eba3c3bec87
+
+│  │  ├─realtekhsa.inf_amd64_c9dd8ccb598e6edf
+
+│  │  ├─realtekservice.inf_amd64_31a20374e0a7b123
+
+│  │  ├─remoteposdrv.inf_amd64_7ff2bbe159952174
+
+│  │  ├─rhproxy.inf_amd64_7d28259fbc48ab7d
+
+│  │  ├─rndiscmp.inf_amd64_81bff1eb756435c6
+
+│  │  ├─rogkb.inf_amd64_06d18fd54a33184c
+
+│  │  ├─rogms.inf_amd64_5ac5f4b89f43b05e
+
+│  │  ├─rspndr.inf_amd64_4e80c2bb5314f071
+
+│  │  ├─rt640x64.inf_amd64_00cf2d7cfdea7eae
+
+│  │  ├─rt640x64.inf_amd64_8518dd32c6a29daa
+
+│  │  ├─rt640x64.inf_amd64_8984d8483eef476c
+
+│  │  ├─rtux64w10.inf_amd64_d6132e4c7fe2fac6
+
+│  │  ├─rtvdevx64.inf_amd64_7b972df4e09f9463
+
+│  │  ├─rtwlanu_oldic.inf_amd64_1a82423cc076e882
+
+│  │  ├─sbp2.inf_amd64_76e1b89751cd652f
+
+│  │  ├─scmbus.inf_amd64_5ed4d064db1c1769
+
+│  │  ├─scmvolume.inf_amd64_6957cfb7d6fea5c7
+
+│  │  ├─scrawpdo.inf_amd64_466615aad3be8e26
+
+│  │  ├─scsidev.inf_amd64_55176c1890d480fe
+
+│  │  ├─scunknown.inf_amd64_90993a57907d9959
+
+│  │  ├─sdbus.inf_amd64_2d1f6e3c230607ee
+
+│  │  ├─sdflauncher.inf_amd64_1ea082c6cf8f6982
+
+│  │  ├─sdfrd.inf_amd64_25779da6eca4810a
+
+│  │  ├─sdstor.inf_amd64_c60f7964a96b8aab
+
+│  │  ├─selow_x64.inf_amd64_6c19407ec8a10dbc
+
+│  │  ├─sensorsalsdriver.inf_amd64_3d871eb8eb330681
+
+│  │  ├─sensorshidclassdriver.inf_amd64_fdeca87de78d4742
+
+│  │  ├─sensorsservicedriver.inf_amd64_ce1d18b9e867a63d
+
+│  │  ├─sisraid2.inf_amd64_845e008c32615283
+
+│  │  ├─sisraid4.inf_amd64_65ab84e9830f6f4b
+
+│  │  ├─skylakesystem.inf_amd64_cc99ef6e5cc846fb
+
+│  │  ├─smartsamd.inf_amd64_2238284d493e89f4
+
+│  │  ├─smrdisk.inf_amd64_f945aad6094163f4
+
+│  │  ├─smrvolume.inf_amd64_9a3d52a168ca8fee
+
+│  │  ├─spaceport.inf_amd64_75db2a57ca8ef34d
+
+│  │  ├─ssudbus.inf_amd64_76330fadf036c230
+
+│  │  │  └─amd64
+
+│  │  ├─ssudmdm.inf_amd64_85ed24214db389b6
+
+│  │  │  └─amd64
+
+│  │  ├─ss_conn_usb_driver2.inf_amd64_2b21a2a8f9f2cfc4
+
+│  │  │  └─amd64
+
+│  │  ├─steamxboxndi.inf_amd64_1bf726b89aad21db
+
+│  │  ├─stexstor.inf_amd64_fefc1160d15aa667
+
+│  │  ├─sti.inf_amd64_13cb4c639b27cb07
+
+│  │  ├─storfwupdate.inf_amd64_ccad14ca37132a1e
+
+│  │  ├─stornvme.inf_amd64_e0c126d55d25ccad
+
+│  │  ├─storufs.inf_amd64_043d7587663e74cc
+
+│  │  ├─swenum.inf_amd64_16a14542b63c02af
+
+│  │  ├─tape.inf_amd64_bf051ca3546a5bf3
+
+│  │  ├─tdibth.inf_amd64_f91ee021521b5e25
+
+│  │  ├─termkbd.inf_amd64_a0634dcf2da1127e
+
+│  │  ├─termmou.inf_amd64_c4c8f901e3534194
+
+│  │  ├─tpm.inf_amd64_1d878197ebb9a0c0
+
+│  │  ├─tpmvsc.inf_amd64_cb91328051de4e73
+
+│  │  ├─transfercable.inf_amd64_911a60fb265ff111
+
+│  │  ├─tsgenericusbdriver.inf_amd64_83e8abb4a748a2e1
+
+│  │  ├─tsprint.inf_amd64_d082bd3b25291d70
+
+│  │  │  └─amd64
+
+│  │  ├─tsusbhub.inf_amd64_4a438b43b1734917
+
+│  │  ├─tsusbhubfilter.inf_amd64_283a44fe508f0682
+
+│  │  ├─ts_generic.inf_amd64_b6cb67052996a0bf
+
+│  │  ├─ts_wpdmtp.inf_amd64_e0577000b188c16b
+
+│  │  ├─tvvirtualmonitordriver.inf_amd64_b8a4eb13af8975aa
+
+│  │  ├─uaspstor.inf_amd64_5e080aa49043ecea
+
+│  │  ├─ucmucsiacpiclient.inf_amd64_a233292790c69f03
+
+│  │  ├─uefi.inf_amd64_c1628ffa62c8e54c
+
+│  │  ├─ufxchipidea.inf_amd64_1c78775fffab6a0a
+
+│  │  ├─ufxsynopsys.inf_amd64_fc630a18f07bcc4b
+
+│  │  ├─uicciso.inf_amd64_32023cb966fd5c8c
+
+│  │  ├─uiccspb.inf_amd64_18454ae612999870
+
+│  │  ├─umbus.inf_amd64_b78a9c5b6fd62c27
+
+│  │  ├─umpass.inf_amd64_3daa9a904daf9501
+
+│  │  ├─unifhid.inf_amd64_ba680b8596be64e8
+
+│

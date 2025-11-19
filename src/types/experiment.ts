@@ -1,3 +1,5 @@
+// experiment.ts
+
 // 既存の型定義
 export type EasingFunction =
   | "linear"
@@ -25,16 +27,13 @@ export interface ClickLog {
 
 // 🆕 実験用の型定義
 
-/** タスク難易度 */
-export type TaskDifficulty = "easy" | "medium" | "hard";
-
 /** 被験者の好みタイプ */
 export type PreferenceType = "smooth" | "snappy" | "neutral";
 
 /** タスク定義 */
 export interface Task {
   id: string;
-  difficulty: TaskDifficulty;
+  // difficulty: TaskDifficulty; // 難易度を削除
   targetPath: string[]; // 正解パス
   description: string; // タスク説明文
   categories: Category[]; // メニュー構造
@@ -56,7 +55,7 @@ export interface TaskLog {
   taskId: string;
   participantId: string;
   easingFunction: EasingFunction;
-  difficulty: TaskDifficulty;
+  // difficulty: TaskDifficulty; // 難易度を削除
   preferenceType: PreferenceType;
 
   // タイミング
@@ -84,15 +83,6 @@ export interface TaskLog {
   errorCount?: number; // エラー数
   timedOut?: boolean; // タイムアウトフラグ
   usedEasing?: EasingFunction; // 使用したイージング
-}
-
-/** イージング関数別の事後評価 */
-export interface EasingEvaluation {
-  easingFunction: EasingFunction;
-  usability: number; // 使いやすさ (1-7)
-  smoothness: number; // 滑らかさ (1-7)
-  responsiveness: number; // 応答性 (1-7)
-  preference: number; // 総合的好み (1-7)
 }
 
 /** イージング関数別の事後評価 */

@@ -21,8 +21,7 @@ export function PostSurveyOverlay({
   const [usabilityImpact, setUsabilityImpact] = useState<string[]>([]);
   const [usabilityImpactOther, setUsabilityImpactOther] = useState<string>("");
   const [bestFeature, setBestFeature] = useState<string>("");
-  const [worstFeature, setWorstFeature] = useState<string>(""); // ★ 追加
-  const [inputDevice, setInputDevice] = useState<string>(""); // ★ 追加
+  const [worstFeature, setWorstFeature] = useState<string>("");
   const [improvements, setImprovements] = useState<string>("");
 
   const impactOptions = [
@@ -57,8 +56,7 @@ export function PostSurveyOverlay({
       !noticeDifference ||
       usabilityImpact.length === 0 ||
       !bestFeature ||
-      !worstFeature || // ★ 追加
-      !inputDevice // ★ 追加
+      !worstFeature // ★ 修正: 末尾の || を削除
     ) {
       alert("すべての必須項目に回答してください。");
       return;
@@ -70,8 +68,7 @@ export function PostSurveyOverlay({
       usabilityImpact,
       usabilityImpactOther,
       bestFeature,
-      worstFeature, // ★ 追加
-      inputDevice, // ★ 追加
+      worstFeature, // ★ 追加: これがないとデータに含まれません
       improvements,
     };
 
@@ -125,7 +122,7 @@ export function PostSurveyOverlay({
                     >
                       <input
                         type="radio"
-                        name="q3_notice"
+                        name="q2_notice"
                         value={opt}
                         checked={noticeDifference === opt}
                         onChange={(e) => setNoticeDifference(e.target.value)}
@@ -188,7 +185,7 @@ export function PostSurveyOverlay({
                     >
                       <input
                         type="radio"
-                        name="q5_best"
+                        name="q4_best"
                         value={opt}
                         checked={bestFeature === opt}
                         onChange={(e) => setBestFeature(e.target.value)}
@@ -200,7 +197,7 @@ export function PostSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q5: 最も使いにくかった特徴 (★追加) */}
+              {/* Q5: 最も使いにくかった特徴 */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
                   5.
@@ -215,7 +212,7 @@ export function PostSurveyOverlay({
                     >
                       <input
                         type="radio"
-                        name="q6_worst"
+                        name="q5_worst"
                         value={opt}
                         checked={worstFeature === opt}
                         onChange={(e) => setWorstFeature(e.target.value)}

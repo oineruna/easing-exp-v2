@@ -55,7 +55,7 @@ export type ClickLog = ClickRecord;
 export interface PreSurveyData {
   preferences: Record<EasingFunction, number>; // 1-5の評価
   ranking: EasingFunction[]; // 好みの順位
-  preferenceType: 'smooth' | 'snappy' | 'other'; // 自動分類
+  preferenceType: "smooth" | "snappy" | "other"; // 自動分類
   comments: string;
 }
 
@@ -66,6 +66,7 @@ export interface TaskSurveyResult {
   easeRating: number;
   difficultyRating: number;
   differenceRating: number;
+  awarenessRating: number; // 🆕 認知度 (1-5)
   comments: string;
 }
 
@@ -94,6 +95,26 @@ export interface TaskLog {
   survey?: TaskSurveyResult;
   seqScore?: number;
   usedEasing?: EasingFunction;
+}
+
+/**
+ * 事前アンケート結果の型
+ */
+export interface PreSurveyData {
+  preferences: Record<EasingFunction, number>; // 1-5の評価
+  ranking: EasingFunction[]; // 好みの順位
+  preferenceType: "smooth" | "snappy" | "other"; // 自動分類
+  comments: string;
+}
+
+/**
+ * 事前アンケート結果の型
+ */
+export interface PreSurveyData {
+  preferences: Record<EasingFunction, number>; // 1-5の評価
+  ranking: EasingFunction[]; // 好みの順位
+  preferenceType: "smooth" | "snappy" | "other"; // 自動分類
+  comments: string;
 }
 
 /**

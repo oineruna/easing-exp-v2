@@ -1,5 +1,7 @@
+// --- START OF FILE src/hooks/useTaskLogger.ts ---
+
 import { useState, useRef, useCallback } from "react";
-import type { ClickLog, Category } from "../types/experiment";
+import type { ClickLog, Category, TaskLog } from "./experiment"; // パスを修正
 
 export function useTaskLogger() {
   const [clicksThisTask, setClicksThisTask] = useState<ClickLog[]>([]);
@@ -12,6 +14,7 @@ export function useTaskLogger() {
   const lastClickDepthRef = useRef<number>(0);
   const isAnimatingRef = useRef<boolean>(false);
 
+  // カテゴリの深さを取得
   const getCategoryDepth = useCallback(
     (categories: Category[], targetName: string, depth = 0): number => {
       for (const cat of categories) {
@@ -32,12 +35,12 @@ export function useTaskLogger() {
     []
   );
 
+  // クリック記録
   const recordClick = useCallback(
     (categoryName: string, categories: Category[]) => {
       const currentClickTime = performance.now();
       const currentDepth = getCategoryDepth(categories, categoryName);
 
-      // 初回クリック時間の記録
       if (firstClickTime === null) {
         const delay = (currentClickTime - startTimeRef.current) / 1000;
         setFirstClickTime(delay);
@@ -80,7 +83,34 @@ export function useTaskLogger() {
     lastClickTimeRef.current = 0;
     lastClickDepthRef.current = 0;
     startTimeRef.current = performance.now();
+    isAnimatingRef.current = false;
   }, []);
+
+  // ★ ログ確定用メソッド
+  const stopTask = useCallback(
+    (isCorrect: boolean, timedOut: boolean): Partial<TaskLog> => {
+      const endTime = performance.now();
+      const totalDurationMs = endTime - startTimeRef.current;
+      const totalTimeSec = (totalDurationMs / 1000).toFixed(2);
+
+      return {
+        isCorrect,
+        timedOut,
+        startTime: startTimeRef.current,
+        endTime,
+        totalDuration: totalDurationMs,
+        totalTime: totalTimeSec + "s",
+        firstClickTime: firstClickTime || 0,
+        clickCount: clicksThisTask.length,
+        errorCount: errorCount,
+        totalClicks: clicksThisTask.length,
+        errorClicks: errorCount,
+        clicks: clicksThisTask,
+        menuTravelDistance: menuTravelDistance,
+      };
+    },
+    [clicksThisTask, errorCount, firstClickTime, menuTravelDistance]
+  );
 
   const setAnimating = useCallback((animating: boolean) => {
     isAnimatingRef.current = animating;
@@ -95,6 +125,7 @@ export function useTaskLogger() {
     recordClick,
     incrementError,
     resetTask,
+    stopTask,
     setAnimating,
   };
 }

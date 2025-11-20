@@ -1,5 +1,8 @@
+// --- START OF FILE src/App.tsx ---
+
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
 import { ConsentOverlay } from "./components/ConsentOverlay";
 import { TutorialIntroOverlay } from "./components/TutorialIntroOverlay";
 import { TutorialCompleteOverlay } from "./components/TutorialCompleteOverlay";
@@ -7,14 +10,28 @@ import { TaskMenu } from "./components/TaskMenu";
 import { TaskEndOverlay } from "./components/TaskEndOverlay";
 import { RewardScreen } from "./components/RewardScreen";
 import { PreSurveyOverlay, PreSurveyData } from "./components/PreSurveyOverlay";
-import { useTaskLogger } from "./hooks/useTaskLogger";
+import { NextTaskOverlay } from "./components/NextTaskOverlay";
+import { TaskSurveyOverlay } from "./components/TaskSurveyOverlay";
+// ★ 新規追加
+import { PostSurveyOverlay } from "./components/PostSurveyOverlay";
+
+import { useTaskLogger } from "./useTaskLogger";
 import { detectLang, t } from "./utils/i18n";
-import type { Lang } from "./utils/i18n";
-import type { Category, TaskLog, EasingFunction } from "./types/experiment";
+import type { Lang } from "./experiment";
+import type {
+  Category,
+  TaskLog,
+  Task,
+  EasingFunction,
+  PostSurveyResult,
+  ExperimentData,
+} from "./experiment";
 import {
+  loadMenuCategories,
+  loadTutorialCategories,
   generateTaskSequence,
+  generateTasksFromCategories,
   TIME_LIMIT_MS,
-  TaskDefinition,
 } from "./utils/task";
 
 type AppState =
@@ -25,234 +42,206 @@ type AppState =
   | "tutorial"
   | "tutorial-complete"
   | "task"
+  | "seq"
+  | "next-task-ready"
   | "task-end"
-  | "reward";
+  | "reward"
+  | "post-survey"; // ★ 追加
 
 interface TaskWithEasing {
   trial: number;
-  task: TaskDefinition;
+  task: Task;
   easing: EasingFunction;
 }
 
-const LanguageSwitcher = ({
-  currentLang,
-  onLangChange,
-}: {
-  currentLang: Lang;
-  onLangChange: (lang: Lang) => void;
-}) => (
-  <div className="fixed top-4 right-4 z-[100] flex gap-2 p-1 bg-white/30 backdrop-blur-sm rounded-full shadow-lg">
-    <button
-      onClick={() => onLangChange("ja")}
-      className={`px-3 py-1.5 text-sm font-bold rounded-full transition-all ${
-        currentLang === "ja"
-          ? "bg-white text-purple-600 shadow-md"
-          : "bg-transparent text-black/70 hover:bg-white/50"
-      }`}
-    >
-      日本語
-    </button>
-    <button
-      onClick={() => onLangChange("en")}
-      className={`px-3 py-1.5 text-sm font-bold rounded-full transition-all ${
-        currentLang === "en"
-          ? "bg-white text-purple-600 shadow-md"
-          : "bg-transparent text-black/70 hover:bg-white/50"
-      }`}
-    >
-      English
-    </button>
-  </div>
-);
-
-const TUTORIAL_CATEGORIES: Category[] = [
-  {
-    name: "日用品",
-    subcategories: [
-      { name: "トイレットペーパー" },
-      { name: "ティッシュ" },
-      { name: "洗剤" },
-    ],
-  },
-  {
-    name: "食品",
-    subcategories: [{ name: "お米" }, { name: "パン" }],
-  },
-];
+const hashCode = (str: string) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+};
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>(detectLang());
-  const [appState, setAppState] = useState<AppState>("ready");
+  const [lang, setLang] = useState<Lang>("ja");
+  const [appState, setAppState] = useState<AppState>("reward");
+  const [participantId, setParticipantId] = useState<string>("");
+
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
+  const [tutorialCategories, setTutorialCategories] = useState<Category[]>([]);
+
   const [experimentTasks, setExperimentTasks] = useState<TaskWithEasing[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [currentTaskWithEasing, setCurrentTaskWithEasing] =
     useState<TaskWithEasing | null>(null);
+
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
+  const [tempTaskLog, setTempTaskLog] = useState<TaskLog | null>(null);
+
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<
     "correct" | "incorrect" | "timeout" | ""
   >("");
+
+  const currentEasing: EasingFunction =
+    currentTaskWithEasing?.easing || "easeInOutExpo";
+
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
 
-  // イージング関数選択を管理
-  const [currentEasing, setCurrentEasing] = useState<EasingFunction>("linear");
-
-  // カテゴリデータ読み込み
+  // 初期化
   useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const response = await fetch("/menu_categories.json");
-        const data = await response.json();
-        setMenuCategories(data.categories);
-        console.log("✅ カテゴリ読み込み完了:", data.categories.length);
-      } catch (error) {
-        console.error("❌ menu_categories.json の読み込みエラー:", error);
-      }
-    };
-    loadCategories();
+    setLang(detectLang());
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    let id = params.get("pid") || params.get("id");
+
+    if (!id) {
+      id = Math.floor(1000 + Math.random() * 9000).toString();
+    }
+
+    setParticipantId(id);
+    params.set("pid", id);
+    window.history.replaceState(null, "", url.toString());
   }, []);
 
-  // 各種ハンドラー（省略...過去回答参照）
-  const handleLangChange = (newLang: Lang) => setLang(newLang);
+  // データ読み込み
+  useEffect(() => {
+    const loadData = async () => {
+      const mainCats = await loadMenuCategories(lang);
+      setMenuCategories(mainCats);
+      const tutCats = await loadTutorialCategories(lang);
+      setTutorialCategories(tutCats);
+    };
+    loadData();
+  }, [lang]);
+
+  // --- ハンドラー ---
+
   const handleConsentAgree = useCallback(() => setAppState("pre-survey"), []);
   const handleConsentDisagree = useCallback(
     () => alert(t(lang, "disagreeAlert")),
     [lang]
   );
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
+    console.log("[Pre-Survey]", data);
     setAppState("ready");
   }, []);
+
   const handleStartTutorial = useCallback(
     () => setAppState("tutorial-intro"),
     []
   );
-  const handleTutorialIntroClose = useCallback(() => {
-    setAppState("tutorial");
-    taskLogger.resetTask();
-    setFeedback(null);
-    setFeedbackType("");
-    if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
-    timeoutIdRef.current = window.setTimeout(() => {
-      setFeedback(t(lang, "tutorialTimeout"));
-      setFeedbackType("timeout");
-      setTimeout(() => {
-        setAppState("tutorial-complete");
-        setFeedback(null);
-        setFeedbackType("");
-      }, 2000);
-    }, TIME_LIMIT_MS);
-  }, [lang, taskLogger]);
+  const handleTutorialIntroClose = useCallback(
+    () => setAppState("tutorial"),
+    []
+  );
+  const handleTutorialCompleteClose = useCallback(
+    () => setAppState("ready"),
+    []
+  );
 
   const handleTutorialItemClick = useCallback(
     (itemName: string) => {
-      taskLogger.recordClick(itemName, TUTORIAL_CATEGORIES);
-      const targetItem = lang === "en" ? "Toilet Paper" : "トイレットペーパー";
-      if (itemName !== targetItem) {
+      const targetItem = lang === "en" ? "Tents" : "テント";
+      if (itemName === targetItem) {
+        setFeedback(t(lang, "tutorialCorrect"));
+        setFeedbackType("correct");
+        setTimeout(() => setAppState("tutorial-complete"), 1000);
+      } else {
         setFeedback(t(lang, "tutorialWrong"));
         setFeedbackType("incorrect");
-        setTimeout(() => {
-          setFeedback(null);
-          setFeedbackType("");
-        }, 2000);
-        return;
+        setTimeout(() => setFeedback(null), 1000);
       }
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-        timeoutIdRef.current = null;
-      }
-      setFeedback(t(lang, "tutorialCorrect"));
-      setFeedbackType("correct");
-      setTimeout(() => {
-        setAppState("tutorial-complete");
-      }, 1500);
     },
-    [lang, taskLogger]
+    [lang]
   );
 
-  const handleTutorialCompleteClose = useCallback(() => {
-    setAppState("ready");
-    setFeedback(null);
-    setFeedbackType("");
-  }, []);
-  const handleStartTask = useCallback(() => {
-    if (!confirm(t(lang, "startTaskConfirm"))) return;
-    if (menuCategories.length === 0) {
-      alert(
-        "カテゴリの読み込みに失敗しました。ページを再読み込みしてください。"
-      );
-      return;
+  const handleTaskTimeout = useCallback(() => {
+    if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+
+    setFeedback(lang === "en" ? "Timeout!" : "タイムアウト!");
+    setFeedbackType("timeout");
+
+    const log = taskLogger.stopTask(false, true);
+    if (currentTaskWithEasing) {
+      const fullLog = {
+        ...log,
+        participantId,
+        trialNumber: currentTaskWithEasing.trial,
+        taskId: currentTaskWithEasing.task.id,
+        targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
+        easingFunction: currentTaskWithEasing.easing,
+      } as TaskLog;
+      setTempTaskLog(fullLog);
     }
-    const participantId = Date.now() % 5;
-    const taskSequence = generateTaskSequence(participantId);
+
+    setTimeout(() => {
+      setFeedback(null);
+      setFeedbackType("");
+      setAppState("seq");
+    }, 200);
+  }, [currentTaskWithEasing, taskLogger, lang, participantId]);
+
+  const handleStartTask = useCallback(async () => {
+    if (menuCategories.length === 0) return;
+
+    const seed = hashCode(participantId);
+    const taskDefs = generateTasksFromCategories(menuCategories);
+    const taskSequence = generateTaskSequence(seed, taskDefs);
+
     setExperimentTasks(taskSequence);
     setAllLogs([]);
     setCurrentTaskIndex(0);
     setCurrentTaskWithEasing(taskSequence[0]);
+    setTempTaskLog(null);
+
     setAppState("task");
     taskLogger.resetTask();
+
     if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
-    timeoutIdRef.current = window.setTimeout(() => {
-      handleTaskTimeout();
-    }, TIME_LIMIT_MS);
-  }, [lang, menuCategories]);
-  const handleTaskTimeout = useCallback(() => {
-    if (timeoutIdRef.current) {
-      clearTimeout(timeoutIdRef.current);
-      timeoutIdRef.current = null;
-    }
-    setFeedback("タイムアウト!");
-    setFeedbackType("timeout");
-    setTimeout(() => {
-      setFeedback(null);
-      setFeedbackType("");
-      const nextIndex = currentTaskIndex + 1;
-      if (nextIndex < experimentTasks.length) {
-        setCurrentTaskIndex(nextIndex);
-        setCurrentTaskWithEasing(experimentTasks[nextIndex]);
-        taskLogger.resetTask();
-        timeoutIdRef.current = window.setTimeout(() => {
-          handleTaskTimeout();
-        }, TIME_LIMIT_MS);
-      } else {
-        setAppState("task-end");
-      }
-    }, 2000);
-  }, [currentTaskIndex, experimentTasks, taskLogger]);
+    timeoutIdRef.current = window.setTimeout(
+      () => handleTaskTimeout(),
+      TIME_LIMIT_MS
+    );
+  }, [menuCategories, lang, participantId, taskLogger, handleTaskTimeout]);
 
   const handleTaskItemClick = useCallback(
     (itemName: string, isCorrectPath: boolean) => {
       if (!currentTaskWithEasing) return;
       taskLogger.recordClick(itemName, menuCategories);
+
       const targetItem =
         currentTaskWithEasing.task.targetPath[
           currentTaskWithEasing.task.targetPath.length - 1
         ];
+
       if (itemName === targetItem) {
-        if (timeoutIdRef.current) {
-          clearTimeout(timeoutIdRef.current);
-          timeoutIdRef.current = null;
-        }
-        setFeedback("正解!");
+        if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+
+        setFeedback(lang === "en" ? "Correct!" : "正解!");
         setFeedbackType("correct");
+
+        const log = taskLogger.stopTask(true, false);
+        const fullLog = {
+          ...log,
+          participantId,
+          trialNumber: currentTaskWithEasing.trial,
+          taskId: currentTaskWithEasing.task.id,
+          targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
+          easingFunction: currentTaskWithEasing.easing,
+        } as TaskLog;
+        setTempTaskLog(fullLog);
+
         setTimeout(() => {
           setFeedback(null);
           setFeedbackType("");
-          const nextIndex = currentTaskIndex + 1;
-          if (nextIndex < experimentTasks.length) {
-            setCurrentTaskIndex(nextIndex);
-            setCurrentTaskWithEasing(experimentTasks[nextIndex]);
-            taskLogger.resetTask();
-            timeoutIdRef.current = window.setTimeout(() => {
-              handleTaskTimeout();
-            }, TIME_LIMIT_MS);
-          } else {
-            setAppState("task-end");
-          }
-        }, 1500);
+          setAppState("seq");
+        }, 200);
       } else if (!isCorrectPath) {
-        setFeedback("不正解");
+        setFeedback(lang === "en" ? "Incorrect" : "不正解");
         setFeedbackType("incorrect");
         setTimeout(() => {
           setFeedback(null);
@@ -260,295 +249,268 @@ export default function App() {
         }, 1000);
       }
     },
-    [
-      currentTaskWithEasing,
-      currentTaskIndex,
-      experimentTasks,
-      taskLogger,
-      handleTaskTimeout,
-      menuCategories,
-    ]
+    [currentTaskWithEasing, menuCategories, taskLogger, lang, participantId]
   );
 
-  useEffect(() => {
-    return () => {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-        timeoutIdRef.current = null;
+  const handleSurveyComplete = useCallback(
+    (data: any) => {
+      if (tempTaskLog) {
+        const completedLog: TaskLog = { ...tempTaskLog, survey: data };
+        setAllLogs((prev) => [...prev, completedLog]);
       }
-    };
-  }, [appState]);
+      const nextIndex = currentTaskIndex + 1;
+      if (nextIndex < experimentTasks.length) {
+        setAppState("next-task-ready");
+      } else {
+        setAppState("task-end");
+      }
+    },
+    [currentTaskIndex, experimentTasks.length, tempTaskLog]
+  );
+
+  const handleNextTaskStart = useCallback(() => {
+    const nextIndex = currentTaskIndex + 1;
+    setCurrentTaskIndex(nextIndex);
+    setCurrentTaskWithEasing(experimentTasks[nextIndex]);
+
+    setAppState("task");
+    taskLogger.resetTask();
+
+    if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+    timeoutIdRef.current = window.setTimeout(
+      () => handleTaskTimeout(),
+      TIME_LIMIT_MS
+    );
+  }, [currentTaskIndex, experimentTasks, taskLogger, handleTaskTimeout]);
+
+  // ★ 事後アンケート完了＆データ保存
+  const handlePostSurveyComplete = useCallback(
+    (surveyData: PostSurveyResult) => {
+      // 最終データの構築
+      const finalData: ExperimentData = {
+        participantId,
+        timestamp: new Date().toISOString(),
+        tasks: allLogs,
+        postSurvey: surveyData,
+      };
+
+      // JSONダウンロード
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(finalData, null, 2));
+      const downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute(
+        "download",
+        `experiment_data_${participantId}.json`
+      );
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+
+      // 完了後、同意画面に戻る
+      alert(
+        lang === "ja"
+          ? "実験データが保存されました。ご協力ありがとうございました。"
+          : "Data saved. Thank you!"
+      );
+      setAppState("consent");
+
+      // 必要ならIDをリセットする処理など
+    },
+    [allLogs, participantId, lang]
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden flex flex-col">
-      <LanguageSwitcher currentLang={lang} onLangChange={handleLangChange} />
-      {appState !== "consent" &&
-        appState !== "pre-survey" &&
-        appState !== "reward" && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="pt-6 pb-4 flex-shrink-0"
-          >
-            <h1 className="text-3xl md:text-4xl font-black text-center text-gray-800">
-              {t(lang, "experimentTitle")}
-            </h1>
-          </motion.div>
-        )}
-      <div className="flex-grow">
-        <AnimatePresence mode="wait">
-          {appState === "consent" && (
-            <ConsentOverlay
-              key="consent"
-              isVisible={true}
-              lang={lang}
-              onAgree={handleConsentAgree}
-              onDisagree={handleConsentDisagree}
-            />
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {appState === "pre-survey" && (
-            <PreSurveyOverlay
-              key="pre-survey"
-              isVisible={true}
-              lang={lang}
-              onComplete={handlePreSurveyComplete}
-            />
-          )}
-        </AnimatePresence>
-        <TutorialIntroOverlay
-          isVisible={appState === "tutorial-intro"}
-          lang={lang}
-          onClose={handleTutorialIntroClose}
-        />
-        <TutorialCompleteOverlay
-          isVisible={appState === "tutorial-complete"}
-          lang={lang}
-          onClose={handleTutorialCompleteClose}
-        />
-        {appState === "task-end" && (
-          <TaskEndOverlay
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+      <ConsentOverlay
+        isVisible={appState === "consent"}
+        lang={lang}
+        onAgree={handleConsentAgree}
+        onDisagree={handleConsentDisagree}
+        onLanguageChange={setLang}
+      />
+
+      <AnimatePresence>
+        {appState === "pre-survey" && (
+          <PreSurveyOverlay
+            key="pre-survey"
             isVisible={true}
             lang={lang}
-            isLastTask={true}
-            onContinue={() => setAppState("reward")}
+            onComplete={handlePreSurveyComplete}
           />
         )}
-        {appState === "reward" && (
-          <RewardScreen
-            lang={lang}
-            allLogs={allLogs}
-            onContinue={() => setAppState("consent")}
-          />
-        )}
-        {appState === "ready" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center gap-6 mt-20"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleStartTask}
-              className="relative group overflow-hidden rounded-2xl p-[2px]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 animate-gradient-shift"></div>
-              <div className="relative bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl px-12 py-5 group-hover:bg-opacity-90 transition-all">
-                <span className="text-white font-bold text-2xl flex items-center gap-3">
-                  {t(lang, "startTask")}
-                  <motion.span
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    →
-                  </motion.span>
-                </span>
-              </div>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleStartTutorial}
-              className="relative group overflow-hidden rounded-2xl p-[2px]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
-              <div className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-2xl px-12 py-5 group-hover:bg-opacity-90 transition-all">
-                <span className="text-white font-bold text-2xl flex items-center gap-3">
-                  📚 {t(lang, "startTutorial")}
-                </span>
-              </div>
-            </motion.button>
+      </AnimatePresence>
+
+      <TutorialIntroOverlay
+        isVisible={appState === "tutorial-intro"}
+        lang={lang}
+        onClose={handleTutorialIntroClose}
+      />
+      <TutorialCompleteOverlay
+        isVisible={appState === "tutorial-complete"}
+        lang={lang}
+        onClose={handleTutorialCompleteClose}
+      />
+
+      {appState === "seq" && (
+        <TaskSurveyOverlay
+          isVisible={true}
+          lang={lang}
+          taskNumber={currentTaskIndex + 1}
+          onComplete={handleSurveyComplete}
+        />
+      )}
+      <NextTaskOverlay
+        isVisible={appState === "next-task-ready"}
+        lang={lang}
+        nextTaskNumber={currentTaskIndex + 2}
+        totalTasks={experimentTasks.length}
+        onNext={handleNextTaskStart}
+      />
+
+      {appState === "task-end" && (
+        <TaskEndOverlay
+          isVisible={true}
+          lang={lang}
+          isLastTask={true}
+          onContinue={() => setAppState("reward")}
+        />
+      )}
+
+      {appState === "reward" && (
+        <RewardScreen
+          allLogs={allLogs}
+          lang={lang}
+          participantId={participantId}
+          // ★ 修正: Consentに戻るのではなく、事後アンケート(post-survey)に進む
+          onContinue={() => setAppState("post-survey")}
+        />
+      )}
+
+      {/* ★ 事後アンケートオーバーレイ */}
+      {appState === "post-survey" && (
+        <PostSurveyOverlay
+          isVisible={true}
+          lang={lang}
+          participantId={participantId}
+          onComplete={handlePostSurveyComplete}
+        />
+      )}
+
+      {appState === "ready" && (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <motion.div className="bg-white p-12 rounded-xl shadow-2xl text-center">
+            <h1 className="text-3xl font-bold mb-4">実験開始</h1>
+            <div className="mb-8 bg-gray-100 py-2 px-4 rounded-lg inline-block">
+              <span className="text-gray-500 text-sm font-bold mr-2">ID:</span>
+              <span className="text-gray-800 font-mono font-bold text-lg tracking-widest">
+                {participantId}
+              </span>
+            </div>
+            <div className="flex gap-4 justify-center mb-4">
+              <button
+                onClick={handleStartTask}
+                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-bold shadow-lg hover:bg-blue-700 transition"
+              >
+                {lang === "en" ? "Start Task" : "タスク開始"}
+              </button>
+              <button
+                onClick={handleStartTutorial}
+                className="px-8 py-4 bg-white border border-gray-300 text-gray-700 rounded-lg font-bold shadow-sm hover:bg-gray-50 transition"
+              >
+                {lang === "en" ? "Tutorial" : "チュートリアル"}
+              </button>
+            </div>
           </motion.div>
-        )}
-        {(appState === "tutorial" ||
-          (appState === "task" &&
-            currentTaskWithEasing &&
-            menuCategories.length > 0)) && (
-          <div className="flex h-full w-full max-w-7xl mx-auto px-4 gap-6">
-            <div className="flex-1 max-w-4xl mx-auto px-4 pt-4 pb-8 overflow-auto">
-              {appState === "tutorial" && (
-                <>
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-6"
-                  >
-                    <div className="bg-white rounded-2xl px-8 py-6 shadow-xl border border-gray-200">
-                      <div className="text-2xl md:text-3xl font-black text-gray-800 text-center">
-                        「トイレットペーパー」を探してクリックしてください
-                      </div>
-                    </div>
-                  </motion.div>
-                  <AnimatePresence mode="wait">
-                    {feedback && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8, y: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.8, y: -20 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 20,
-                        }}
-                        className="mb-6"
-                      >
-                        <div
-                          className={`
-                            px-8 py-5 rounded-2xl shadow-2xl text-white
-                            ${
-                              feedbackType === "correct"
-                                ? "bg-gradient-to-r from-emerald-400 to-green-500"
-                                : ""
-                            }
-                            ${
-                              feedbackType === "incorrect"
-                                ? "bg-gradient-to-r from-red-400 to-pink-500"
-                                : ""
-                            }
-                            ${
-                              feedbackType === "timeout"
-                                ? "bg-gradient-to-r from-amber-400 to-orange-500"
-                                : ""
-                            }
-                          `}
-                        >
-                          <div className="flex items-center justify-center gap-3">
-                            <span className="text-3xl">
-                              {feedbackType === "correct"
-                                ? "✓"
-                                : feedbackType === "incorrect"
-                                ? "✗"
-                                : "⏱"}
-                            </span>
-                            <span className="font-bold text-xl">
-                              {feedback}
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              )}
-              {appState === "task" && currentTaskWithEasing && (
-                <>
-                  <div className="text-center mb-4">
-                    <span className="inline-block bg-white px-6 py-2 rounded-full shadow-md border border-gray-200">
-                      <span className="text-lg font-bold text-gray-800">
-                        タスク {currentTaskIndex + 1} / {experimentTasks.length}
-                      </span>
-                    </span>
+        </div>
+      )}
+
+      {(appState === "tutorial" ||
+        appState === "task" ||
+        appState === "seq" ||
+        appState === "next-task-ready") && (
+        <div className="min-h-screen flex flex-col">
+          <header className="bg-white border-b border-gray-200 py-3 px-8 sticky top-0 z-20 shadow-sm flex items-center justify-between">
+            <div className="font-bold text-gray-400">
+              EXPERIMENT{" "}
+              <span className="ml-2 text-xs font-mono text-gray-300">
+                {participantId}
+              </span>
+            </div>
+            <div className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+              Easing:{" "}
+              <span className="font-bold text-blue-600">{currentEasing}</span>
+            </div>
+          </header>
+          <main className="flex-1 overflow-y-auto bg-gray-50">
+            <div className="max-w-4xl mx-auto px-6 py-10">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-12 relative overflow-hidden">
+                <div className="text-center">
+                  <div className="text-xs font-bold text-gray-400 uppercase mb-2">
+                    Current Target
                   </div>
-                  <motion.div
-                    key={currentTaskIndex}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-6"
-                  >
-                    <div className="bg-white rounded-2xl px-8 py-6 shadow-xl border border-gray-200">
-                      <div className="text-2xl md:text-3xl font-black text-gray-800 text-center">
-                        {currentTaskWithEasing.task.description}
-                      </div>
-                    </div>
-                  </motion.div>
-                  <AnimatePresence mode="wait">
-                    {feedback && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8, y: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.8, y: -20 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 20,
-                        }}
-                        className="mb-6"
-                      >
-                        <div
-                          className={`
-                            px-8 py-5 rounded-2xl shadow-2xl text-white
-                            ${
-                              feedbackType === "correct"
-                                ? "bg-gradient-to-r from-emerald-400 to-green-500"
-                                : ""
-                            }
-                            ${
-                              feedbackType === "incorrect"
-                                ? "bg-gradient-to-r from-red-400 to-pink-500"
-                                : ""
-                            }
-                            ${
-                              feedbackType === "timeout"
-                                ? "bg-gradient-to-r from-amber-400 to-orange-500"
-                                : ""
-                            }
-                          `}
-                        >
-                          <div className="flex items-center justify-center gap-3">
-                            <span className="text-3xl">
-                              {feedbackType === "correct"
-                                ? "✓"
-                                : feedbackType === "incorrect"
-                                ? "✗"
-                                : "⏱"}
-                            </span>
-                            <span className="font-bold text-xl">
-                              {feedback}
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              )}
+                  <h2 className="text-3xl font-black">
+                    {appState !== "tutorial" && currentTaskWithEasing
+                      ? currentTaskWithEasing.task.description
+                      : lang === "en"
+                      ? "Find 'Tents'"
+                      : "「テント」を探してクリックしてください"}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="h-12 mb-4 flex items-center justify-center pointer-events-none z-30 relative">
+                <AnimatePresence mode="wait">
+                  {feedback && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className={`px-8 py-2 rounded-full text-white font-bold shadow-lg ${
+                        feedbackType === "correct"
+                          ? "bg-green-500"
+                          : feedbackType === "timeout"
+                          ? "bg-orange-500"
+                          : "bg-red-500"
+                      }`}
+                    >
+                      {feedback}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="relative h-[500px] z-0">
+                {appState === "tutorial" && (
+                  <TaskMenu
+                    key="tutorial-menu"
+                    categories={tutorialCategories}
+                    currentEasing={currentEasing}
+                    correctPath={["...", "...", "..."]}
+                    isTutorial={true}
+                    onItemClick={handleTutorialItemClick}
+                  />
+                )}
+                {appState !== "tutorial" &&
+                  currentTaskWithEasing &&
+                  menuCategories.length > 0 && (
+                    <TaskMenu
+                      key={currentTaskWithEasing.trial}
+                      categories={menuCategories}
+                      currentEasing={currentEasing}
+                      correctPath={currentTaskWithEasing.task.targetPath}
+                      isTutorial={false}
+                      onItemClick={
+                        appState === "task" ? handleTaskItemClick : () => {}
+                      }
+                    />
+                  )}
+              </div>
             </div>
-            {/* 右側サイドバー（TaskMenu呼び出し） */}
-            <div className="w-96 flex-shrink-0 bg-gray-50/50 backdrop-blur-sm border-l border-gray-200 p-4 pt-6 overflow-y-auto">
-              <TaskMenu
-                categories={
-                  appState === "tutorial" ? TUTORIAL_CATEGORIES : menuCategories
-                }
-                currentEasing={currentEasing}
-                setCurrentEasing={setCurrentEasing}
-                correctPath={
-                  appState === "tutorial"
-                    ? ["日用品", "トイレットペーパー"]
-                    : currentTaskWithEasing?.task.targetPath ?? []
-                }
-                isTutorial={appState === "tutorial"}
-                onItemClick={
-                  appState === "tutorial"
-                    ? handleTutorialItemClick
-                    : handleTaskItemClick
-                }
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          </main>
+        </div>
+      )}
     </div>
   );
 }

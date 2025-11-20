@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import type { Lang, EasingFunction } from "../types/experiment";
+import type { Lang, EasingFunction } from "../experiment";
 
 // 🔧 型名を変更して衝突を回避
 export interface EasingEvaluationData {

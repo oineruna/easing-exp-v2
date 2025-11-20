@@ -1,16 +1,25 @@
+// --- START OF FILE src/components/RewardScreen.tsx ---
+
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { TaskLog, EasingFunction } from "../types/experiment";
+import type { TaskLog, EasingFunction } from "../experiment"; // パスは環境に合わせて調整してください
 import { t } from "../utils/i18n";
 import type { Lang } from "../utils/i18n";
 
 interface RewardScreenProps {
   allLogs: TaskLog[];
   lang: Lang;
+  participantId: string;
   onContinue: () => void;
 }
 
-export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
+export function RewardScreen({
+  allLogs,
+  lang,
+  participantId,
+  onContinue,
+}: RewardScreenProps) {
+  // 統計データの計算ロジック
   const stats = useMemo(() => {
     const totalTasks = allLogs.length;
 
@@ -23,7 +32,7 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
       ? ((correctTasks / totalTasks) * 100).toFixed(1) + "%"
       : "0%";
 
-    // 合計時間（undefinedチェック）
+    // 合計時間
     const totalTime = allLogs.reduce((sum, log) => {
       const time = log.totalTime
         ? parseFloat(log.totalTime)
@@ -67,11 +76,15 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
       easingStats[easing].totalTime += time;
     });
 
-    // MVP イージング関数
+    // MVP イージング関数 (正解率 > 時間 で決定)
     let bestEasing: EasingFunction | null = null;
     let bestScore = -1;
     Object.entries(easingStats).forEach(([easing, stat]) => {
-      const score = stat.total > 0 ? (stat.correct / stat.total) * 100 : 0;
+      // スコア計算: 正解率(0-100) - 平均時間(秒) * 2 (時間をペナルティとする簡易スコア)
+      const rate = stat.total > 0 ? (stat.correct / stat.total) * 100 : 0;
+      const avgT = stat.total > 0 ? stat.totalTime / stat.total : 999;
+      const score = rate - avgT * 2;
+
       if (score > bestScore) {
         bestScore = score;
         bestEasing = easing as EasingFunction;
@@ -82,22 +95,17 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
     const validLogs = allLogs.filter(
       (log) => !log.timedOut && (log.errorCount ?? log.errorClicks ?? 0) === 0
     );
-
     let fastestTime = Infinity;
-    const allTimes: number[] = [];
-
     validLogs.forEach((log) => {
       const time = log.totalTime
         ? parseFloat(log.totalTime)
         : log.totalDuration
         ? log.totalDuration / 1000
         : 0;
-      allTimes.push(time);
       if (time < fastestTime) {
         fastestTime = time;
       }
     });
-
     const fastestTaskTime =
       fastestTime !== Infinity ? fastestTime.toFixed(2) + "s" : "-";
 
@@ -113,20 +121,6 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
       0
     );
 
-    // 平均初回クリック時間
-    const validFirstClicks = allLogs
-      .map((log) => log.firstClickTime)
-      .filter(
-        (val): val is number =>
-          typeof val === "number" && !isNaN(val) && val < 100
-      );
-    const avgFirstClick = validFirstClicks.length
-      ? (
-          validFirstClicks.reduce((sum, val) => sum + val, 0) /
-          validFirstClicks.length
-        ).toFixed(2) + "s"
-      : "-";
-
     return {
       accuracy,
       averageTime,
@@ -135,7 +129,6 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
       fastestTaskTime,
       totalClicks,
       totalDistance,
-      avgFirstClick,
       correctTasks,
       totalTasks,
     };
@@ -169,6 +162,11 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           <h2 className="text-5xl font-black text-white drop-shadow-2xl mb-4">
             {t(lang, "taskCompleted")}
           </h2>
+
+          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-4">
+            ID: {participantId}
+          </div>
+
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
@@ -182,13 +180,12 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl"
+          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl bg-white/60 backdrop-blur-md"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
-              style={{ background: "var(--gradient-success)" }}
-              className="rounded-2xl p-6 text-white shadow-xl"
+              className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl"
             >
               <div className="text-sm font-semibold opacity-90 mb-2">
                 {t(lang, "totalAccuracy")}
@@ -234,7 +231,7 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl text-center"
+          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl text-center bg-white/60 backdrop-blur-md"
         >
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
@@ -246,9 +243,14 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           <h3 className="text-3xl font-black mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
             {t(lang, "mvpEasing")}
           </h3>
-          <div className="text-5xl font-black text-white drop-shadow-lg">
+          <div className="text-5xl font-black text-gray-800 drop-shadow-sm">
             {stats.bestEasing || "-"}
           </div>
+          <p className="text-gray-500 mt-2 text-sm">
+            {lang === "ja"
+              ? "最もパフォーマンスが良かった動き"
+              : "Best performing animation"}
+          </p>
         </motion.div>
 
         {/* Easing Stats Table */}
@@ -256,9 +258,9 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl overflow-hidden"
+          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl overflow-hidden bg-white/80 backdrop-blur-md"
         >
-          <h3 className="text-2xl font-black mb-6 text-center gradient-text">
+          <h3 className="text-2xl font-black mb-6 text-center text-gray-800">
             📊{" "}
             {lang === "ja"
               ? "イージング関数別パフォーマンス"
@@ -267,7 +269,7 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b-2 border-purple-300">
+                <tr className="border-b-2 border-purple-200">
                   <th className="px-6 py-4 text-left font-bold text-gray-700">
                     {lang === "ja" ? "イージング" : "Easing"}
                   </th>
@@ -299,10 +301,10 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: 1 + index * 0.1 }}
                         whileHover={{
-                          scale: 1.02,
-                          backgroundColor: "rgba(147, 51, 234, 0.1)",
+                          scale: 1.01,
+                          backgroundColor: "rgba(147, 51, 234, 0.05)",
                         }}
-                        className={`border-b border-purple-100 transition-all ${
+                        className={`border-b border-purple-50 transition-all ${
                           isBest
                             ? "bg-gradient-to-r from-yellow-50 to-orange-50"
                             : ""
@@ -339,83 +341,23 @@ export function RewardScreen({ allLogs, lang, onContinue }: RewardScreenProps) {
           </div>
         </motion.div>
 
-        {/* Additional Stats */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl"
-        >
-          <h3 className="text-2xl font-black mb-6 text-center gradient-text">
-            📈 {lang === "ja" ? "詳細統計" : "Detailed Statistics"}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white/60 rounded-2xl p-4 flex justify-between items-center">
-              <span className="font-semibold text-gray-700">
-                {t(lang, "fastestTask")}
-              </span>
-              <span className="text-2xl font-black text-purple-600">
-                {stats.fastestTaskTime}
-              </span>
-            </div>
-            <div className="bg-white/60 rounded-2xl p-4 flex justify-between items-center">
-              <span className="font-semibold text-gray-700">
-                {t(lang, "avgFirstClick")}
-              </span>
-              <span className="text-2xl font-black text-blue-600">
-                {stats.avgFirstClick}
-              </span>
-            </div>
-            <div className="bg-white/60 rounded-2xl p-4 flex justify-between items-center">
-              <span className="font-semibold text-gray-700">
-                {t(lang, "totalClicks")}
-              </span>
-              <span className="text-2xl font-black text-green-600">
-                {stats.totalClicks}
-              </span>
-            </div>
-            <div className="bg-white/60 rounded-2xl p-4 flex justify-between items-center">
-              <span className="font-semibold text-gray-700">
-                {t(lang, "totalDistance")}
-              </span>
-              <span className="text-2xl font-black text-orange-600">
-                {stats.totalDistance}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Continue Button */}
+        {/* Action Buttons */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.4 }}
-          className="text-center"
+          className="flex justify-center mt-12"
         >
+          {/* Continue Button */}
           <motion.button
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 25px 50px rgba(147, 51, 234, 0.5)",
-            }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onContinue}
-            className="px-16 py-6 btn-primary text-white rounded-full font-black text-2xl shadow-2xl relative overflow-hidden group"
+            className="px-16 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center gap-4"
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600"
-              animate={{ x: ["-100%", "100%"] }}
-              transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-              style={{ opacity: 0.3 }}
-            />
-            <span className="relative z-10 flex items-center gap-3">
-              {t(lang, "toSurvey")}
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ repeat: Infinity, duration: 1 }}
-              >
-                →
-              </motion.span>
-            </span>
+            <span>📋</span>
+            {lang === "ja" ? "アンケートへ進む" : "Proceed to Survey"}
+            <span>➜</span>
           </motion.button>
         </motion.div>
 

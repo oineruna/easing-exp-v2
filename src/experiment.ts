@@ -50,6 +50,16 @@ export interface ClickRecord {
 export type ClickLog = ClickRecord;
 
 /**
+ * 事前アンケート結果の型
+ */
+export interface PreSurveyData {
+  preferences: Record<EasingFunction, number>; // 1-5の評価
+  ranking: EasingFunction[]; // 好みの順位
+  preferenceType: 'smooth' | 'snappy' | 'other'; // 自動分類
+  comments: string;
+}
+
+/**
  * タスク終了後のアンケート結果
  */
 export interface TaskSurveyResult {
@@ -88,7 +98,6 @@ export interface TaskLog {
 
 /**
  * 事後アンケート結果の型
- * ★ inputDevice を削除し、worstFeature を追加
  */
 export interface PostSurveyResult {
   participantId: string;
@@ -96,8 +105,7 @@ export interface PostSurveyResult {
   usabilityImpact: string[];
   usabilityImpactOther: string;
   bestFeature: string;
-  worstFeature: string; // ★ 追加
-  // inputDevice: string;    // 🗑️ 削除
+  worstFeature: string;
   improvements: string;
 }
 
@@ -107,6 +115,7 @@ export interface PostSurveyResult {
 export interface ExperimentData {
   participantId: string;
   timestamp: string;
+  preSurvey: PreSurveyData; // 🆕 事前アンケートデータ
   tasks: TaskLog[];
   postSurvey: PostSurveyResult;
 }

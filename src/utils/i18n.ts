@@ -1,121 +1,249 @@
-const SUPPORTED = ['ja', 'en'] as const;
-export type Lang = typeof SUPPORTED[number];
+// --- START OF FILE src/utils/i18n.ts ---
+
+const SUPPORTED = ["ja", "en"] as const;
+export type Lang = (typeof SUPPORTED)[number];
 
 export function detectLang(): Lang {
   const params = new URLSearchParams(window.location.search);
-  const lang = params.get('lang');
-  
-  if (lang === 'ja' || lang === 'en') {
+  const lang = params.get("lang");
+
+  if (lang === "ja" || lang === "en") {
     document.documentElement.lang = lang;
     return lang;
   }
-  
-  const browserLang = navigator.language.startsWith('ja') ? 'ja' : 'en';
+
+  const browserLang = navigator.language.startsWith("ja") ? "ja" : "en";
   document.documentElement.lang = browserLang;
   return browserLang;
 }
 
 export const TEXT = {
   ja: {
+    // --- 共通・実験全体 ---
     experimentTitle: "イージング関数における効果測定実験",
     consentTitle: "実験へのご協力に関する同意",
-    consentText: "本実験では操作ログ等を記録します。データは匿名化され、研究以外に利用しません。<br />同意いただけたら「同意する」をクリックし、F11キーで全画面表示してください。",
+    consentText:
+      "本実験では操作ログ等を記録します。データは匿名化され、研究以外に利用しません。<br />同意いただけたら「同意する」をクリックし、F11キーで全画面表示してください。",
     agree: "同意する",
     disagree: "同意しない",
-    startTask: "タスク開始",
+    disagreeAlert: "同意いただけない場合は実験に参加できません。", // ★ 追加
+
+    // --- チュートリアル ---
     startTutorial: "チュートリアル開始",
-    tutorialInfo: (item: string) => `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,
+    tutorialIntroText:
+      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />下のボタンで開始してください。<br /><br />制限時間は1タスク当たり15秒です。",
+    tutorialIntroClose: "閉じる",
+    tutorialInfo: (item: string) =>
+      `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,
     tutorialWrong: "チュートリアル：違う項目です。",
     tutorialTimeout: "（チュートリアル：時間切れです もう一度トライ可能）",
     tutorialCorrect: "チュートリアル：正解です！",
-    taskInfo: (idx: number, max: number, item: string) => `タスク ${idx}/${max}： 「${item}」をメニューから見つけて、クリックしてください。`,
+    tutorialCompleted: "チュートリアル完了",
+    tutorialCompletedText:
+      "チュートリアルは以上です。<br />タスク開始ボタンを押す前にメニューの内容を確認しておいてください。",
+    closeTutorial: "閉じる",
+
+    // --- 本番タスク ---
+    startTask: "タスク開始",
+    taskInfo: (idx: number, max: number, item: string) =>
+      `タスク ${idx}/${max}： 「${item}」をメニューから見つけて、クリックしてください。`,
     wrong: "間違いです。もう一度試してください。",
     correct: "正解です！",
     timeout: "時間切れです。",
-    continue: "次のタスクへ",
-    toResult: "結果へ進む",
-    surveyAlert: "タスクアンケートの全ての項目に回答してください。",
-    disagreeAlert: "同意いただけない場合は実験に参加できません。",
-    startTaskConfirm: "タスクを開始しますか？ 制限時間は1タスク当たり15秒です",
-    nextConfirm: "次のタスクに進みますか？",
-    toResultConfirm: "結果に進みますか？",
-    tutorialStartConfirm: "チュートリアルを開始しますか？",
-    tutorialCompleted: "チュートリアル完了",
-    tutorialCompletedText: "チュートリアルは以上です。<br />タスク開始ボタンを押す前にメニューの内容を確認しておいてください。",
-    closeTutorial: "閉じる",
-    tutorialIntroText: "メニューを開くたびにマウスでクリックして選択してください。<br /><br />下のボタンで開始してください。<br /><br />制限時間は1タスク当たり15秒です。",
-    tutorialIntroClose: "閉じる",
-    surveyTitle: "タスクについてのアンケート",
-    surveyQ1: "Q1. メニューの開閉アニメーションは滑らかに感じましたか？",
-    surveyQ2: "Q2. メニューの動きは自然に感じましたか？",
-    surveyQ3: "Q3. アニメーションの違いが操作のしやすさに影響しましたか？",
-    surveyScale1: "1(全くそう思わない) ～ 5(とてもそう思う)",
-    surveyScale2: "1(全くそう思わない) ～ 5(とてもそう思う)",
-    surveyScale3: "1(全く感じなかった) ～ 5(とても感じた)",
-    surveyComments: "コメントがあればご記入ください：",
+
+    // --- タスク間遷移 (NextTaskOverlay) ---
+    nextTaskTitle: "次のタスクへ進みます",
+    nextTaskButton: "次へ",
+    nextTaskProgress: (current: number, total: number) =>
+      `タスク ${current} / ${total}`,
+
+    // --- タスク毎アンケート (TaskSurveyOverlay) ---
+    taskSurveyTitle: (num: number) => `タスク ${num} の評価`,
+    taskSurveyQ1: "アニメーションの動きやすさ",
+    taskSurveyScale1: "1: 非常に使いにくい - 5: 非常に使いやすい",
+    taskSurveyQ2: "タスクの難易度",
+    taskSurveyScale2: "1: 非常に難しい - 5: 非常に簡単",
+    taskSurveyQ3: "アニメーションの違和感",
+    taskSurveyScale3: "1: 違和感がある - 5: 自然である",
+    taskSurveyComment: "気になった点があれば教えてください（任意）",
+    taskSurveyPlaceholder: "自由記入欄...",
+    taskSurveySubmit: "次へ進む",
+    surveyAlert: "すべての必須項目に回答してください。",
+
+    // --- 全タスク終了画面 (TaskEndOverlay) ---
+    taskEndTitle: "全タスク終了", // ★ 追加
+    taskEndMessage: "すべてのタスクが終了しました。<br />お疲れ様でした。", // ★ 追加
+    toResult: "結果へ進む", // ★ 追加
+
+    // --- 結果画面 (RewardScreen) ---
     taskCompleted: "タスクが完了しました！",
-    mvpEasing: "🏅 MVPイージング関数: ",
     totalAccuracy: "全体正解率",
     avgTime: "平均時間",
-    fastestTask: "最速タスク",
     totalClicks: "総クリック数",
-    totalDistance: "メニュー移動距離",
-    avgFirstClick: "初回クリック平均",
-    toSurvey: "アンケートへ進む",
+    mvpEasing: "🏅 MVPイージング関数",
+    mvpEasingDesc: "最もパフォーマンスが良かった動き",
+    easingPerfTitle: "イージング関数別パフォーマンス",
+    headerEasing: "イージング",
+    headerAccuracy: "正解率",
+    headerAvgTime: "平均時間",
+    toPostSurvey: "アンケートへ進む",
+    backToTop: "トップへ戻る",
+    downloadData: "データを保存",
+
+    // --- 事後アンケート (PostSurveyOverlay) ---
+    postSurveyTitle: "事後アンケート",
+    postSurveyQ1: "1. 被験者ID",
+    postSurveyQ1Note: "※自動入力されています",
+    postSurveyQ2:
+      "2. 実験全体を通して、メニューアニメーションに違いがあることに気づきましたか？",
+    postSurveyQ2Options: ["はい", "いいえ", "よくわからなかった"],
+    postSurveyQ3:
+      "3. アニメーションがタスクのやりやすさに与えた影響について、当てはまるものをすべて選んでください。",
+    postSurveyQ3Options: [
+      "操作のスピードが上がった（速く終わるようになった）",
+      "操作のスピードが下がった（遅くなった）",
+      "どこを操作すればいいか分かりやすくなった",
+      "どこを操作すればいいか分かりにくくなった",
+      "ストレスが減った",
+      "ストレスが増えた",
+      "特に変化は感じなかった",
+      "その他",
+    ],
+    postSurveyQ4:
+      "4. 最も「使いやすい」と感じたアニメーションの特徴は何ですか？",
+    postSurveyQ5:
+      "5. 最も「使いにくい・操作しづらい」と感じたアニメーションの特徴は何ですか？",
+    postSurveyFeatureOptions: [
+      "ゆっくり滑らかに動く",
+      "素早く動く",
+      "弾むような動き",
+      "一定速度で動く",
+    ],
+    postSurveyQ6:
+      "6. アニメーションや操作性について、改善してほしい点や気になったことがあれば教えてください",
+    postSurveySubmit: "回答を送信してデータを保存",
+    postSurveyNote: "※このボタンを押すと実験データがダウンロードされます",
+    postSurveyAlert: "すべての必須項目に回答してください。",
+    dataSavedMsg: "実験データが保存されました。ご協力ありがとうございました。",
+    dataSaveFailedMsg:
+      "データの自動送信に失敗しました。手動でファイルをダウンロードしますか？\n(ダウンロードしたファイルを実験担当者に送付してください)",
   },
   en: {
+    // --- Common ---
     experimentTitle: "Easing Function Effectiveness Experiment",
-    consentTitle: "Consent for Participation in Experiment",
-    consentText: "This experiment records operation logs. Data will be anonymized and used only for research purposes.<br />If you agree, click 'Agree' and press F11 for full screen.",
+    consentTitle: "Consent for Participation",
+    consentText:
+      "This experiment records operation logs. Data will be anonymized and used only for research.<br />If you agree, click 'Agree' and press F11 for full screen.",
     agree: "Agree",
     disagree: "Disagree",
-    startTask: "Start Task",
+    disagreeAlert:
+      "You cannot participate in the experiment if you do not agree.",
+
+    // --- Tutorial ---
     startTutorial: "Start Tutorial",
-    tutorialInfo: (item: string) => `[Tutorial] Please find "${item}" from the menu and click it.`,
+    tutorialIntroText:
+      "Click to select items from the menu.<br /><br />Start with the button below.<br /><br />Time limit: 15s per task.",
+    tutorialIntroClose: "Close",
+    tutorialInfo: (item: string) => `[Tutorial] Find "${item}" and click it.`,
     tutorialWrong: "Tutorial: Incorrect item.",
-    tutorialTimeout: "(Tutorial: Time out. Please try again.)",
+    tutorialTimeout: "(Tutorial: Time out. Try again.)",
     tutorialCorrect: "Tutorial: Correct!",
-    taskInfo: (idx: number, max: number, item: string) => `Task ${idx}/${max}: Find "${item}" from the menu and click it.`,
-    wrong: "Incorrect. Please try again.",
+    tutorialCompleted: "Tutorial Completed",
+    tutorialCompletedText:
+      "Tutorial complete.<br />Please check the menu structure before starting.",
+    closeTutorial: "Close",
+
+    // --- Task ---
+    startTask: "Start Task",
+    taskInfo: (idx: number, max: number, item: string) =>
+      `Task ${idx}/${max}: Find "${item}" and click it.`,
+    wrong: "Incorrect. Try again.",
     correct: "Correct!",
     timeout: "Time out.",
-    continue: "Next Task",
+
+    // --- Next Task ---
+    nextTaskTitle: "Proceed to Next Task",
+    nextTaskButton: "Next",
+    nextTaskProgress: (current: number, total: number) =>
+      `Task ${current} / ${total}`,
+
+    // --- Task Survey ---
+    taskSurveyTitle: (num: number) => `Task ${num} Evaluation`,
+    taskSurveyQ1: "Animation Ease of Use",
+    taskSurveyScale1: "1: Very Difficult - 5: Very Easy",
+    taskSurveyQ2: "Task Difficulty",
+    taskSurveyScale2: "1: Very Hard - 5: Very Easy",
+    taskSurveyQ3: "Animation Naturalness",
+    taskSurveyScale3: "1: Unnatural - 5: Natural",
+    taskSurveyComment: "Any comments? (Optional)",
+    taskSurveyPlaceholder: "Optional...",
+    taskSurveySubmit: "Next Task",
+    surveyAlert: "Please answer all required items.",
+
+    // --- Task End ---
+    taskEndTitle: "All Tasks Completed",
+    taskEndMessage:
+      "All tasks have been completed.<br />Thank you for your hard work.",
     toResult: "Go to Results",
-    surveyAlert: "Please answer all items in the task survey.",
-    disagreeAlert: "You cannot participate in the experiment if you do not agree.",
-    startTaskConfirm: "Start the task? The time limit is 15 seconds per task.",
-    nextConfirm: "Proceed to the next task?",
-    toResultConfirm: "Go to results?",
-    tutorialStartConfirm: "Start the tutorial?",
-    tutorialCompleted: "Tutorial Completed",
-    tutorialCompletedText: "The tutorial is complete.<br />Please check the menu contents before pressing the task start button.",
-    closeTutorial: "Close",
-    tutorialIntroText: "Click with the mouse to select each time you open a menu.<br /><br />Start with the button below.<br /><br />The time limit is 15 seconds per task.",
-    tutorialIntroClose: "Close",
-    surveyTitle: "Task Survey",
-    surveyQ1: "Q1. Did the menu open/close animation feel smooth?",
-    surveyQ2: "Q2. Did the menu movement feel natural?",
-    surveyQ3: "Q3. Did the animation differences affect ease of operation?",
-    surveyScale1: "1(Strongly disagree) ～ 5(Strongly agree)",
-    surveyScale2: "1(Strongly disagree) ～ 5(Strongly agree)",
-    surveyScale3: "1(Not at all) ～ 5(Very much)",
-    surveyComments: "Please enter any comments:",
+
+    // --- Result ---
     taskCompleted: "Task Completed!",
-    mvpEasing: "🏅 MVP Easing: ",
     totalAccuracy: "Total Accuracy",
     avgTime: "Avg. Time",
-    fastestTask: "Fastest Task",
     totalClicks: "Total Clicks",
-    totalDistance: "Menu Travel",
-    avgFirstClick: "Avg. First Click",
-    toSurvey: "Go to Survey",
-  }
+    mvpEasing: "🏅 MVP Easing",
+    mvpEasingDesc: "Best performing animation",
+    easingPerfTitle: "Performance by Easing Function",
+    headerEasing: "Easing",
+    headerAccuracy: "Accuracy",
+    headerAvgTime: "Avg. Time",
+    toPostSurvey: "Proceed to Survey",
+    backToTop: "Back to Top",
+    downloadData: "Download Data",
+
+    // --- Post Survey ---
+    postSurveyTitle: "Post-Experiment Survey",
+    postSurveyQ1: "1. Participant ID",
+    postSurveyQ1Note: "* Automatically filled",
+    postSurveyQ2:
+      "2. Did you notice differences in menu animations throughout the experiment?",
+    postSurveyQ2Options: ["Yes", "No", "Not sure"],
+    postSurveyQ3:
+      "3. How did the animations affect your task performance? (Select all that apply)",
+    postSurveyQ3Options: [
+      "Increased speed (Finished faster)",
+      "Decreased speed (Slower)",
+      "Made it easier to know where to click",
+      "Made it harder to know where to click",
+      "Reduced stress",
+      "Increased stress",
+      "Felt no particular change",
+      "Other",
+    ],
+    postSurveyQ4: "4. Which animation feature was the EASIEST to use?",
+    postSurveyQ5: "5. Which animation feature was the HARDEST to use?",
+    postSurveyFeatureOptions: [
+      "Slow and smooth movement",
+      "Quick movement",
+      "Bouncy movement",
+      "Constant speed movement",
+    ],
+    postSurveyQ6: "6. Any feedback on animation or usability?",
+    postSurveySubmit: "Submit & Save Data",
+    postSurveyNote: "* Data will be downloaded upon clicking",
+    postSurveyAlert: "Please answer all required questions.",
+    dataSavedMsg: "Data saved successfully. Thank you!",
+    dataSaveFailedMsg:
+      "Automatic upload failed. Do you want to download the file manually?",
+  },
 } as const;
 
-type TextKey = keyof typeof TEXT['ja'];
-type TextValue = typeof TEXT['ja'][TextKey];
+type TextKey = keyof (typeof TEXT)["ja"];
 
-export function t(lang: Lang, key: TextKey, ...args: any[]): string {
-  const val = TEXT[lang][key] as TextValue;
-  return typeof val === 'function' ? (val as (...args: any[]) => string)(...args) : val;
+export function t(lang: Lang, key: TextKey, ...args: any[]): any {
+  const val = TEXT[lang][key];
+  if (typeof val === "function") {
+    return (val as (...args: any[]) => string)(...args);
+  }
+  return val;
 }

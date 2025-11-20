@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { t } from "../utils/i18n";
 import type { Lang, PostSurveyResult } from "../experiment";
 
 interface PostSurveyOverlayProps {
@@ -24,23 +25,14 @@ export function PostSurveyOverlay({
   const [worstFeature, setWorstFeature] = useState<string>("");
   const [improvements, setImprovements] = useState<string>("");
 
-  const impactOptions = [
-    "操作のスピードが上がった（速く終わるようになった）",
-    "操作のスピードが下がった（遅くなった）",
-    "どこを操作すればいいか分かりやすくなった",
-    "どこを操作すればいいか分かりにくくなった",
-    "ストレスが減った",
-    "ストレスが増えた",
-    "特に変化は感じなかった",
-    "その他",
-  ];
+  // i18nから選択肢配列を取得
+  const q2Options: string[] = t(lang, "postSurveyQ2Options");
+  const impactOptions: string[] = t(lang, "postSurveyQ3Options");
+  const featureOptions: string[] = t(lang, "postSurveyFeatureOptions");
 
-  const featureOptions = [
-    "ゆっくり滑らかに動く",
-    "素早く動く",
-    "弾むような動き",
-    "一定速度で動く",
-  ];
+  // "その他" / "Other" の判定用 (配列の最後の要素と仮定するか、文字列で判定)
+  // ここでは文字列一致で判定します（i18nファイルの内容と合わせる必要があります）
+  const otherOptionLabel = lang === "en" ? "Other" : "その他";
 
   const handleImpactChange = (option: string) => {
     if (usabilityImpact.includes(option)) {
@@ -56,9 +48,9 @@ export function PostSurveyOverlay({
       !noticeDifference ||
       usabilityImpact.length === 0 ||
       !bestFeature ||
-      !worstFeature // ★ 修正: 末尾の || を削除
+      !worstFeature
     ) {
-      alert("すべての必須項目に回答してください。");
+      alert(t(lang, "postSurveyAlert"));
       return;
     }
 
@@ -68,7 +60,7 @@ export function PostSurveyOverlay({
       usabilityImpact,
       usabilityImpactOther,
       bestFeature,
-      worstFeature, // ★ 追加: これがないとデータに含まれません
+      worstFeature,
       improvements,
     };
 
@@ -90,14 +82,14 @@ export function PostSurveyOverlay({
             className="bg-white rounded-3xl p-8 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             <h2 className="text-3xl font-black mb-8 text-center text-gray-800 border-b pb-4 sticky top-0 bg-white z-10">
-              📋 事後アンケート
+              📋 {t(lang, "postSurveyTitle")}
             </h2>
 
             <div className="space-y-8 text-left pb-4">
               {/* Q1: ID */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-2">
-                  1. 被験者ID
+                  {t(lang, "postSurveyQ1")}
                 </label>
                 <input
                   type="text"
@@ -105,17 +97,19 @@ export function PostSurveyOverlay({
                   readOnly
                   className="w-full p-3 bg-gray-200 border border-gray-300 rounded-lg text-gray-600 font-mono cursor-not-allowed"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  {t(lang, "postSurveyQ1Note")}
+                </p>
               </div>
 
               {/* Q2: 違いに気づいたか */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
-                  2.
-                  実験全体を通して、メニューアニメーションに違いがあることに気づきましたか？{" "}
+                  {t(lang, "postSurveyQ2")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="space-y-2">
-                  {["はい", "いいえ", "よくわからなかった"].map((opt) => (
+                  {q2Options.map((opt) => (
                     <label
                       key={opt}
                       className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition"
@@ -137,8 +131,7 @@ export function PostSurveyOverlay({
               {/* Q3: 影響 */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
-                  3.
-                  アニメーションがタスクのやりやすさに与えた影響について、当てはまるものをすべて選んでください。{" "}
+                  {t(lang, "postSurveyQ3")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="space-y-2">
@@ -154,14 +147,18 @@ export function PostSurveyOverlay({
                         />
                         <span>{opt}</span>
                       </label>
-                      {opt === "その他" &&
-                        usabilityImpact.includes("その他") && (
+                      {opt === otherOptionLabel &&
+                        usabilityImpact.includes(otherOptionLabel) && (
                           <textarea
                             value={usabilityImpactOther}
                             onChange={(e) =>
                               setUsabilityImpactOther(e.target.value)
                             }
-                            placeholder="具体的に教えてください..."
+                            placeholder={
+                              lang === "ja"
+                                ? "具体的に教えてください..."
+                                : "Please specify..."
+                            }
                             className="w-full mt-2 p-3 border border-gray-300 rounded-lg text-sm"
                             rows={2}
                           />
@@ -174,7 +171,7 @@ export function PostSurveyOverlay({
               {/* Q4: 最も使いやすかった特徴 */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
-                  4. 最も「使いやすい」と感じたアニメーションの特徴は何ですか？{" "}
+                  {t(lang, "postSurveyQ4")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="space-y-2">
@@ -200,8 +197,7 @@ export function PostSurveyOverlay({
               {/* Q5: 最も使いにくかった特徴 */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
-                  5.
-                  最も「使いにくい・操作しづらい」と感じたアニメーションの特徴は何ですか？{" "}
+                  {t(lang, "postSurveyQ5")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="space-y-2">
@@ -227,13 +223,16 @@ export function PostSurveyOverlay({
               {/* Q6: 改善点 */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-2">
-                  6.
-                  アニメーションや操作性について、改善してほしい点や気になったことがあれば教えてください
+                  {t(lang, "postSurveyQ6")}
                 </label>
                 <textarea
                   value={improvements}
                   onChange={(e) => setImprovements(e.target.value)}
-                  placeholder="自由にご記入ください..."
+                  placeholder={
+                    lang === "ja"
+                      ? "自由にご記入ください..."
+                      : "Feel free to write..."
+                  }
                   className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                   rows={4}
                 />
@@ -248,8 +247,11 @@ export function PostSurveyOverlay({
                 onClick={handleSubmit}
                 className="px-16 py-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-xl hover:shadow-2xl transition-all"
               >
-                回答を送信してデータを保存 📥
+                {t(lang, "postSurveySubmit")} 📥
               </motion.button>
+              <p className="mt-4 text-sm text-gray-500">
+                {t(lang, "postSurveyNote")}
+              </p>
             </div>
           </motion.div>
         </motion.div>

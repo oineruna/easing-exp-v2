@@ -1,6 +1,8 @@
+// --- START OF FILE src/components/NextTaskOverlay.tsx ---
+
 import { motion, AnimatePresence } from "framer-motion";
 import { t } from "../utils/i18n";
-import type { Lang } from "../utils/i18n";
+import type { Lang } from "../experiment";
 
 interface NextTaskOverlayProps {
   isVisible: boolean;
@@ -17,21 +19,6 @@ export function NextTaskOverlay({
   totalTasks,
   onNext,
 }: NextTaskOverlayProps) {
-  const labels = {
-    ja: {
-      title: "次のタスクへ進みます",
-      button: "次へ",
-      progress: `タスク ${nextTaskNumber} / ${totalTasks}`,
-    },
-    en: {
-      title: "Proceed to Next Task",
-      button: "Next",
-      progress: `Task ${nextTaskNumber} / ${totalTasks}`,
-    },
-  };
-
-  const text = labels[lang];
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -48,11 +35,11 @@ export function NextTaskOverlay({
             className="bg-white rounded-2xl p-10 shadow-2xl border border-gray-100 text-center max-w-md w-full"
           >
             <div className="text-sm font-bold text-blue-600 bg-blue-50 py-1 px-3 rounded-full inline-block mb-4">
-              {text.progress}
+              {t(lang, "nextTaskProgress", nextTaskNumber, totalTasks)}
             </div>
 
             <h2 className="text-2xl font-bold text-gray-800 mb-8">
-              {text.title}
+              {t(lang, "nextTaskTitle")}
             </h2>
 
             <motion.button
@@ -62,7 +49,7 @@ export function NextTaskOverlay({
               autoFocus
               className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xl shadow-lg transition-all"
             >
-              {text.button} →
+              {t(lang, "nextTaskButton")} →
             </motion.button>
           </motion.div>
         </motion.div>

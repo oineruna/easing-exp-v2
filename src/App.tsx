@@ -7,7 +7,7 @@ import { ConsentOverlay } from "./components/ConsentOverlay";
 import { TutorialIntroOverlay } from "./components/TutorialIntroOverlay";
 import { TutorialCompleteOverlay } from "./components/TutorialCompleteOverlay";
 import { TaskMenu } from "./components/TaskMenu";
-import { TaskEndOverlay } from "./components/TaskEndOverlay";
+
 import { RewardScreen } from "./components/RewardScreen";
 import { PreSurveyOverlay } from "./components/PreSurveyOverlay";
 import { NextTaskOverlay } from "./components/NextTaskOverlay";

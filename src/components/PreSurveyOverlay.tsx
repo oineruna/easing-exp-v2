@@ -16,37 +16,37 @@ const EASING_DEMOS: Array<{
   descKey: string;
   bezier: [number, number, number, number];
 }> = [
-    {
-      name: "linear",
-      labelKey: "easingLinearLabel",
-      descKey: "easingLinearDesc",
-      bezier: [0.25, 0.25, 0.75, 0.75],
-    },
-    {
-      name: "easeInOutQuad",
-      labelKey: "easingQuadLabel",
-      descKey: "easingQuadDesc",
-      bezier: [0.455, 0.03, 0.515, 0.955],
-    },
-    {
-      name: "easeInOutQuint",
-      labelKey: "easingQuintLabel",
-      descKey: "easingQuintDesc",
-      bezier: [0.86, 0, 0.07, 1],
-    },
-    {
-      name: "easeInOutExpo",
-      labelKey: "easingExpoLabel",
-      descKey: "easingExpoDesc",
-      bezier: [1, 0, 0, 1],
-    },
-    {
-      name: "easeInOutBack",
-      labelKey: "easingBackLabel",
-      descKey: "easingBackDesc",
-      bezier: [0.68, -0.55, 0.265, 1.55],
-    },
-  ];
+  {
+    name: "linear",
+    labelKey: "easingLinearLabel",
+    descKey: "easingLinearDesc",
+    bezier: [0.25, 0.25, 0.75, 0.75],
+  },
+  {
+    name: "easeInOutQuad",
+    labelKey: "easingQuadLabel",
+    descKey: "easingQuadDesc",
+    bezier: [0.455, 0.03, 0.515, 0.955],
+  },
+  {
+    name: "easeInOutQuint",
+    labelKey: "easingQuintLabel",
+    descKey: "easingQuintDesc",
+    bezier: [0.86, 0, 0.07, 1],
+  },
+  {
+    name: "easeInOutExpo",
+    labelKey: "easingExpoLabel",
+    descKey: "easingExpoDesc",
+    bezier: [1, 0, 0, 1],
+  },
+  {
+    name: "easeInOutBack",
+    labelKey: "easingBackLabel",
+    descKey: "easingBackDesc",
+    bezier: [0.68, -0.55, 0.265, 1.55],
+  },
+];
 
 export function PreSurveyOverlay({
   isVisible,
@@ -180,9 +180,7 @@ export function PreSurveyOverlay({
                   </span>
                 </h2>
                 <div className="bg-white/60 rounded-2xl p-4 mb-5 text-gray-800">
-                  <p className="text-base mb-2">
-                    {t(lang, "preSurveyIntro")}
-                  </p>
+                  <p className="text-base mb-2">{t(lang, "preSurveyIntro")}</p>
                   <p className="text-sm text-gray-600">
                     {t(lang, "preSurveyNote")}
                   </p>
@@ -256,9 +254,10 @@ export function PreSurveyOverlay({
                                 }
                                 className={`
                                   w-10 h-10 rounded-md font-bold text-base transition-all
-                                  ${preferences[demo.name] === value
-                                    ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-md scale-110"
-                                    : "bg-white text-gray-700 hover:bg-purple-100"
+                                  ${
+                                    preferences[demo.name] === value
+                                      ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-md scale-110"
+                                      : "bg-white text-gray-700 hover:bg-purple-100"
                                   }
                                 `}
                               >

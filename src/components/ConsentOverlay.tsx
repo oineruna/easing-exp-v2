@@ -28,19 +28,21 @@ export function ConsentOverlay({
       <div className="fixed top-4 right-4 z-[60] flex gap-2 bg-white p-1 rounded-lg shadow-md border border-gray-200">
         <button
           onClick={() => onLanguageChange("ja")}
-          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${lang === "ja"
-            ? "bg-blue-600 text-white shadow-sm"
-            : "text-gray-500 hover:bg-gray-100"
-            }`}
+          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${
+            lang === "ja"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "text-gray-500 hover:bg-gray-100"
+          }`}
         >
           {t(lang, "langJa")}
         </button>
         <button
           onClick={() => onLanguageChange("en")}
-          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${lang === "en"
-            ? "bg-blue-600 text-white shadow-sm"
-            : "text-gray-500 hover:bg-gray-100"
-            }`}
+          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${
+            lang === "en"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "text-gray-500 hover:bg-gray-100"
+          }`}
         >
           {t(lang, "langEn")}
         </button>

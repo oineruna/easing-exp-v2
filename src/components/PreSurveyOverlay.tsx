@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { t } from "../utils/i18n";
-import type { Lang } from "../utils/i18n";
+import type { Lang, TextKey } from "../utils/i18n";
 import type { EasingFunction, PreSurveyData } from "../experiment";
 
 interface PreSurveyOverlayProps {
@@ -12,8 +12,8 @@ interface PreSurveyOverlayProps {
 
 const EASING_DEMOS: Array<{
   name: EasingFunction;
-  labelKey: string;
-  descKey: string;
+  labelKey: TextKey;
+  descKey: TextKey;
   bezier: [number, number, number, number];
 }> = [
   {

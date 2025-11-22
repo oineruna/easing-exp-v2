@@ -132,7 +132,8 @@ export const TEXT = {
       "データの自動送信に失敗しました。手動でファイルをダウンロードしますか？\n(ダウンロードしたファイルを実験担当者に送付してください)",
     // PreSurveyOverlay
     preSurveyTitle: "事前アンケート",
-    preSurveyIntro: "これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。",
+    preSurveyIntro:
+      "これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。",
     preSurveyNote: "※ この情報は実験データの分析に使用されます",
     preSurveyStart: "開始する",
     preSurveyDemoTitle: "あなたの好みをもとにアニメーションを評価してください",
@@ -141,9 +142,11 @@ export const TEXT = {
     preSurveyHigh: "高",
     preSurveyNext: "次へ",
     preSurveyRankingTitle: "好みの順に並べ替えてください",
-    preSurveyRankingDesc: "ドラッグ＆ドロップで順位を変更できます(1位が最も好き)",
+    preSurveyRankingDesc:
+      "ドラッグ＆ドロップで順位を変更できます(1位が最も好き)",
     preSurveyCommentTitle: "最後に一言(任意)",
-    preSurveyCommentPlaceholder: "アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...",
+    preSurveyCommentPlaceholder:
+      "アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...",
     preSurveyComplete: "完了",
     preSurveyAlert: "すべてのアニメーションを評価してください",
     // Easing Labels (JA)
@@ -273,7 +276,8 @@ export const TEXT = {
       "Automatic upload failed. Do you want to download the file manually?",
     // PreSurveyOverlay
     preSurveyTitle: "Pre-Survey",
-    preSurveyIntro: "We will show you 5 types of animations. Please rate each animation based on your preference.",
+    preSurveyIntro:
+      "We will show you 5 types of animations. Please rate each animation based on your preference.",
     preSurveyNote: "※ This information will be used for data analysis",
     preSurveyStart: "Start",
     preSurveyDemoTitle: "Rate Each Animation based on your preference",
@@ -284,7 +288,8 @@ export const TEXT = {
     preSurveyRankingTitle: "Rank by Preference",
     preSurveyRankingDesc: "Drag & drop to reorder (1st = most preferred)",
     preSurveyCommentTitle: "Additional Comments (Optional)",
-    preSurveyCommentPlaceholder: "Feel free to share any thoughts about your animation preferences...",
+    preSurveyCommentPlaceholder:
+      "Feel free to share any thoughts about your animation preferences...",
     preSurveyComplete: "Complete",
     preSurveyAlert: "Please rate all animations",
     // Easing Labels (EN)
@@ -304,7 +309,7 @@ export const TEXT = {
   },
 } as const;
 
-type TextKey = keyof (typeof TEXT)["ja"];
+export type TextKey = keyof (typeof TEXT)["ja"];
 
 export function t(lang: Lang, key: TextKey, ...args: any[]): any {
   const val = TEXT[lang][key];

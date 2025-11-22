@@ -67,6 +67,20 @@ export function PostSurveyOverlay({
     onComplete(result);
   };
 
+  // ★ デバッグ用スキップ
+  const handleDebugSkip = () => {
+    const dummyResult: PostSurveyResult = {
+      participantId,
+      noticeDifference: q2Options[0],
+      usabilityImpact: [impactOptions[0]],
+      usabilityImpactOther: "",
+      bestFeature: featureOptions[0],
+      worstFeature: featureOptions[0],
+      improvements: "Debug Skip",
+    };
+    onComplete(dummyResult);
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -108,7 +122,7 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ2")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {q2Options.map((opt) => (
                     <label
                       key={opt}
@@ -134,7 +148,7 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ3")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {impactOptions.map((opt) => (
                     <div key={opt}>
                       <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition">
@@ -174,11 +188,11 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ4")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {featureOptions.map((opt) => (
                     <label
                       key={opt}
-                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-green-50 transition"
+                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition"
                     >
                       <input
                         type="radio"
@@ -200,11 +214,11 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ5")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {featureOptions.map((opt) => (
                     <label
                       key={opt}
-                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-red-50 transition"
+                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition"
                     >
                       <input
                         type="radio"
@@ -252,6 +266,13 @@ export function PostSurveyOverlay({
               <p className="mt-4 text-sm text-gray-500">
                 {t(lang, "postSurveyNote")}
               </p>
+              {/* デバッグ用スキップボタン */}
+              <button
+                onClick={handleDebugSkip}
+                className="mt-4 text-xs text-gray-400 underline hover:text-gray-600"
+              >
+                Skip (Debug)
+              </button>
             </div>
           </motion.div>
         </motion.div>

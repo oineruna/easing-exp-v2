@@ -146,7 +146,7 @@ export function RewardScreen({
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          transition={{ type: "spring", stiffness: 200 }}
           className="text-center mb-12"
         >
           <motion.div
@@ -154,7 +154,7 @@ export function RewardScreen({
               rotate: [0, 10, -10, 10, 0],
               scale: [1, 1.1, 1, 1.1, 1],
             }}
-            transition={{ duration: 1, delay: 0.5 }}
+            transition={{ duration: 1 }}
             className="text-8xl mb-4"
           >
             🎉
@@ -170,7 +170,7 @@ export function RewardScreen({
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            transition={{ duration: 0.6 }}
             className="h-2 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 rounded-full mx-auto max-w-md"
           />
         </motion.div>
@@ -179,7 +179,6 @@ export function RewardScreen({
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
           className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl bg-white/60 backdrop-blur-md"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -230,7 +229,6 @@ export function RewardScreen({
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
           className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl text-center bg-white/60 backdrop-blur-md"
         >
           <motion.div

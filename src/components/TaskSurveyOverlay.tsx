@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t } from "../utils/i18n";
 import type { Lang } from "../utils/i18n";
 
@@ -47,6 +47,28 @@ export function TaskSurveyOverlay({
     setDifferenceRating(null);
     setComments("");
   };
+
+  // ★ デバッグ用スキップ (Shift + Enter)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey && e.key === "Enter") {
+        // ダミーデータで完了
+        onComplete({
+          easeRating: 3,
+          difficultyRating: 3,
+          differenceRating: 3,
+          comments: "Debug Skip",
+        });
+        // 状態リセット
+        setEaseRating(null);
+        setDifficultyRating(null);
+        setDifferenceRating(null);
+        setComments("");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onComplete]);
 
   // 文言定義（TaskEndOverlayを参考に調整）
   const text = {
@@ -111,11 +133,10 @@ export function TaskSurveyOverlay({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setEaseRating(value)}
-                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${
-                        easeRating === value
+                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${easeRating === value
                           ? "bg-blue-600 text-white shadow-lg scale-110"
                           : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
-                      }`}
+                        }`}
                     >
                       {value}
                     </motion.button>
@@ -138,11 +159,10 @@ export function TaskSurveyOverlay({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDifficultyRating(value)}
-                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${
-                        difficultyRating === value
+                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${difficultyRating === value
                           ? "bg-blue-600 text-white shadow-lg scale-110"
                           : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
-                      }`}
+                        }`}
                     >
                       {value}
                     </motion.button>
@@ -165,11 +185,10 @@ export function TaskSurveyOverlay({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDifferenceRating(value)}
-                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${
-                        differenceRating === value
+                      className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${differenceRating === value
                           ? "bg-blue-600 text-white shadow-lg scale-110"
                           : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
-                      }`}
+                        }`}
                     >
                       {value}
                     </motion.button>

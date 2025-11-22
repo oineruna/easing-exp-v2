@@ -22,29 +22,27 @@ export function ConsentOverlay({
   return (
     <>
       {/* 背景 */}
-      <div className="fixed inset-0 z-40" style={{ background: "#f5f5f5" }} />
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" />
 
       {/* ★ 修正: z-index を 60 に上げて、モーダルコンテナ(z-50)より手前に表示させる */}
       <div className="fixed top-4 right-4 z-[60] flex gap-2 bg-white p-1 rounded-lg shadow-md border border-gray-200">
         <button
           onClick={() => onLanguageChange("ja")}
-          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${
-            lang === "ja"
-              ? "bg-blue-600 text-white shadow-sm"
-              : "text-gray-500 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${lang === "ja"
+            ? "bg-blue-600 text-white shadow-sm"
+            : "text-gray-500 hover:bg-gray-100"
+            }`}
         >
-          日本語
+          {t(lang, "langJa")}
         </button>
         <button
           onClick={() => onLanguageChange("en")}
-          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${
-            lang === "en"
-              ? "bg-blue-600 text-white shadow-sm"
-              : "text-gray-500 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${lang === "en"
+            ? "bg-blue-600 text-white shadow-sm"
+            : "text-gray-500 hover:bg-gray-100"
+            }`}
         >
-          English
+          {t(lang, "langEn")}
         </button>
       </div>
 
@@ -59,15 +57,15 @@ export function ConsentOverlay({
           initial={{ scale: 0.8, opacity: 0, y: 50 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 50 }}
-          transition={{ type: "spring", damping: 20, stiffness: 200 }}
+          transition={{ type: "spring", damping: 25, stiffness: 300 }}
           className="relative max-w-2xl w-full pointer-events-auto"
         >
-          <div className="relative bg-white border border-gray-200 rounded-3xl p-10 shadow-xl max-h-[90vh] overflow-y-auto">
+          <div className="relative glass-effect rounded-3xl p-10 shadow-xl max-h-[90vh] overflow-y-auto">
             {/* アイコン */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              transition={{ type: "spring", stiffness: 200 }}
               className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-2xl flex items-center justify-center shadow"
             >
               <span className="text-4xl">📋</span>
@@ -77,7 +75,6 @@ export function ConsentOverlay({
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
               className="text-4xl font-black text-center mb-6 text-gray-800"
             >
               {t(lang, "consentTitle")}
@@ -87,7 +84,6 @@ export function ConsentOverlay({
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
               className="mb-8 text-gray-700 leading-relaxed text-lg"
             >
               <div
@@ -100,11 +96,10 @@ export function ConsentOverlay({
             <motion.button
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onAgree}
-              className="w-full relative rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-white font-bold text-xl py-4"
+              className="w-full relative rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-white font-bold text-xl py-4 shadow-lg"
             >
               ✓ {t(lang, "agree")}
             </motion.button>
@@ -112,8 +107,7 @@ export function ConsentOverlay({
             <motion.button
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.55 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onDisagree}
               className="w-full mt-4 relative rounded-2xl bg-gray-200 hover:bg-gray-300 transition text-gray-700 font-bold text-xl py-4"

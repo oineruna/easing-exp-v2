@@ -1,7 +1,7 @@
 // --- START OF FILE src/components/PostSurveyOverlay.tsx ---
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { t } from "../utils/i18n";
 import type { Lang, PostSurveyResult } from "../experiment";
 
@@ -67,6 +67,31 @@ export function PostSurveyOverlay({
     onComplete(result);
   };
 
+  // ★ デバッグ用スキップ
+  const handleDebugSkip = () => {
+    const dummyResult: PostSurveyResult = {
+      participantId,
+      noticeDifference: q2Options[0],
+      usabilityImpact: [impactOptions[0]],
+      usabilityImpactOther: "",
+      bestFeature: featureOptions[0],
+      worstFeature: featureOptions[0],
+      improvements: "Debug Skip",
+    };
+    onComplete(dummyResult);
+  };
+
+  // ★ デバッグ用スキップ (Shift + Enter)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey && e.key === "Enter") {
+        handleDebugSkip();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -77,12 +102,13 @@ export function PostSurveyOverlay({
           className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl p-8 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] overflow-y-auto shadow-2xl relative flex flex-col"
           >
-            <h2 className="text-3xl font-black mb-8 text-center text-gray-800 border-b pb-4 sticky top-0 bg-white z-10">
-              📋 {t(lang, "postSurveyTitle")}
+            <h2 className="text-3xl font-black text-gray-800 mt-6 mb-2 flex items-center justify-center">
+              <span className="text-2xl mr-2">📋</span>
+              事後アンケート
             </h2>
 
             <div className="space-y-8 text-left pb-4">
@@ -108,7 +134,7 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ2")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {q2Options.map((opt) => (
                     <label
                       key={opt}
@@ -134,7 +160,7 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ3")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {impactOptions.map((opt) => (
                     <div key={opt}>
                       <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition">
@@ -174,11 +200,11 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ4")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {featureOptions.map((opt) => (
                     <label
                       key={opt}
-                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-green-50 transition"
+                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition"
                     >
                       <input
                         type="radio"
@@ -200,11 +226,11 @@ export function PostSurveyOverlay({
                   {t(lang, "postSurveyQ5")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {featureOptions.map((opt) => (
                     <label
                       key={opt}
-                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-red-50 transition"
+                      className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-blue-50 transition"
                     >
                       <input
                         type="radio"

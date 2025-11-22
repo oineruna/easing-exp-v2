@@ -80,7 +80,10 @@ export const TEXT = {
     totalAccuracy: "全体正解率",
     avgTime: "平均時間",
     totalClicks: "総クリック数",
-    mvpEasing: "🏅 MVPイージング関数",
+    tasksCompletedSuffix: "タスク成功", // ★ 追加
+    fastestLabel: "最速", // ★ 追加
+    distanceLabel: "移動距離", // ★ 追加
+    mvpEasing: "MVPイージング関数",
     mvpEasingDesc: "最もパフォーマンスが良かった動き",
     easingPerfTitle: "イージング関数別パフォーマンス",
     headerEasing: "イージング",
@@ -127,6 +130,36 @@ export const TEXT = {
     dataSavedMsg: "実験データが保存されました。ご協力ありがとうございました。",
     dataSaveFailedMsg:
       "データの自動送信に失敗しました。手動でファイルをダウンロードしますか？\n(ダウンロードしたファイルを実験担当者に送付してください)",
+    // PreSurveyOverlay
+    preSurveyTitle: "事前アンケート",
+    preSurveyIntro: "これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。",
+    preSurveyNote: "※ この情報は実験データの分析に使用されます",
+    preSurveyStart: "開始する",
+    preSurveyDemoTitle: "あなたの好みをもとにアニメーションを評価してください",
+    preSurveyPreference: "好み度",
+    preSurveyLow: "低",
+    preSurveyHigh: "高",
+    preSurveyNext: "次へ",
+    preSurveyRankingTitle: "好みの順に並べ替えてください",
+    preSurveyRankingDesc: "ドラッグ＆ドロップで順位を変更できます(1位が最も好き)",
+    preSurveyCommentTitle: "最後に一言(任意)",
+    preSurveyCommentPlaceholder: "アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...",
+    preSurveyComplete: "完了",
+    preSurveyAlert: "すべてのアニメーションを評価してください",
+    // Easing Labels (JA)
+    easingLinearLabel: "一定速度",
+    easingLinearDesc: "等速で動く",
+    easingQuadLabel: "滑らか(弱)",
+    easingQuadDesc: "ゆっくり加速・減速",
+    easingQuintLabel: "滑らか(強)",
+    easingQuintDesc: "とても滑らか",
+    easingExpoLabel: "キビキビ",
+    easingExpoDesc: "急加速・急停止",
+    easingBackLabel: "バウンス",
+    easingBackDesc: "オーバーシュート",
+    // ConsentOverlay
+    langJa: "日本語",
+    langEn: "English",
   },
   en: {
     // --- Common ---
@@ -191,6 +224,9 @@ export const TEXT = {
     totalAccuracy: "Total Accuracy",
     avgTime: "Avg. Time",
     totalClicks: "Total Clicks",
+    tasksCompletedSuffix: "tasks completed", // ★ 追加
+    fastestLabel: "Fastest", // ★ 追加
+    distanceLabel: "Distance", // ★ 追加
     mvpEasing: "🏅 MVP Easing",
     mvpEasingDesc: "Best performing animation",
     easingPerfTitle: "Performance by Easing Function",
@@ -235,6 +271,36 @@ export const TEXT = {
     dataSavedMsg: "Data saved successfully. Thank you!",
     dataSaveFailedMsg:
       "Automatic upload failed. Do you want to download the file manually?",
+    // PreSurveyOverlay
+    preSurveyTitle: "Pre-Survey",
+    preSurveyIntro: "We will show you 5 types of animations. Please rate each animation based on your preference.",
+    preSurveyNote: "※ This information will be used for data analysis",
+    preSurveyStart: "Start",
+    preSurveyDemoTitle: "Rate Each Animation based on your preference",
+    preSurveyPreference: "Preference",
+    preSurveyLow: "Low",
+    preSurveyHigh: "High",
+    preSurveyNext: "Next",
+    preSurveyRankingTitle: "Rank by Preference",
+    preSurveyRankingDesc: "Drag & drop to reorder (1st = most preferred)",
+    preSurveyCommentTitle: "Additional Comments (Optional)",
+    preSurveyCommentPlaceholder: "Feel free to share any thoughts about your animation preferences...",
+    preSurveyComplete: "Complete",
+    preSurveyAlert: "Please rate all animations",
+    // Easing Labels (EN)
+    easingLinearLabel: "Linear",
+    easingLinearDesc: "Constant speed",
+    easingQuadLabel: "Smooth (Weak)",
+    easingQuadDesc: "Gentle acceleration",
+    easingQuintLabel: "Smooth (Strong)",
+    easingQuintDesc: "Very smooth",
+    easingExpoLabel: "Snappy",
+    easingExpoDesc: "Quick start/stop",
+    easingBackLabel: "Bounce",
+    easingBackDesc: "Overshoot effect",
+    // ConsentOverlay
+    langJa: "日本語",
+    langEn: "English",
   },
 } as const;
 

@@ -9,7 +9,7 @@ import { TutorialCompleteOverlay } from "./components/TutorialCompleteOverlay";
 import { TaskMenu } from "./components/TaskMenu";
 import { TaskEndOverlay } from "./components/TaskEndOverlay";
 import { RewardScreen } from "./components/RewardScreen";
-import { PreSurveyOverlay, PreSurveyData } from "./components/PreSurveyOverlay";
+import { PreSurveyOverlay } from "./components/PreSurveyOverlay";
 import { NextTaskOverlay } from "./components/NextTaskOverlay";
 import { TaskSurveyOverlay } from "./components/TaskSurveyOverlay";
 // ★ 新規追加
@@ -25,6 +25,7 @@ import type {
   EasingFunction,
   PostSurveyResult,
   ExperimentData,
+  PreSurveyData,
 } from "./experiment";
 import {
   loadMenuCategories,
@@ -44,7 +45,6 @@ type AppState =
   | "task"
   | "seq"
   | "next-task-ready"
-  | "task-end"
   | "reward"
   | "post-survey"; // ★ 追加
 
@@ -66,7 +66,7 @@ const hashCode = (str: string) => {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("reward");
+  const [appState, setAppState] = useState<AppState>("consent");
   const [participantId, setParticipantId] = useState<string>("");
 
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
@@ -78,12 +78,17 @@ export default function App() {
     useState<TaskWithEasing | null>(null);
 
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
+  const [preSurveyData, setPreSurveyData] = useState<PreSurveyData | null>(
+    null
+  );
   const [tempTaskLog, setTempTaskLog] = useState<TaskLog | null>(null);
 
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<
     "correct" | "incorrect" | "timeout" | ""
   >("");
+  // ★ 実験開始確認用ステート
+  const [showStartConfirm, setShowStartConfirm] = useState(false);
 
   const currentEasing: EasingFunction =
     currentTaskWithEasing?.easing || "easeInOutExpo";
@@ -91,7 +96,7 @@ export default function App() {
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
 
-  // 初期化
+  // 初期化 & localStorage復元確認
   useEffect(() => {
     setLang(detectLang());
     const url = new URL(window.location.href);
@@ -105,6 +110,29 @@ export default function App() {
     setParticipantId(id);
     params.set("pid", id);
     window.history.replaceState(null, "", url.toString());
+
+    // localStorage からバックアップを確認
+    const backup = localStorage.getItem(`experiment_backup_${id}`);
+    if (backup) {
+      const shouldRestore = window.confirm(
+        lang === "ja"
+          ? "前回の実験データが見つかりました。続きから再開しますか？"
+          : "Previous experiment data found. Resume from where you left off?"
+      );
+      if (shouldRestore) {
+        try {
+          const data = JSON.parse(backup);
+          setAllLogs(data.tasks || []);
+          setPreSurveyData(data.preSurvey || null);
+          setCurrentTaskIndex(data.currentTaskIndex || 0);
+          console.log("[Backup] Restored from localStorage", data);
+        } catch (e) {
+          console.error("[Backup] Failed to restore", e);
+        }
+      } else {
+        localStorage.removeItem(`experiment_backup_${id}`);
+      }
+    }
   }, []);
 
   // データ読み込み
@@ -118,6 +146,24 @@ export default function App() {
     loadData();
   }, [lang]);
 
+  // localStorage 自動バックアップ（5タスクごと）
+  useEffect(() => {
+    if (allLogs.length > 0 && allLogs.length % 5 === 0) {
+      const backupData = {
+        participantId,
+        preSurvey: preSurveyData,
+        tasks: allLogs,
+        currentTaskIndex,
+        timestamp: new Date().toISOString(),
+      };
+      localStorage.setItem(
+        `experiment_backup_${participantId}`,
+        JSON.stringify(backupData)
+      );
+      console.log(`[Backup] Auto-saved at task ${allLogs.length}`);
+    }
+  }, [allLogs.length, participantId, preSurveyData, currentTaskIndex]);
+
   // --- ハンドラー ---
 
   const handleConsentAgree = useCallback(() => setAppState("pre-survey"), []);
@@ -127,6 +173,7 @@ export default function App() {
   );
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
     console.log("[Pre-Survey]", data);
+    setPreSurveyData(data);
     setAppState("ready");
   }, []);
 
@@ -186,6 +233,9 @@ export default function App() {
   }, [currentTaskWithEasing, taskLogger, lang, participantId]);
 
   const handleStartTask = useCallback(async () => {
+    // 確認ダイアログを閉じる
+    setShowStartConfirm(false);
+
     if (menuCategories.length === 0) return;
 
     const seed = hashCode(participantId);
@@ -262,7 +312,8 @@ export default function App() {
       if (nextIndex < experimentTasks.length) {
         setAppState("next-task-ready");
       } else {
-        setAppState("task-end");
+        // ★ 修正: TaskEndOverlayをスキップして直接Rewardへ
+        setAppState("reward");
       }
     },
     [currentTaskIndex, experimentTasks.length, tempTaskLog]
@@ -286,10 +337,23 @@ export default function App() {
   // ★ 事後アンケート完了＆データ保存
   const handlePostSurveyComplete = useCallback(
     (surveyData: PostSurveyResult) => {
+      // Pre-Survey データのチェック
+      if (!preSurveyData) {
+        const proceed = window.confirm(
+          lang === "ja"
+            ? "事前アンケートのデータが見つかりません。このまま続けますか？"
+            : "Pre-survey data not found. Continue anyway?"
+        );
+        if (!proceed) {
+          return;
+        }
+      }
+
       // 最終データの構築
       const finalData: ExperimentData = {
         participantId,
         timestamp: new Date().toISOString(),
+        preSurvey: preSurveyData!,
         tasks: allLogs,
         postSurvey: surveyData,
       };
@@ -305,20 +369,14 @@ export default function App() {
         `experiment_data_${participantId}.json`
       );
       document.body.appendChild(downloadAnchorNode);
-      downloadAnchorNode.click();
-      downloadAnchorNode.remove();
-
-      // 完了後、同意画面に戻る
-      alert(
-        lang === "ja"
-          ? "実験データが保存されました。ご協力ありがとうございました。"
-          : "Data saved. Thank you!"
-      );
+      // タブを閉じる試行
+      window.close();
+      // 閉じられなかった場合はConsentに戻る（あるいは終了画面のままにする）
       setAppState("consent");
 
       // 必要ならIDをリセットする処理など
     },
-    [allLogs, participantId, lang]
+    [allLogs, participantId, lang, preSurveyData]
   );
 
   return (
@@ -369,15 +427,6 @@ export default function App() {
         onNext={handleNextTaskStart}
       />
 
-      {appState === "task-end" && (
-        <TaskEndOverlay
-          isVisible={true}
-          lang={lang}
-          isLastTask={true}
-          onContinue={() => setAppState("reward")}
-        />
-      )}
-
       {appState === "reward" && (
         <RewardScreen
           allLogs={allLogs}
@@ -398,33 +447,100 @@ export default function App() {
         />
       )}
 
-      {appState === "ready" && (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <motion.div className="bg-white p-12 rounded-xl shadow-2xl text-center">
-            <h1 className="text-3xl font-bold mb-4">実験開始</h1>
-            <div className="mb-8 bg-gray-100 py-2 px-4 rounded-lg inline-block">
-              <span className="text-gray-500 text-sm font-bold mr-2">ID:</span>
-              <span className="text-gray-800 font-mono font-bold text-lg tracking-widest">
-                {participantId}
-              </span>
-            </div>
-            <div className="flex gap-4 justify-center mb-4">
-              <button
-                onClick={handleStartTask}
-                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-bold shadow-lg hover:bg-blue-700 transition"
-              >
-                {lang === "en" ? "Start Task" : "タスク開始"}
-              </button>
-              <button
-                onClick={handleStartTutorial}
-                className="px-8 py-4 bg-white border border-gray-300 text-gray-700 rounded-lg font-bold shadow-sm hover:bg-gray-50 transition"
-              >
-                {lang === "en" ? "Tutorial" : "チュートリアル"}
-              </button>
-            </div>
+      <AnimatePresence>
+        {appState === "ready" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="glass-effect rounded-3xl p-12 shadow-2xl text-center max-w-2xl w-full mx-4"
+            >
+              <h1 className="text-3xl font-black mb-8 gradient-text">
+                {lang === "ja" ? "実験開始" : "Ready to Start"}
+              </h1>
+              <div className="mb-8 bg-white/50 py-3 px-6 rounded-xl inline-block border border-gray-200">
+                <span className="text-gray-500 text-sm font-bold mr-2">
+                  ID:
+                </span>
+                <span className="text-gray-800 font-mono font-bold text-xl tracking-widest">
+                  {participantId}
+                </span>
+              </div>
+              <div className="flex gap-4 justify-center mb-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowStartConfirm(true)}
+                  className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition"
+                >
+                  {lang === "en" ? "Start Task" : "タスク開始"}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleStartTutorial}
+                  className="px-10 py-4 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold text-lg shadow-md hover:bg-gray-50 transition"
+                >
+                  {lang === "en" ? "Tutorial" : "チュートリアル"}
+                </motion.button>
+              </div>
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
+
+      {/* ★ 実験開始確認モーダル */}
+      <AnimatePresence>
+        {showStartConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60]"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl text-center mx-4"
+            >
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                {lang === "ja" ? "確認" : "Confirmation"}
+              </h3>
+              <p className="text-gray-600 mb-8 text-lg">
+                {lang === "ja"
+                  ? "本当に実験を開始しますか？"
+                  : "Are you sure you want to start?"}
+              </p>
+              <div className="flex gap-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowStartConfirm(false)}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition"
+                >
+                  {lang === "ja" ? "キャンセル" : "Cancel"}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleStartTask}
+                  className="px-6 py-3 bg-red-500 text-white rounded-xl font-bold shadow-lg hover:bg-red-600 transition"
+                >
+                  {lang === "ja" ? "開始する" : "Yes, Start"}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {(appState === "tutorial" ||
         appState === "task" ||

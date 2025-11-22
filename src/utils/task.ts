@@ -2,7 +2,7 @@
 
 import type { Category, Task, EasingFunction } from "../experiment";
 
-export const TIME_LIMIT_MS = 30000;
+export const TIME_LIMIT_MS = 100;
 
 export const EASING_FUNCS: EasingFunction[] = [
   "linear",
@@ -101,7 +101,7 @@ export const generateTaskSequence = (
   // ランダムに25問抽出
   const shuffledTasks = [...availableTasks]
     .sort(() => Math.random() - 0.5)
-    .slice(0, 2);
+    .slice(0, 1);
 
   shuffledTasks.forEach((task, index) => {
     const easing = EASING_FUNCS[index % EASING_FUNCS.length];

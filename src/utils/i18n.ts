@@ -21,15 +21,19 @@ export const TEXT = {
   ja: {
     // --- 共通・実験全体 ---
     experimentTitle: "イージング関数における効果測定実験",
+    experimentStart: "実験開始",
+    welcomeTitle: "実験へようこそ",
+    welcomeSubtitle: "メニュー探索タスクにおける操作性の評価",
     consentTitle: "実験へのご協力に関する同意",
     consentText:
       "本実験では操作ログ等を記録します。データは匿名化され、研究以外に利用しません。<br />同意いただけたら「同意する」をクリックし、F11キーで全画面表示してください。",
     agree: "同意する",
     disagree: "同意しない",
-    disagreeAlert: "同意いただけない場合は実験に参加できません。", // ★ 追加
+    disagreeAlert: "同意いただけない場合は実験に参加できません。",
 
     // --- チュートリアル ---
     startTutorial: "チュートリアル開始",
+    tutorialLabel: "チュートリアル",
     tutorialIntroText:
       "メニューを開くたびにマウスでクリックして選択してください。<br /><br />下のボタンで開始してください。<br /><br />制限時間は1タスク当たり15秒です。",
     tutorialIntroClose: "閉じる",
@@ -59,6 +63,9 @@ export const TEXT = {
 
     // --- タスク毎アンケート (TaskSurveyOverlay) ---
     taskSurveyTitle: (num: number) => `タスク ${num} の評価`,
+    taskSurveyQuestion: "このタスクの操作性を評価してください",
+    taskSurveyLow: "低",
+    taskSurveyHigh: "高",
     taskSurveyQ1: "アニメーションの動きやすさ",
     taskSurveyScale1: "1: 非常に使いにくい - 5: 非常に使いやすい",
     taskSurveyQ2: "タスクの難易度",
@@ -71,18 +78,18 @@ export const TEXT = {
     surveyAlert: "すべての必須項目に回答してください。",
 
     // --- 全タスク終了画面 (TaskEndOverlay) ---
-    taskEndTitle: "全タスク終了", // ★ 追加
-    taskEndMessage: "すべてのタスクが終了しました。<br />お疲れ様でした。", // ★ 追加
-    toResult: "結果へ進む", // ★ 追加
+    taskEndTitle: "全タスク終了",
+    taskEndMessage: "すべてのタスクが終了しました。<br />お疲れ様でした。",
+    toResult: "結果へ進む",
 
     // --- 結果画面 (RewardScreen) ---
     taskCompleted: "タスクが完了しました！",
     totalAccuracy: "全体正解率",
     avgTime: "平均時間",
     totalClicks: "総クリック数",
-    tasksCompletedSuffix: "タスク成功", // ★ 追加
-    fastestLabel: "最速", // ★ 追加
-    distanceLabel: "移動距離", // ★ 追加
+    tasksCompletedSuffix: "タスク成功",
+    fastestLabel: "最速",
+    distanceLabel: "移動距離",
     mvpEasing: "MVPイージング関数",
     mvpEasingDesc: "最もパフォーマンスが良かった動き",
     easingPerfTitle: "イージング関数別パフォーマンス",
@@ -95,6 +102,17 @@ export const TEXT = {
 
     // --- 事後アンケート (PostSurveyOverlay) ---
     postSurveyTitle: "事後アンケート",
+    postSurveyFatigue: "実験全体の疲労度",
+    postSurveyFatigueLow: "低",
+    postSurveyFatigueHigh: "高",
+    postSurveyPreference: "最も使いやすかったアニメーション",
+    postSurveyPrefSmooth: "滑らかな動き",
+    postSurveyPrefSnappy: "キビキビした動き",
+    postSurveyPrefNone: "特に違いを感じなかった",
+    postSurveyComments: "その他コメント（任意）",
+    postSurveyCommentsPlaceholder: "自由にご記入ください...",
+    postSurveySubmit: "送信",
+    postSurveyAlert: "好みを選択してください。",
     postSurveyQ1: "1. 被験者ID",
     postSurveyQ1Note: "※自動入力されています",
     postSurveyQ2:
@@ -124,12 +142,11 @@ export const TEXT = {
     ],
     postSurveyQ6:
       "6. アニメーションや操作性について、改善してほしい点や気になったことがあれば教えてください",
-    postSurveySubmit: "回答を送信してデータを保存",
     postSurveyNote: "※このボタンを押すと実験データがダウンロードされます",
-    postSurveyAlert: "すべての必須項目に回答してください。",
     dataSavedMsg: "実験データが保存されました。ご協力ありがとうございました。",
     dataSaveFailedMsg:
       "データの自動送信に失敗しました。手動でファイルをダウンロードしますか？\n(ダウンロードしたファイルを実験担当者に送付してください)",
+    
     // PreSurveyOverlay
     preSurveyTitle: "事前アンケート",
     preSurveyIntro:
@@ -149,6 +166,7 @@ export const TEXT = {
       "アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...",
     preSurveyComplete: "完了",
     preSurveyAlert: "すべてのアニメーションを評価してください",
+    
     // Easing Labels (JA)
     easingLinearLabel: "一定速度",
     easingLinearDesc: "等速で動く",
@@ -160,6 +178,7 @@ export const TEXT = {
     easingExpoDesc: "急加速・急停止",
     easingBackLabel: "バウンス",
     easingBackDesc: "オーバーシュート",
+    
     // ConsentOverlay
     langJa: "日本語",
     langEn: "English",
@@ -167,6 +186,9 @@ export const TEXT = {
   en: {
     // --- Common ---
     experimentTitle: "Easing Function Effectiveness Experiment",
+    experimentStart: "Start Experiment",
+    welcomeTitle: "Welcome to the Experiment",
+    welcomeSubtitle: "Evaluation of usability in menu selection tasks",
     consentTitle: "Consent for Participation",
     consentText:
       "This experiment records operation logs. Data will be anonymized and used only for research.<br />If you agree, click 'Agree' and press F11 for full screen.",
@@ -177,6 +199,7 @@ export const TEXT = {
 
     // --- Tutorial ---
     startTutorial: "Start Tutorial",
+    tutorialLabel: "Tutorial",
     tutorialIntroText:
       "Click to select items from the menu.<br /><br />Start with the button below.<br /><br />Time limit: 15s per task.",
     tutorialIntroClose: "Close",
@@ -205,6 +228,9 @@ export const TEXT = {
 
     // --- Task Survey ---
     taskSurveyTitle: (num: number) => `Task ${num} Evaluation`,
+    taskSurveyQuestion: "Please rate the usability of this task",
+    taskSurveyLow: "Low",
+    taskSurveyHigh: "High",
     taskSurveyQ1: "Animation Ease of Use",
     taskSurveyScale1: "1: Very Difficult - 5: Very Easy",
     taskSurveyQ2: "Task Difficulty",
@@ -227,9 +253,9 @@ export const TEXT = {
     totalAccuracy: "Total Accuracy",
     avgTime: "Avg. Time",
     totalClicks: "Total Clicks",
-    tasksCompletedSuffix: "tasks completed", // ★ 追加
-    fastestLabel: "Fastest", // ★ 追加
-    distanceLabel: "Distance", // ★ 追加
+    tasksCompletedSuffix: "tasks completed",
+    fastestLabel: "Fastest",
+    distanceLabel: "Distance",
     mvpEasing: "🏅 MVP Easing",
     mvpEasingDesc: "Best performing animation",
     easingPerfTitle: "Performance by Easing Function",
@@ -242,6 +268,17 @@ export const TEXT = {
 
     // --- Post Survey ---
     postSurveyTitle: "Post-Experiment Survey",
+    postSurveyFatigue: "Overall fatigue level",
+    postSurveyFatigueLow: "Low",
+    postSurveyFatigueHigh: "High",
+    postSurveyPreference: "Most preferred animation",
+    postSurveyPrefSmooth: "Smooth movement",
+    postSurveyPrefSnappy: "Snappy movement",
+    postSurveyPrefNone: "No particular preference",
+    postSurveyComments: "Additional comments (Optional)",
+    postSurveyCommentsPlaceholder: "Feel free to share your thoughts...",
+    postSurveySubmit: "Submit",
+    postSurveyAlert: "Please select your preference.",
     postSurveyQ1: "1. Participant ID",
     postSurveyQ1Note: "* Automatically filled",
     postSurveyQ2:
@@ -268,12 +305,11 @@ export const TEXT = {
       "Constant speed movement",
     ],
     postSurveyQ6: "6. Any feedback on animation or usability?",
-    postSurveySubmit: "Submit & Save Data",
     postSurveyNote: "* Data will be downloaded upon clicking",
-    postSurveyAlert: "Please answer all required questions.",
     dataSavedMsg: "Data saved successfully. Thank you!",
     dataSaveFailedMsg:
       "Automatic upload failed. Do you want to download the file manually?",
+    
     // PreSurveyOverlay
     preSurveyTitle: "Pre-Survey",
     preSurveyIntro:
@@ -292,6 +328,7 @@ export const TEXT = {
       "Feel free to share any thoughts about your animation preferences...",
     preSurveyComplete: "Complete",
     preSurveyAlert: "Please rate all animations",
+    
     // Easing Labels (EN)
     easingLinearLabel: "Linear",
     easingLinearDesc: "Constant speed",
@@ -303,6 +340,7 @@ export const TEXT = {
     easingExpoDesc: "Quick start/stop",
     easingBackLabel: "Bounce",
     easingBackDesc: "Overshoot effect",
+    
     // ConsentOverlay
     langJa: "日本語",
     langEn: "English",

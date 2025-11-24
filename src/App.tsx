@@ -489,7 +489,7 @@ export default function App() {
               </h3>
               <p className="text-gray-600 mb-8 text-lg">
                 {lang === "ja"
-                  ? "本当に実験を開始しますか？"
+                  ? "実験を開始しますか？"
                   : "Are you sure you want to start?"}
               </p>
               <div className="flex gap-4 justify-center">

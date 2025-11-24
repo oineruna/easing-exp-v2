@@ -1,94 +1,283 @@
 {
+  "meta": {
+    "description": "イージング関数比較実験用データセット",
+    "structure_depth": 4,
+    "items_per_category": "5-8 (uniform distribution)"
+  },
   "categories": [
     {
-      "name": "ファッション",
-      "subcategories": [
-        { "name": "メンズ靴" },
-        { "name": "レディース靴" },
-        { "name": "バッグ" },
-        { "name": "アクセサリー" }
-      ]
-    },
-    {
-      "name": "家電・カメラ",
+      "name": "電子機器・PC",
       "subcategories": [
         {
-          "name": "カメラ",
-          "subcategories": [
-            { "name": "デジタル一眼" },
-            { "name": "コンパクトカメラ" },
-            { "name": "ミラーレス" }
-          ]
-        },
-        {
-          "name": "テレビ",
-          "subcategories": [{ "name": "4Kテレビ" }, { "name": "有機EL" }]
-        },
-        { "name": "オーディオ" },
-        { "name": "生活家電" }
-      ]
-    },
-    {
-      "name": "食品・飲料",
-      "subcategories": [
-        {
-          "name": "飲料",
+          "name": "パソコン本体",
           "subcategories": [
             {
-              "name": "コーヒー",
+              "name": "ノートパソコン",
               "subcategories": [
-                { "name": "ドリップバッグ" },
-                { "name": "インスタント" },
-                { "name": "コーヒー豆" }
+                { "name": "軽量モバイルノート 13インチ" },
+                { "name": "スタンダードノート 15インチ" },
+                { "name": "ゲーミングノート RTX搭載" },
+                { "name": "2in1 タブレットPC" },
+                { "name": "クリエイター向け 4Kモデル" }
               ]
             },
             {
-              "name": "お茶",
-              "subcategories": [{ "name": "緑茶" }, { "name": "紅茶" }]
+              "name": "デスクトップPC",
+              "subcategories": [
+                { "name": "タワー型ゲーミングPC" },
+                { "name": "省スペース型 スリムPC" },
+                { "name": "液晶一体型 オールインワン" },
+                { "name": "ミニPC (NUC)" },
+                { "name": "ワークステーション" }
+              ]
             }
           ]
         },
         {
-          "name": "お菓子",
-          "subcategories": [{ "name": "チョコレート" }, { "name": "クッキー" }]
+          "name": "スマートフォン",
+          "subcategories": [
+            {
+              "name": "iPhone関連",
+              "subcategories": [
+                { "name": "iPhone 15 Pro Max" },
+                { "name": "iPhone 15 標準モデル" },
+                { "name": "iPhone SE (第3世代)" },
+                { "name": "MagSafe充電器" },
+                { "name": "Lightningケーブル" }
+              ]
+            },
+            {
+              "name": "Android関連",
+              "subcategories": [
+                { "name": "Galaxy Sシリーズ" },
+                { "name": "Pixel Proシリーズ" },
+                { "name": "Xperia 1シリーズ" },
+                { "name": "SIMフリー エントリー機" },
+                { "name": "急速充電アダプター Type-C" }
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "name": "スポーツ",
+      "name": "ホーム・キッチン",
       "subcategories": [
         {
-          "name": "アウトドア",
+          "name": "調理家電",
           "subcategories": [
-            { "name": "テント" },
-            { "name": "寝袋" },
-            { "name": "バーベキュー用品" }
+            {
+              "name": "炊飯器・レンジ",
+              "subcategories": [
+                { "name": "圧力IH炊飯ジャー 5.5合" },
+                { "name": "スチームオーブンレンジ" },
+                { "name": "単機能電子レンジ" },
+                { "name": "電気圧力鍋" },
+                { "name": "ホームベーカリー" }
+              ]
+            },
+            {
+              "name": "コーヒーメーカー",
+              "subcategories": [
+                { "name": "全自動エスプレッソマシン" },
+                { "name": "カプセル式コーヒーメーカー" },
+                { "name": "ドリップ式コーヒーメーカー" },
+                { "name": "電動コーヒーミル" },
+                { "name": "ミルクフォーマー" }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "寝具・ベッド",
+          "subcategories": [
+            {
+              "name": "布団・枕",
+              "subcategories": [
+                { "name": "高反発マットレス シングル" },
+                { "name": "羽毛布団 ダブルサイズ" },
+                { "name": "低反発まくら" },
+                { "name": "冷感敷きパッド" },
+                { "name": "除湿シート" }
+              ]
+            },
+            {
+              "name": "ベッドフレーム",
+              "subcategories": [
+                { "name": "収納付き木製ベッド" },
+                { "name": "パイプベッド シングル" },
+                { "name": "すのこベッド 折りたたみ" },
+                { "name": "ロフトベッド" },
+                { "name": "脚付きマットレス" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "スポーツ・アウトドア",
+      "subcategories": [
+        {
+          "name": "キャンプ用品",
+          "subcategories": [
+            {
+              "name": "テント・タープ",
+              "subcategories": [
+                { "name": "ドーム型テント 4人用" },
+                { "name": "ワンポールテント" },
+                { "name": "ヘキサタープ" },
+                { "name": "ポップアップテント" },
+                { "name": "ペグ・ハンマーセット" }
+              ]
+            },
+            {
+              "name": "調理・焚き火",
+              "subcategories": [
+                { "name": "焚き火台 ステンレス製" },
+                { "name": "ダッチオーブン 10インチ" },
+                { "name": "ガスバーナー コンロ" },
+                { "name": "アウトドア用クッカー" },
+                { "name": "クーラーボックス 50L" }
+              ]
+            }
           ]
         },
         {
           "name": "フィットネス",
-          "subcategories": [{ "name": "ヨガマット" }, { "name": "ダンベル" }]
+          "subcategories": [
+            {
+              "name": "トレーニング用品",
+              "subcategories": [
+                { "name": "可変式ダンベル 20kg" },
+                { "name": "ヨガマット 厚手10mm" },
+                { "name": "腹筋ローラー" },
+                { "name": "懸垂マシン" },
+                { "name": "バランスボール 65cm" }
+              ]
+            },
+            {
+              "name": "ランニング",
+              "subcategories": [
+                { "name": "ランニングシューズ メンズ" },
+                { "name": "ランニングウォッチ GPS" },
+                { "name": "スポーツタイツ" },
+                { "name": "ウエストポーチ" },
+                { "name": "給水ボトル" }
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "name": "本・雑誌",
+      "name": "書籍・コミック",
       "subcategories": [
         {
-          "name": "書籍",
+          "name": "ビジネス・経済",
           "subcategories": [
             {
-              "name": "小説",
+              "name": "自己啓発",
               "subcategories": [
-                { "name": "ミステリー" },
-                { "name": "SF" },
-                { "name": "恋愛小説" }
+                { "name": "時間管理術のすべて" },
+                { "name": "リーダーシップの教科書" },
+                { "name": "話し方・プレゼン入門" },
+                { "name": "モチベーション革命" },
+                { "name": "習慣化のテクニック" }
               ]
             },
-            { "name": "実用書" }
+            {
+              "name": "金融・投資",
+              "subcategories": [
+                { "name": "株式投資の基礎知識" },
+                { "name": "FXチャート分析入門" },
+                { "name": "不動産投資の教科書" },
+                { "name": "ファイナンス理論" },
+                { "name": "会社四季報 最新号" }
+              ]
+            }
           ]
         },
-        { "name": "雑誌" }
+        {
+          "name": "コミック",
+          "subcategories": [
+            {
+              "name": "少年コミック",
+              "subcategories": [
+                { "name": "冒険ファンタジー 1巻" },
+                { "name": "スポーツ青春漫画 1巻" },
+                { "name": "バトルアクション 1巻" },
+                { "name": "学園コメディ 1巻" },
+                { "name": "SFロボット漫画 1巻" }
+              ]
+            },
+            {
+              "name": "青年コミック",
+              "subcategories": [
+                { "name": "歴史ドラマ漫画 1巻" },
+                { "name": "サスペンスミステリー 1巻" },
+                { "name": "ビジネス立志伝 1巻" },
+                { "name": "グルメ・料理漫画 1巻" },
+                { "name": "アウトロー漫画 1巻" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "食品・ドリンク",
+      "subcategories": [
+        {
+          "name": "飲料・お酒",
+          "subcategories": [
+            {
+              "name": "ソフトドリンク",
+              "subcategories": [
+                { "name": "ミネラルウォーター 2L×6" },
+                { "name": "無糖炭酸水 500ml×24" },
+                { "name": "100%オレンジジュース" },
+                { "name": "特定保健用食品 お茶" },
+                { "name": "野菜ジュース ケース" }
+              ]
+            },
+            {
+              "name": "アルコール",
+              "subcategories": [
+                { "name": "プレミアムビール 350ml" },
+                { "name": "純米大吟醸 720ml" },
+                { "name": "赤ワイン フルボディ" },
+                { "name": "ウイスキー 12年熟成" },
+                { "name": "焼酎 芋 1.8L" }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "スイーツ",
+          "subcategories": [
+            {
+              "name": "洋菓子",
+              "subcategories": [
+                { "name": "高級チョコレート詰め合わせ" },
+                { "name": "チーズケーキ ホール" },
+                { "name": "マドレーヌ ギフトセット" },
+                { "name": "フルーツゼリー" },
+                { "name": "バウムクーヘン" }
+              ]
+            },
+            {
+              "name": "和菓子",
+              "subcategories": [
+                { "name": "羊羹 詰め合わせ" },
+                { "name": "カステラ 1斤" },
+                { "name": "どら焼き 10個入り" },
+                { "name": "大福 6個セット" },
+                { "name": "かりんとう ギフト" }
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

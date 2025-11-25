@@ -571,28 +571,36 @@ export default function App() {
               </div>
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">
-              <div className="max-w-4xl mx-auto px-6 py-10">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-xl border-2 border-blue-200 p-8 mb-12 relative overflow-hidden">
-                  {/* Background decoration */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -mr-16 -mt-16 opacity-50"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-100 rounded-full -ml-12 -mb-12 opacity-50"></div>
+              <div className="py-6">
+                {/* Compact Task Instruction Bar */}
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 mx-auto w-192">
+                  <div className="flex items-center gap-3">
+                    {/* Status Indicator */}
+                    <div className="flex items-center gap-2 px-2 py-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs font-semibold text-gray-600">
+                        {appState === "tutorial"
+                          ? (lang === "ja" ? "チュートリアル中" : "In Tutorial")
+                          : (lang === "ja" ? "実験中" : "In Progress")}
+                      </span>
+                    </div>
 
-                  <div className="text-center relative z-10">
-                    <div className="inline-block px-4 py-2 bg-blue-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4 shadow-md">
-                      {appState === "tutorial"
-                        ? (lang === "ja" ? "🎯 チュートリアルタスク" : "🎯 Tutorial Task")
-                        : (lang === "ja" ? "🔬 実験タスク進行中" : "🔬 Experiment Task In Progress")}
+                    {/* Divider */}
+                    <div className="w-px h-8 bg-gray-300"></div>
+
+                    {/* Task Description */}
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-500 font-medium mb-2">
+                        {lang === "ja" ? "目標アイテム" : "Target Item"}
+                      </div>
+                      <div className="text-2xl font-bold text-gray-900 leading-tight">
+                        {appState !== "tutorial" && currentTaskWithEasing
+                          ? currentTaskWithEasing.task.description
+                          : lang === "en"
+                            ? "Find 'Dome Tent 4-person'"
+                            : "「ドーム型テント 4人用」を探してクリックしてください"}
+                      </div>
                     </div>
-                    <div className="text-sm font-semibold text-blue-700 uppercase mb-3">
-                      {lang === "ja" ? "目標アイテム" : "Target Item"}
-                    </div>
-                    <h2 className="text-4xl font-black text-gray-900 leading-tight">
-                      {appState !== "tutorial" && currentTaskWithEasing
-                        ? currentTaskWithEasing.task.description
-                        : lang === "en"
-                          ? "Find 'Dome Tent 4-person'"
-                          : "「ドーム型テント 4人用」を探してクリックしてください"}
-                    </h2>
                   </div>
                 </div>
 
@@ -616,7 +624,7 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
-                <div className="relative h-[500px] z-0">
+                <div className="relative h-[500px] z-0 ml-6">
                   {appState === "tutorial" && (
                     <TaskMenu
                       key="tutorial-menu"
@@ -643,9 +651,10 @@ export default function App() {
                     )}
                 </div>
               </div>
-            </main>
-          </div>
-        )}
-    </div>
+            </main >
+          </div >
+        )
+      }
+    </div >
   );
 }

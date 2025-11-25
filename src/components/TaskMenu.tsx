@@ -56,10 +56,9 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     return (
       <ul
         className={`
-          w-64 bg-white text-gray-700 text-sm font-medium
-          /* 影をつけて浮き上がらせる */
-          shadow-xl rounded-sm border border-gray-100
-          /* 親要素（li）に対して相対配置ではなくなるが、ここでは枠のデザインのみ */
+          w-72 bg-white text-gray-800
+          shadow-lg border border-gray-200
+          ${depth === 0 ? 'rounded-b-md' : 'rounded-md'}
         `}
       >
         {cats.map((cat) => {
@@ -67,27 +66,29 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           const isActive = activePath[depth] === cat.name;
 
           return (
-            <li key={cat.name} className="relative">
+            <li key={cat.name} className="relative border-b border-gray-100 last:border-b-0">
               <button
                 onClick={() => handleClick(cat, depth)}
                 className={`
-                  w-full text-left px-4 py-3.5 flex items-center justify-between
-                  transition-colors duration-100 focus:outline-none
-                  /* 親メニューの背景色。アクティブ時は薄い青 */
+                  w-full text-left px-5 py-4 flex items-center justify-between
+                  transition-all duration-150 focus:outline-none
+                  text-base font-medium
                   ${isActive
-                    ? "bg-blue-50 text-blue-700 font-bold"
-                    : "hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-gray-100 text-gray-800"
                   }
                 `}
               >
                 <span className="truncate">{cat.name}</span>
                 {hasSub && (
-                  <span
-                    className={`text-[10px] ml-2 ${isActive ? "text-blue-500" : "text-gray-300"
-                      }`}
+                  <svg
+                    className={`w-4 h-4 ml-2 flex-shrink-0 transition-transform ${isActive ? 'rotate-0' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    ▶
-                  </span>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                  </svg>
                 )}
               </button>
 
@@ -101,11 +102,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                       duration: 0.8,
                       ease: bezierMap[currentEasing],
                     }}
-                    // 重要変更点:
-                    // 1. -z-10: 親メニューより奥（背面）に配置する
-                    // 2. left-[98%]: 親メニューの右端より少し左から開始して、親の下に潜り込ませる
-                    //    これにより親の影が子の上に落ちるようになる
-                    className="absolute top-0 left-[98%] w-64 -z-10 pt-0"
+                    className="absolute top-0 left-full ml-2 -z-10"
                   >
                     {/* 再帰呼び出し */}
                     {renderMenu(cat.subcategories!, depth + 1)}
@@ -121,22 +118,16 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
   return (
     <div className="relative inline-block align-top">
-      {/* ヘッダー: z-indexを高くして一番手前に表示 */}
-      <div className="relative z-20 bg-[#1a2332] text-white px-5 py-4 text-sm font-bold flex items-center gap-3 rounded-t-sm shadow-md w-64">
-        <span className="text-xl leading-none">≡</span>
-        <span className="tracking-wide">CATEGORY</span>
+      {/* ヘッダー */}
+      <div className="relative z-20 bg-gradient-to-r from-gray-700 to-gray-800 text-white px-5 py-3.5 font-semibold flex items-center gap-3 rounded-t-md shadow-md w-72">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <span className="tracking-wide text-sm uppercase">カテゴリー</span>
       </div>
 
       {/* メインメニュー */}
       <div className="relative z-10">
-        <style>{`
-          /* 最初のリストだけ上部の角丸とボーダーを調整してヘッダーと結合させる */
-          ul:first-child {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top: none;
-          }
-        `}</style>
         {renderMenu(categories)}
       </div>
     </div>

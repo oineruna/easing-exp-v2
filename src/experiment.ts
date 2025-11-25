@@ -91,6 +91,7 @@ export interface TaskLog {
   errorClicks?: number;
   clicks: ClickRecord[];
   menuTravelDistance?: number;
+  mouseDistance?: number; // 🆕 マウスの総移動距離（ピクセル）
   survey?: TaskSurveyResult;
   seqScore?: number;
   usedEasing?: EasingFunction;

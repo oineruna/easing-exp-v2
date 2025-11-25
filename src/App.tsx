@@ -253,6 +253,8 @@ export default function App() {
     () => {
       console.log("[App] handleTutorialCompleteClose called");
       setAppState("ready");
+      // チュートリアル完了後、自動的に実験開始確認ダイアログを表示
+      setShowStartConfirm(true);
     },
     []
   );
@@ -704,7 +706,7 @@ export default function App() {
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="py-6">
                 {/* Compact Task Instruction Bar */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-120 w-192">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-100 w-192">
                   <div className="flex items-center gap-3">
                     {/* Status Indicator */}
                     <div className="flex items-center gap-2 px-2 py-1">

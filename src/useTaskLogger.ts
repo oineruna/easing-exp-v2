@@ -1,6 +1,6 @@
 // --- START OF FILE src/hooks/useTaskLogger.ts ---
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import type { ClickLog, Category, TaskLog } from "./experiment"; // パスを修正
 
 export function useTaskLogger() {
@@ -13,6 +13,28 @@ export function useTaskLogger() {
   const lastClickTimeRef = useRef<number>(0);
   const lastClickDepthRef = useRef<number>(0);
   const isAnimatingRef = useRef<boolean>(false);
+
+  // マウス移動距離トラッキング用
+  const mouseDistanceRef = useRef(0);
+  const lastMousePosRef = useRef<{ x: number; y: number } | null>(null);
+
+  // グローバルマウス移動イベントリスナー
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (lastMousePosRef.current) {
+        const dx = e.clientX - lastMousePosRef.current.x;
+        const dy = e.clientY - lastMousePosRef.current.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        mouseDistanceRef.current += distance;
+      }
+      lastMousePosRef.current = { x: e.clientX, y: e.clientY };
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   // カテゴリの深さを取得
   const getCategoryDepth = useCallback(
@@ -82,6 +104,9 @@ export function useTaskLogger() {
     setFirstClickTime(null);
     lastClickTimeRef.current = 0;
     lastClickDepthRef.current = 0;
+    // マウストラッキングをリセット
+    mouseDistanceRef.current = 0;
+    lastMousePosRef.current = null;
     startTimeRef.current = performance.now();
     isAnimatingRef.current = false;
   }, []);
@@ -107,6 +132,7 @@ export function useTaskLogger() {
         errorClicks: errorCount,
         clicks: clicksThisTask,
         menuTravelDistance: menuTravelDistance,
+        mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）
       };
     },
     [clicksThisTask, errorCount, firstClickTime, menuTravelDistance]

@@ -74,19 +74,17 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                   w-full text-left px-4 py-3.5 flex items-center justify-between
                   transition-colors duration-100 focus:outline-none
                   /* 親メニューの背景色。アクティブ時は薄い青 */
-                  ${
-                    isActive
-                      ? "bg-blue-50 text-blue-700 font-bold"
-                      : "hover:bg-gray-50 hover:text-gray-900"
+                  ${isActive
+                    ? "bg-blue-50 text-blue-700 font-bold"
+                    : "hover:bg-gray-50 hover:text-gray-900"
                   }
                 `}
               >
                 <span className="truncate">{cat.name}</span>
                 {hasSub && (
                   <span
-                    className={`text-[10px] ml-2 ${
-                      isActive ? "text-blue-500" : "text-gray-300"
-                    }`}
+                    className={`text-[10px] ml-2 ${isActive ? "text-blue-500" : "text-gray-300"
+                      }`}
                   >
                     ▶
                   </span>
@@ -100,7 +98,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{
-                      duration: 0.2,
+                      duration: 0.8,
                       ease: bezierMap[currentEasing],
                     }}
                     // 重要変更点:

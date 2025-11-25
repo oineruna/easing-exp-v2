@@ -196,7 +196,7 @@ export default function App() {
 
   const handleTutorialItemClick = useCallback(
     (itemName: string) => {
-      const targetItem = lang === "en" ? "Tents" : "テント";
+      const targetItem = lang === "en" ? "Dome Tent 4-person" : "ドーム型テント 4人用";
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
@@ -545,7 +545,7 @@ export default function App() {
                         ? currentTaskWithEasing.task.description
                         : lang === "en"
                           ? "Find 'Tents'"
-                          : "「テント」を探してクリックしてください"}
+                          : "「ドーム型テント 4人用」を探してクリックしてください"}
                     </h2>
                   </div>
                 </div>

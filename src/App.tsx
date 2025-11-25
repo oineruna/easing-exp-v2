@@ -90,9 +90,11 @@ export default function App() {
   >("");
   // ★ 実験開始確認用ステート
   const [showStartConfirm, setShowStartConfirm] = useState(false);
+  // ★ チュートリアル用イージング選択
+  const [tutorialEasing, setTutorialEasing] = useState<EasingFunction>("easeInOutExpo");
 
   const currentEasing: EasingFunction =
-    currentTaskWithEasing?.easing || "easeInOutExpo";
+    appState === "tutorial" ? tutorialEasing : (currentTaskWithEasing?.easing || "easeInOutExpo");
 
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
@@ -183,7 +185,11 @@ export default function App() {
     []
   );
   const handleTutorialIntroClose = useCallback(
-    () => setAppState("ready"),
+    () => {
+      setFeedback(null);
+      setFeedbackType("");
+      setAppState("tutorial");
+    },
     []
   );
   const handleTutorialCompleteClose = useCallback(
@@ -463,6 +469,7 @@ export default function App() {
             isVisible={true}
             lang={lang}
             participantId={participantId}
+            isExperimentActive={experimentTasks.length > 0}
             onStart={() => setShowStartConfirm(true)}
             onTutorial={handleStartTutorial}
           />
@@ -521,30 +528,69 @@ export default function App() {
         appState === "seq" ||
         appState === "next-task-ready") && (
           <div className="min-h-screen flex flex-col">
-            <header className="bg-white border-b border-gray-200 py-3 px-8 sticky top-0 z-20 shadow-sm flex items-center justify-between">
-              <div className="font-bold text-gray-400">
-                EXPERIMENT{" "}
-                <span className="ml-2 text-xs font-mono text-gray-300">
-                  {participantId}
-                </span>
-              </div>
-              <div className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                Easing:{" "}
-                <span className="font-bold text-blue-600">{currentEasing}</span>
+            <header className="bg-white border-b border-gray-300 py-3 px-6 sticky top-0 z-20 shadow-sm">
+              <div className="flex items-center justify-between max-w-7xl mx-auto">
+                {/* Left: Participant Info */}
+                <div className="flex items-center gap-4">
+                  <div className="text-sm font-semibold text-gray-700">
+                    {lang === "ja" ? "実験ID" : "Participant ID"}:
+                  </div>
+                  <div className="px-3 py-1 bg-gray-100 rounded font-mono text-sm text-gray-800">
+                    {participantId}
+                  </div>
+                </div>
+
+                {/* Right: Easing Selector */}
+                <div className="flex items-center gap-4">
+                  <label className="text-sm font-bold text-gray-700">
+                    {lang === "ja" ? "イージング関数" : "Easing Function"}:
+                  </label>
+                  <select
+                    value={currentEasing}
+                    onChange={(e) => {
+                      if (appState === "tutorial") {
+                        setTutorialEasing(e.target.value as EasingFunction);
+                      } else if (appState === "task" || appState === "seq" || appState === "next-task-ready") {
+                        if (currentTaskWithEasing) {
+                          setCurrentTaskWithEasing({
+                            ...currentTaskWithEasing,
+                            easing: e.target.value as EasingFunction
+                          });
+                        }
+                      }
+                    }}
+                    className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all"
+                  >
+                    <option value="linear">linear</option>
+                    <option value="easeInOutQuad">easeInOutQuad</option>
+                    <option value="easeInOutQuint">easeInOutQuint</option>
+                    <option value="easeInOutExpo">easeInOutExpo</option>
+                    <option value="easeInOutBack">easeInOutBack</option>
+                  </select>
+                </div>
               </div>
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="max-w-4xl mx-auto px-6 py-10">
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-12 relative overflow-hidden">
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-gray-400 uppercase mb-2">
-                      Current Target
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-xl border-2 border-blue-200 p-8 mb-12 relative overflow-hidden">
+                  {/* Background decoration */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -mr-16 -mt-16 opacity-50"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-100 rounded-full -ml-12 -mb-12 opacity-50"></div>
+
+                  <div className="text-center relative z-10">
+                    <div className="inline-block px-4 py-2 bg-blue-600 text-white text-xs font-bold uppercase tracking-wider rounded-full mb-4 shadow-md">
+                      {appState === "tutorial"
+                        ? (lang === "ja" ? "🎯 チュートリアルタスク" : "🎯 Tutorial Task")
+                        : (lang === "ja" ? "🔬 実験タスク進行中" : "🔬 Experiment Task In Progress")}
                     </div>
-                    <h2 className="text-3xl font-black">
+                    <div className="text-sm font-semibold text-blue-700 uppercase mb-3">
+                      {lang === "ja" ? "目標アイテム" : "Target Item"}
+                    </div>
+                    <h2 className="text-4xl font-black text-gray-900 leading-tight">
                       {appState !== "tutorial" && currentTaskWithEasing
                         ? currentTaskWithEasing.task.description
                         : lang === "en"
-                          ? "Find 'Tents'"
+                          ? "Find 'Dome Tent 4-person'"
                           : "「ドーム型テント 4人用」を探してクリックしてください"}
                     </h2>
                   </div>

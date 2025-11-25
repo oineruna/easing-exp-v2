@@ -6,6 +6,7 @@ interface StartScreenProps {
   isVisible: boolean;
   lang: Lang;
   participantId: string;
+  isExperimentActive: boolean;
   onStart: () => void;
   onTutorial: () => void;
 }
@@ -14,6 +15,7 @@ export function StartScreen({
   isVisible,
   lang,
   participantId,
+  isExperimentActive,
   onStart,
   onTutorial,
 }: StartScreenProps) {
@@ -72,7 +74,8 @@ export function StartScreen({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={onStart}
-                  className="w-full px-8 py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-lg shadow-xl"
+                  disabled={isExperimentActive}
+                  className="w-full px-8 py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                 >
                   {t(lang, "startTask")}
                 </motion.button>

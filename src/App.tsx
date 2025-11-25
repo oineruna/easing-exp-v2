@@ -35,6 +35,14 @@ import {
   generateTasksFromCategories,
   TIME_LIMIT_MS,
 } from "./utils/task";
+import {
+  FrameRateMonitor,
+  getClientIP,
+  getPublicIP,
+  getUserAgent,
+  getScreenInfo,
+} from "./utils/systemInfo";
+
 
 type AppState =
   | "consent"
@@ -67,7 +75,7 @@ const hashCode = (str: string) => {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("ready");
+  const [appState, setAppState] = useState<AppState>("consent");
   const [participantId, setParticipantId] = useState<string>("");
 
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
@@ -98,6 +106,15 @@ export default function App() {
 
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
+
+  // システム情報収集用
+  const fpsMonitorRef = useRef<FrameRateMonitor | null>(null);
+  const [systemInfo, setSystemInfo] = useState<{
+    clientIP: string;
+    publicIP: string;
+    userAgent: string;
+    screenInfo: ReturnType<typeof getScreenInfo>;
+  } | null>(null);
 
   // 初期化 & localStorage復元確認
   useEffect(() => {
@@ -148,6 +165,46 @@ export default function App() {
     };
     loadData();
   }, [lang]);
+
+  // システム情報を収集
+  useEffect(() => {
+    // FPSモニターを初期化
+    if (!fpsMonitorRef.current) {
+      fpsMonitorRef.current = new FrameRateMonitor();
+    }
+
+    // IP、ユーザーエージェント、画面情報を取得
+    const collectSystemInfo = async () => {
+      const [clientIP, publicIP] = await Promise.all([
+        getClientIP(),
+        getPublicIP(),
+      ]);
+
+      setSystemInfo({
+        clientIP,
+        publicIP,
+        userAgent: getUserAgent(),
+        screenInfo: getScreenInfo(),
+      });
+
+      console.log("[System Info] Collected:", {
+        clientIP,
+        publicIP,
+        userAgent: getUserAgent(),
+        screenInfo: getScreenInfo(),
+      });
+    };
+
+    collectSystemInfo();
+
+    // クリーンアップ
+    return () => {
+      if (fpsMonitorRef.current) {
+        fpsMonitorRef.current.stop();
+      }
+    };
+  }, []);
+
 
   // localStorage 自動バックアップ（5タスクごと）
   useEffect(() => {
@@ -222,6 +279,14 @@ export default function App() {
     setFeedback(lang === "en" ? "Timeout!" : "タイムアウト!");
     setFeedbackType("timeout");
 
+    // FPSモニターを停止してFPS統計を取得
+    let fpsStats = undefined;
+    if (fpsMonitorRef.current) {
+      fpsStats = fpsMonitorRef.current.getStats();
+      fpsMonitorRef.current.stop();
+      console.log("[FPS] Task timeout - Stats:", fpsStats);
+    }
+
     const log = taskLogger.stopTask(false, true);
     if (currentTaskWithEasing) {
       const fullLog = {
@@ -231,6 +296,7 @@ export default function App() {
         taskId: currentTaskWithEasing.task.id,
         targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
         easingFunction: currentTaskWithEasing.easing,
+        fps: fpsStats,
       } as TaskLog;
       setTempTaskLog(fullLog);
     }
@@ -241,6 +307,7 @@ export default function App() {
       setAppState("seq");
     }, 200);
   }, [currentTaskWithEasing, taskLogger, lang, participantId]);
+
 
   const handleStartTask = useCallback(async () => {
     // 確認ダイアログを閉じる
@@ -261,12 +328,20 @@ export default function App() {
     setAppState("task");
     taskLogger.resetTask();
 
+    // FPSモニタリングを開始
+    if (fpsMonitorRef.current) {
+      fpsMonitorRef.current.reset();
+      fpsMonitorRef.current.start();
+      console.log("[FPS] Monitoring started for task");
+    }
+
     if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     timeoutIdRef.current = window.setTimeout(
       () => handleTaskTimeout(),
       TIME_LIMIT_MS
     );
   }, [menuCategories, lang, participantId, taskLogger, handleTaskTimeout]);
+
 
   const handleTaskItemClick = useCallback(
     (itemName: string, isCorrectPath: boolean) => {
@@ -284,6 +359,14 @@ export default function App() {
         setFeedback(lang === "en" ? "Correct!" : "正解!");
         setFeedbackType("correct");
 
+        // FPSモニターを停止してFPS統計を取得
+        let fpsStats = undefined;
+        if (fpsMonitorRef.current) {
+          fpsStats = fpsMonitorRef.current.getStats();
+          fpsMonitorRef.current.stop();
+          console.log("[FPS] Task completed - Stats:", fpsStats);
+        }
+
         const log = taskLogger.stopTask(true, false);
         const fullLog = {
           ...log,
@@ -292,7 +375,9 @@ export default function App() {
           taskId: currentTaskWithEasing.task.id,
           targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
           easingFunction: currentTaskWithEasing.easing,
+          fps: fpsStats,
         } as TaskLog;
+
         setTempTaskLog(fullLog);
 
         setTimeout(() => {
@@ -337,12 +422,20 @@ export default function App() {
     setAppState("task");
     taskLogger.resetTask();
 
+    // FPSモニタリングを再開
+    if (fpsMonitorRef.current) {
+      fpsMonitorRef.current.reset();
+      fpsMonitorRef.current.start();
+      console.log("[FPS] Monitoring restarted for next task");
+    }
+
     if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     timeoutIdRef.current = window.setTimeout(
       () => handleTaskTimeout(),
       TIME_LIMIT_MS
     );
   }, [currentTaskIndex, experimentTasks, taskLogger, handleTaskTimeout]);
+
 
   // ★ 事後アンケート完了＆データ保存
   const handlePostSurveyComplete = useCallback(
@@ -366,23 +459,61 @@ export default function App() {
         preSurvey: preSurveyData!,
         tasks: allLogs,
         postSurvey: surveyData,
+        systemInfo: systemInfo || undefined,
       };
 
-      // JSONダウンロード
-      const dataStr =
-        "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(finalData, null, 2));
-      const downloadAnchorNode = document.createElement("a");
-      downloadAnchorNode.setAttribute("href", dataStr);
-      downloadAnchorNode.setAttribute(
-        "download",
-        `experiment_data_${participantId}.json`
-      );
-      document.body.appendChild(downloadAnchorNode);
-      // タブを閉じる試行
-      window.close();
-      // 閉じられなかった場合はConsentに戻る（あるいは終了画面のままにする）
-      setAppState("consent");
+
+      // サーバーへ送信
+      try {
+        fetch("/api/submit-experiment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalData),
+        })
+          .then((res) => {
+            if (res.ok) {
+              alert(
+                lang === "ja"
+                  ? "実験データが正常に送信されました。\nご協力ありがとうございました。"
+                  : "Experiment data submitted successfully.\nThank you for your cooperation."
+              );
+            } else {
+              throw new Error("Server error");
+            }
+          })
+          .catch((err) => {
+            console.error("Submission error:", err);
+            alert(
+              lang === "ja"
+                ? "データの自動送信に失敗しました。\nダウンロードされるJSONファイルを実験担当者に送付してください。"
+                : "Failed to submit data automatically.\nPlease send the downloaded JSON file to the experimenter."
+            );
+          })
+          .finally(() => {
+            // バックアップとして必ずJSONダウンロードを実行
+            const dataStr =
+              "data:text/json;charset=utf-8," +
+              encodeURIComponent(JSON.stringify(finalData, null, 2));
+            const downloadAnchorNode = document.createElement("a");
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute(
+              "download",
+              `experiment_data_${participantId}.json`
+            );
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+
+            // データをクリアして終了状態へ
+            localStorage.removeItem(`experiment_backup_${participantId}`);
+            setAppState("consent");
+          });
+      } catch (e) {
+        console.error("Error in submission flow:", e);
+      }
+
 
       // 必要ならIDをリセットする処理など
     },

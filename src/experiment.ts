@@ -94,6 +94,13 @@ export interface TaskLog {
   survey?: TaskSurveyResult;
   seqScore?: number;
   usedEasing?: EasingFunction;
+  fps?: {
+    current: number;
+    average: number;
+    min: number;
+    max: number;
+    samples: number;
+  };
 }
 
 /**
@@ -118,4 +125,17 @@ export interface ExperimentData {
   preSurvey: PreSurveyData; // 🆕 事前アンケートデータ
   tasks: TaskLog[];
   postSurvey: PostSurveyResult;
+  systemInfo?: {
+    clientIP: string;
+    publicIP: string;
+    userAgent: string;
+    screenInfo: {
+      width: number;
+      height: number;
+      availWidth: number;
+      availHeight: number;
+      colorDepth: number;
+      pixelRatio: number;
+    };
+  };
 }

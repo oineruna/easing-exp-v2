@@ -117,12 +117,12 @@ export function TaskSurveyOverlay({
               📝 {text.title}
             </h2>
 
-            <div className="space-y-6">
+            <div className="space-y-2">
               {/* Q1 */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q1}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-600 font-normal mt-1">
                     {text.scale1}
                   </span>
                 </div>
@@ -134,8 +134,8 @@ export function TaskSurveyOverlay({
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setEaseRating(value)}
                       className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${easeRating === value
-                          ? "bg-blue-600 text-white shadow-lg scale-110"
-                          : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
+                        ? "bg-blue-600 text-white shadow-lg scale-110"
+                        : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
                         }`}
                     >
                       {value}
@@ -148,7 +148,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q2}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-600 font-normal mt-1">
                     {text.scale2}
                   </span>
                 </div>
@@ -160,8 +160,8 @@ export function TaskSurveyOverlay({
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDifficultyRating(value)}
                       className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${difficultyRating === value
-                          ? "bg-blue-600 text-white shadow-lg scale-110"
-                          : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
+                        ? "bg-blue-600 text-white shadow-lg scale-110"
+                        : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
                         }`}
                     >
                       {value}
@@ -174,7 +174,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q3}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-600 font-normal mt-1">
                     {text.scale3}
                   </span>
                 </div>
@@ -186,8 +186,8 @@ export function TaskSurveyOverlay({
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDifferenceRating(value)}
                       className={`w-12 h-12 rounded-xl font-bold text-lg transition-all ${differenceRating === value
-                          ? "bg-blue-600 text-white shadow-lg scale-110"
-                          : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
+                        ? "bg-blue-600 text-white shadow-lg scale-110"
+                        : "bg-white border border-gray-200 text-gray-600 hover:bg-blue-50"
                         }`}
                     >
                       {value}

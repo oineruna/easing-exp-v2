@@ -573,7 +573,7 @@ export default function App() {
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="py-6">
                 {/* Compact Task Instruction Bar */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 mx-auto w-192">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-120 w-192">
                   <div className="flex items-center gap-3">
                     {/* Status Indicator */}
                     <div className="flex items-center gap-2 px-2 py-1">
@@ -624,7 +624,7 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
-                <div className="relative h-[500px] z-0 ml-6">
+                <div className="relative h-[500px] z-0 -ml-64">
                   {appState === "tutorial" && (
                     <TaskMenu
                       key="tutorial-menu"

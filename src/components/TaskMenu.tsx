@@ -102,7 +102,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                       duration: 0.8,
                       ease: bezierMap[currentEasing],
                     }}
-                    className="absolute top-0 left-full ml-2 -z-10"
+                    className="absolute top-0 left-full -z-10"
                   >
                     {/* 再帰呼び出し */}
                     {renderMenu(cat.subcategories!, depth + 1)}

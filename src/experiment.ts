@@ -86,6 +86,9 @@ export interface TaskLog {
   clicks: ClickRecord[];
   menuTravelDistance?: number;
   mouseDistance?: number; // 🆕 マウスの総移動距離（ピクセル）
+  interactedDuringAnimation?: boolean; // 🆕 アニメーション中に操作したか
+  animationClickCount?: number; // 🆕 アニメーション中のクリック数
+  animationErrorCount?: number; // 🆕 アニメーション中の誤クリック数
   survey?: TaskSurveyResult;
   seqScore?: number;
   usedEasing?: EasingFunction;

@@ -127,6 +127,9 @@ export function useTaskLogger() {
         clicks: clicksThisTask,
         menuTravelDistance: menuTravelDistance,
         mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）
+        interactedDuringAnimation: clicksThisTask.some(click => click.duringAnimation), // 🆕 アニメーション中のクリックがあったか
+        animationClickCount: clicksThisTask.filter(click => click.duringAnimation).length, // 🆕 アニメーション中のクリック数
+        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation && click.isCorrect === false).length, // 🆕 アニメーション中の誤クリック数
       };
     },
     [clicksThisTask, errorCount, firstClickTime, menuTravelDistance]

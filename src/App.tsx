@@ -75,7 +75,7 @@ const hashCode = (str: string) => {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("reward");
+  const [appState, setAppState] = useState<AppState>("consent");
   const [participantId, setParticipantId] = useState<string>("");
 
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
@@ -729,8 +729,13 @@ export default function App() {
 
                     {/* Task Description */}
                     <div className="flex-1">
-                      <div className="text-xs text-gray-500 font-medium mb-2">
+                      <div className="text-sm text-gray-500 font-medium mb-2 border-b-2 border-dotted border-gray-300 pb-1 inline-block">
                         {lang === "ja" ? "目標アイテム" : "Target Item"}
+                        {appState !== "tutorial" && (
+                          <span className="ml-2 text-gray-400 font-normal">
+                            ({currentTaskIndex + 1}/{experimentTasks.length})
+                          </span>
+                        )}
                       </div>
                       <div className="text-2xl font-bold text-gray-900 leading-tight">
                         {appState !== "tutorial" && currentTaskWithEasing

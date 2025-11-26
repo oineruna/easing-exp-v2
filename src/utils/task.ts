@@ -93,18 +93,36 @@ export const generateTasksFromCategories = (categories: Category[]): Task[] => {
  * タスクシーケンスの生成
  */
 export const generateTaskSequence = (
-  _participantId: number,
+  participantId: number,
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
   const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
+  const TRIALS_PER_EASING = 5;
+  const TOTAL_TRIALS = EASING_FUNCS.length * TRIALS_PER_EASING; // 25
 
-  // ランダムに25問抽出
-  const shuffledTasks = [...availableTasks]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 1);
+  // 1. 利用可能なタスクからランダムに25個選出（重複なし）
+  const shuffledAvailableTasks = [...availableTasks].sort(
+    () => Math.random() - 0.5
+  );
+  const selectedTasks = shuffledAvailableTasks.slice(0, TOTAL_TRIALS);
 
-  shuffledTasks.forEach((task, index) => {
-    const easing = EASING_FUNCS[index % EASING_FUNCS.length];
+  // 2. ラテン方格に基づくイージング順序の決定
+  // 参加者IDに基づいて開始位置を決定 (0-4)
+  const startOffset = participantId % EASING_FUNCS.length;
+
+  // 基本となるイージング順序を作成 (例: ID=1 -> [1, 2, 3, 4, 0])
+  const baseEasingSequence: EasingFunction[] = [];
+  for (let i = 0; i < EASING_FUNCS.length; i++) {
+    const index = (startOffset + i) % EASING_FUNCS.length;
+    baseEasingSequence.push(EASING_FUNCS[index]);
+  }
+
+  // 3. タスクとイージングを結合
+  // イージング順序は固定（ラテン方格）、タスクはランダム
+  selectedTasks.forEach((task, index) => {
+    // 5回ごとに同じ順序を繰り返す
+    const easing = baseEasingSequence[index % baseEasingSequence.length];
+
     sequence.push({
       trial: index + 1,
       task,

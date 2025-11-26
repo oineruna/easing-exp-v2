@@ -97,7 +97,7 @@ export const generateTaskSequence = (
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
   const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
-  const TRIALS_PER_EASING = 5;
+  const TRIALS_PER_EASING = 1;
   const TOTAL_TRIALS = EASING_FUNCS.length * TRIALS_PER_EASING; // 25
 
   // 1. 利用可能なタスクからランダムに25個選出（重複なし）

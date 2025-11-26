@@ -2,7 +2,7 @@
 
 import type { Category, Task, EasingFunction } from "../experiment";
 
-export const TIME_LIMIT_MS = 100000;
+export const TIME_LIMIT_MS = 1;
 
 export const EASING_FUNCS: EasingFunction[] = [
   "linear",

@@ -31,21 +31,17 @@ export function TutorialCompleteOverlay({ isVisible, lang, onClose }: TutorialCo
           {/* コンテンツ */}
           <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, rotate: -5 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              exit={{ scale: 0.9, opacity: 0, rotate: -5 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               className="glass-effect rounded-3xl p-10 max-w-2xl w-full shadow-2xl text-center pointer-events-auto"
             >
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200 }} className="text-7xl mb-6">🎉</motion.div>
-              <motion.h2 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="text-3xl font-black mb-4 gradient-text">{t(lang, 'tutorialCompleted')}</motion.h2>
-              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-gray-700 mb-8 leading-relaxed text-lg bg-white/60 rounded-2xl p-6" dangerouslySetInnerHTML={{ __html: t(lang, 'tutorialCompletedText') }} />
+              <div className="text-7xl mb-6">🎉</div>
+              <h2 className="text-3xl font-black mb-4 gradient-text">{t(lang, 'tutorialCompleted')}</h2>
+              <div className="text-gray-700 mb-8 leading-relaxed text-lg bg-white/60 rounded-2xl p-6" dangerouslySetInnerHTML={{ __html: t(lang, 'tutorialCompletedText') }} />
               <motion.button
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   console.log("[TutorialCompleteOverlay] Close clicked");
                   onClose();

@@ -21,15 +21,13 @@ export function RewardScreen({
   const stats = useMemo(() => {
     const totalTasks = allLogs.length;
     const correctTasks = allLogs.filter(
-      (log) => !log.timedOut && (log.errorCount ?? log.errorClicks ?? 0) === 0
+      (log) => !log.timedOut && (log.errorCount ?? log.clickCount ?? 0) === 0
     ).length;
     const accuracy = totalTasks
       ? ((correctTasks / totalTasks) * 100).toFixed(1) + "%"
       : "0%";
     const totalTime = allLogs.reduce((sum, log) => {
-      const time = log.totalTime
-        ? parseFloat(log.totalTime)
-        : log.totalDuration
+      const time = log.totalDuration
         ? log.totalDuration / 1000
         : 0;
       return sum + time;
@@ -53,12 +51,10 @@ export function RewardScreen({
         easingStats[easing] = { total: 0, correct: 0, totalTime: 0 };
       }
       easingStats[easing].total++;
-      if (!log.timedOut && (log.errorCount ?? log.errorClicks ?? 0) === 0) {
+      if (!log.timedOut && (log.errorCount ?? log.clickCount ?? 0) === 0) {
         easingStats[easing].correct++;
       }
-      const time = log.totalTime
-        ? parseFloat(log.totalTime)
-        : log.totalDuration
+      const time = log.totalDuration
         ? log.totalDuration / 1000
         : 0;
       easingStats[easing].totalTime += time;
@@ -77,13 +73,11 @@ export function RewardScreen({
     });
 
     const validLogs = allLogs.filter(
-      (log) => !log.timedOut && (log.errorCount ?? log.errorClicks ?? 0) === 0
+      (log) => !log.timedOut && (log.errorCount ?? log.clickCount ?? 0) === 0
     );
     let fastestTime = Infinity;
     validLogs.forEach((log) => {
-      const time = log.totalTime
-        ? parseFloat(log.totalTime)
-        : log.totalDuration
+      const time = log.totalDuration
         ? log.totalDuration / 1000
         : 0;
       if (time < fastestTime) {
@@ -93,7 +87,7 @@ export function RewardScreen({
     const fastestTaskTime =
       fastestTime !== Infinity ? fastestTime.toFixed(2) + "s" : "-";
     const totalClicks = allLogs.reduce(
-      (sum, log) => sum + ((log.clicks?.length ?? log.totalClicks) || 0),
+      (sum, log) => sum + ((log.clicks?.length ?? log.clickCount) || 0),
       0
     );
     const totalDistance = allLogs.reduce(
@@ -121,7 +115,7 @@ export function RewardScreen({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="text-center mb-12"
+          className="text-center mb-4"
         >
           <motion.div
             animate={{
@@ -133,10 +127,10 @@ export function RewardScreen({
           >
             🎉
           </motion.div>
-          <h2 className="text-5xl font-black text-gray-800 drop-shadow-sm mb-4">
+          <h2 className="text-5xl font-black text-gray-800 drop-shadow-sm mb-2">
             {t(lang, "taskCompleted")}
           </h2>
-          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-4">
+          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-2">
             ID: {participantId}
           </div>
           <motion.div
@@ -158,7 +152,7 @@ export function RewardScreen({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onContinue}
-            className="px-16 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center gap-4"
+            className="px-16 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center gap-2"
           >
             <span>📋</span>
             {lang === "ja" ? "アンケートへ進む" : "Proceed to Survey"}
@@ -167,8 +161,8 @@ export function RewardScreen({
         </motion.div>
 
         {/* Score Card（max-w-4xlを統一） */}
-        <motion.div className="glass-effect rounded-3xl p-8 mb-8 shadow-2xl bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
-          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-2xl bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
               className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl w-full"
@@ -210,10 +204,10 @@ export function RewardScreen({
         </motion.div>
 
         {/* MVP Easing（max-w-4xlを統一） */}
-        <motion.div className="glass-effect rounded-3xl p-6 mb-8 shadow-xl text-center bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
+        <motion.div className="glass-effect rounded-3xl p-6 mb-2 shadow-xl text-center bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="flex flex-col items-center justify-center">
-            <div className="text-6xl mb-4">🏆</div>
-            <h3 className="flex items-center text-3xl font-black mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+            <div className="text-6xl mb-2">🏆</div>
+            <h3 className="flex items-center text-3xl font-black mb-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
               <span className="text-2xl mr-2">🏅</span>
               {t(lang, "mvpEasing")}
             </h3>
@@ -227,7 +221,7 @@ export function RewardScreen({
         </motion.div>
 
         {/* Easing Stats Table（max-w-4xlを統一） */}
-        <motion.div className="glass-effect rounded-3xl p-6 mb-8 shadow-xl overflow-hidden bg-white/80 backdrop-blur-md max-w-4xl mx-auto w-full">
+        <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-xl overflow-hidden bg-white/80 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="flex justify-center items-center mb-6">
             <span className="text-3xl mr-2">📊</span>
             <span className="text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -272,11 +266,10 @@ export function RewardScreen({
                           scale: 1.01,
                           backgroundColor: "rgba(147, 51, 234, 0.05)",
                         }}
-                        className={`border-b border-purple-50 transition-all ${
-                          isBest
-                            ? "bg-gradient-to-r from-yellow-50 to-orange-50"
-                            : ""
-                        }`}
+                        className={`border-b border-purple-50 transition-all ${isBest
+                          ? "bg-gradient-to-r from-yellow-50 to-orange-50"
+                          : ""
+                          }`}
                       >
                         <td className="px-6 py-4 font-semibold text-gray-800">
                           {isBest && <span className="mr-2">🏆</span>}
@@ -286,13 +279,12 @@ export function RewardScreen({
                         </td>
                         <td className="px-6 py-4 text-center">
                           <span
-                            className={`inline-block px-4 py-2 rounded-full font-bold ${
-                              parseFloat(accuracy) >= 80
-                                ? "bg-green-100 text-green-700"
-                                : parseFloat(accuracy) >= 60
+                            className={`inline-block px-4 py-2 rounded-full font-bold ${parseFloat(accuracy) >= 80
+                              ? "bg-green-100 text-green-700"
+                              : parseFloat(accuracy) >= 60
                                 ? "bg-yellow-100 text-yellow-700"
                                 : "bg-red-100 text-red-700"
-                            }`}
+                              }`}
                           >
                             {accuracy}%
                           </span>

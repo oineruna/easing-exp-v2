@@ -1,288 +1,481 @@
 {
+  "meta": {
+    "description": "Dataset for easing function comparison experiment",
+    "structure_depth": 4,
+    "items_per_category": "5-8 (uniform distribution)"
+  },
   "categories": [
+    {
+      "name": "Electronics & PCs",
+      "subcategories": [
+        {
+          "name": "Personal Computers",
+          "subcategories": [
+            {
+              "name": "Notebook PCs",
+              "subcategories": [
+                {
+                  "name": "13-inch Lightweight Mobile Notebook"
+                },
+                {
+                  "name": "15-inch Standard Notebook"
+                },
+                {
+                  "name": "Gaming Notebook with RTX"
+                },
+                {
+                  "name": "2-in-1 Tablet PC"
+                },
+                {
+                  "name": "4K Model for Creators"
+                }
+              ]
+            },
+            {
+              "name": "Desktop PCs",
+              "subcategories": [
+                {
+                  "name": "Tower Gaming PC"
+                },
+                {
+                  "name": "Space-saving Slim PC"
+                },
+                {
+                  "name": "All-in-one with LCD"
+                },
+                {
+                  "name": "Mini PC (NUC)"
+                },
+                {
+                  "name": "Workstation"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Smartphones",
+          "subcategories": [
+            {
+              "name": "iPhone Related",
+              "subcategories": [
+                {
+                  "name": "iPhone 15 Pro Max"
+                },
+                {
+                  "name": "iPhone 15 Standard Model"
+                },
+                {
+                  "name": "iPhone SE (3rd Gen)"
+                },
+                {
+                  "name": "MagSafe Charger"
+                },
+                {
+                  "name": "Lightning Cable"
+                }
+              ]
+            },
+            {
+              "name": "Android Related",
+              "subcategories": [
+                {
+                  "name": "Galaxy S Series"
+                },
+                {
+                  "name": "Pixel Pro Series"
+                },
+                {
+                  "name": "Xperia 1 Series"
+                },
+                {
+                  "name": "SIM-Free Entry Model"
+                },
+                {
+                  "name": "Type-C Rapid Charger Adapter"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home & Kitchen",
+      "subcategories": [
+        {
+          "name": "Cooking Appliances",
+          "subcategories": [
+            {
+              "name": "Rice Cookers & Microwaves",
+              "subcategories": [
+                {
+                  "name": "Pressure IH Rice Cooker (5.5 cups)"
+                },
+                {
+                  "name": "Steam Oven Microwave"
+                },
+                {
+                  "name": "Simple Microwave"
+                },
+                {
+                  "name": "Electric Pressure Cooker"
+                },
+                {
+                  "name": "Home Bakery Machine"
+                }
+              ]
+            },
+            {
+              "name": "Coffee Makers",
+              "subcategories": [
+                {
+                  "name": "Fully Automatic Espresso Machine"
+                },
+                {
+                  "name": "Capsule Coffee Maker"
+                },
+                {
+                  "name": "Drip Coffee Maker"
+                },
+                {
+                  "name": "Electric Coffee Mill"
+                },
+                {
+                  "name": "Milk Frother"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Bedding & Beds",
+          "subcategories": [
+            {
+              "name": "Futons & Pillows",
+              "subcategories": [
+                {
+                  "name": "High Resilience Mattress (Single)"
+                },
+                {
+                  "name": "Down Comforter (Double Size)"
+                },
+                {
+                  "name": "Low Resilience Pillow"
+                },
+                {
+                  "name": "Cool Feeling Mattress Pad"
+                },
+                {
+                  "name": "Dehumidifying Sheet"
+                }
+              ]
+            },
+            {
+              "name": "Bed Frames",
+              "subcategories": [
+                {
+                  "name": "Wooden Bed with Storage"
+                },
+                {
+                  "name": "Pipe Bed (Single)"
+                },
+                {
+                  "name": "Folding Slatted Bed"
+                },
+                {
+                  "name": "Loft Bed"
+                },
+                {
+                  "name": "Mattress with Legs"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "Sports & Outdoors",
       "subcategories": [
         {
-          "name": "Outdoor",
+          "name": "Camping Goods",
           "subcategories": [
-            { "name": "Tents" },
-            { "name": "BBQ Supplies" },
-            { "name": "Outdoor Lighting" },
-            { "name": "Outdoor Bedding" }
+            {
+              "name": "Tents & Tarps",
+              "subcategories": [
+                {
+                  "name": "Dome Tent for 4 People"
+                },
+                {
+                  "name": "One-pole Tent"
+                },
+                {
+                  "name": "Hexa Tarp"
+                },
+                {
+                  "name": "Pop-up Tent"
+                },
+                {
+                  "name": "Peg & Hammer Set"
+                }
+              ]
+            },
+            {
+              "name": "Cooking & Bonfire",
+              "subcategories": [
+                {
+                  "name": "Stainless Bonfire Stand"
+                },
+                {
+                  "name": "10-inch Dutch Oven"
+                },
+                {
+                  "name": "Gas Burner Stove"
+                },
+                {
+                  "name": "Outdoor Cooker"
+                },
+                {
+                  "name": "50L Cooler Box"
+                }
+              ]
+            }
           ]
         },
         {
-          "name": "Golf",
+          "name": "Fitness",
           "subcategories": [
-            { "name": "Golf Clubs" },
-            { "name": "Golf Balls" },
-            { "name": "Golf Shoes" },
-            { "name": "Golf Wear" }
-          ]
-        },
-        {
-          "name": "Baseball",
-          "subcategories": [
-            { "name": "Gloves" },
-            { "name": "Bats" },
-            { "name": "Baseballs" },
-            { "name": "Baseball Uniforms" }
-          ]
-        },
-        {
-          "name": "Soccer",
-          "subcategories": [
-            { "name": "Soccer Accessories" },
-            { "name": "Soccer Uniforms" },
-            { "name": "Soccer Shoes" },
-            { "name": "Soccer Balls" }
+            {
+              "name": "Training Equipment",
+              "subcategories": [
+                {
+                  "name": "Adjustable Dumbbells (20kg)"
+                },
+                {
+                  "name": "Thick Yoga Mat (10mm)"
+                },
+                {
+                  "name": "Ab Roller"
+                },
+                {
+                  "name": "Pull-up Machine"
+                },
+                {
+                  "name": "Balance Ball (65cm)"
+                }
+              ]
+            },
+            {
+              "name": "Running",
+              "subcategories": [
+                {
+                  "name": "Men's Running Shoes"
+                },
+                {
+                  "name": "GPS Running Watch"
+                },
+                {
+                  "name": "Sports Tights"
+                },
+                {
+                  "name": "Waist Pouch"
+                },
+                {
+                  "name": "Hydration Bottle"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
-      "name": "Diet & Health",
+      "name": "Books & Comics",
       "subcategories": [
         {
-          "name": "Relaxation & Self-Care",
+          "name": "Business & Economy",
           "subcategories": [
-            { "name": "Aromatherapy" },
-            { "name": "Stress-Relief Goods" },
-            { "name": "Cold-proof Goods" },
-            { "name": "Relax Sofas" }
-          ]
-        },
-        {
-          "name": "Diet Foods",
-          "subcategories": [
-            { "name": "Low-Carb Foods" },
-            { "name": "Meal-Replacement Foods" },
-            { "name": "Diet Soups" },
-            { "name": "Diet Snacks" }
-          ]
-        },
-        {
-          "name": "Health Supplements",
-          "subcategories": [
-            { "name": "Multivitamin Supplements" },
-            { "name": "Collagen Supplements" },
-            { "name": "DHA / EPA Supplements" },
-            { "name": "Probiotic Supplements" }
-          ]
-        },
-        {
-          "name": "Health Goods",
-          "subcategories": [
-            { "name": "Massagers" },
-            { "name": "Thermometers" },
-            { "name": "Sleep Goods" },
-            { "name": "Posture-Support Goods" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Pet Supplies",
-      "subcategories": [
-        {
-          "name": "Pet Food",
-          "subcategories": [
-            { "name": "Cat Food" },
-            { "name": "Dog Food" },
-            { "name": "Bird Food" },
-            { "name": "Rabbit Food" }
-          ]
-        },
-        {
-          "name": "Pet Care Supplies",
-          "subcategories": [
-            { "name": "Pet Shampoo" },
-            { "name": "Pet Brushing Supplies" },
-            { "name": "Pet Dental Care" },
-            { "name": "Pet Face Care" }
-          ]
-        },
-        {
-          "name": "Pet Goods",
-          "subcategories": [
-            { "name": "Pet Beds" },
-            { "name": "Pet Toilet Goods" },
-            { "name": "Pet Toys" },
-            { "name": "Pet Walking Goods" }
-          ]
-        },
-        {
-          "name": "Pet Travel Supplies",
-          "subcategories": [
-            { "name": "Pet Carriers" },
-            { "name": "Pet Strollers" },
-            { "name": "Pet Car Accessories" },
-            { "name": "Pet Outdoor Clothes" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "General Goods · Stationery · Sewing · Gifts",
-      "subcategories": [
-        {
-          "name": "Daily Goods",
-          "subcategories": [
-            { "name": "Toilet Paper" },
-            { "name": "Tissues" },
-            { "name": "Garbage Bags" },
-            { "name": "Trash Cans" }
-          ]
-        },
-        {
-          "name": "Stationery",
-          "subcategories": [
-            { "name": "Ballpoint Pens" },
-            { "name": "Notebooks" },
-            { "name": "Sticky Notes" },
-            { "name": "Mechanical Pencils" }
-          ]
-        },
-        {
-          "name": "Sewing Supplies",
-          "subcategories": [
-            { "name": "Sewing Needles" },
-            { "name": "Sewing Threads" },
-            { "name": "Sewing Scissors" },
-            { "name": "Leather for Sewing" }
-          ]
-        },
-        {
-          "name": "Gift Supplies",
-          "subcategories": [
-            { "name": "Gift Wrapping Paper" },
-            { "name": "Gift Ribbons" },
-            { "name": "Gift Cards" },
-            { "name": "Gift Bags" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Groceries",
-      "subcategories": [
-        {
-          "name": "Fruits",
-          "subcategories": [
-            { "name": "Apple" },
-            { "name": "Mandarin Orange" },
-            { "name": "Banana" },
-            { "name": "Grape" }
-          ]
-        },
-        {
-          "name": "Vegetables",
-          "subcategories": [
-            { "name": "Tomato" },
-            { "name": "Cucumber" },
-            { "name": "Cabbage" },
-            { "name": "Potato" }
-          ]
-        },
-        {
-          "name": "Meat",
-          "subcategories": [
-            { "name": "Beef" },
-            { "name": "Pork" },
-            { "name": "Chicken" },
-            { "name": "Lamb" }
-          ]
-        },
-        {
-          "name": "Seafood",
-          "subcategories": [
-            { "name": "Salmon" },
-            { "name": "Tuna" },
-            { "name": "Squid" },
-            { "name": "Crab" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Books · Magazines · Comics · Picture Books",
-      "subcategories": [
-        {
-          "name": "Books",
-          "subcategories": [
-            { "name": "Novels" },
-            { "name": "Non-fiction Books" },
-            { "name": "Self-help Books" },
-            { "name": "Hobby / Practical Books" }
-          ]
-        },
-        {
-          "name": "Magazines",
-          "subcategories": [
-            { "name": "Fashion Magazines" },
-            { "name": "Lifestyle Magazines" },
-            { "name": "Business Magazines" },
-            { "name": "Weekly Magazines" }
+            {
+              "name": "Self-improvement",
+              "subcategories": [
+                {
+                  "name": "Complete Guide to Time Management"
+                },
+                {
+                  "name": "Leadership Textbook"
+                },
+                {
+                  "name": "Introduction to Speaking & Presentation"
+                },
+                {
+                  "name": "Motivation Revolution"
+                },
+                {
+                  "name": "Techniques for Habit Formation"
+                }
+              ]
+            },
+            {
+              "name": "Finance & Investment",
+              "subcategories": [
+                {
+                  "name": "Basics of Stock Investment"
+                },
+                {
+                  "name": "Introduction to FX Chart Analysis"
+                },
+                {
+                  "name": "Textbook of Real Estate Investment"
+                },
+                {
+                  "name": "Finance Theory"
+                },
+                {
+                  "name": "Company Handbook Latest Edition"
+                }
+              ]
+            }
           ]
         },
         {
           "name": "Comics",
           "subcategories": [
-            { "name": "Shonen Manga" },
-            { "name": "Shojo Manga" },
-            { "name": "Seinen Manga" },
-            { "name": "Josei Manga" }
-          ]
-        },
-        {
-          "name": "Children's Books & Picture Books",
-          "subcategories": [
-            { "name": "Picture Books" },
-            { "name": "Readers (Kindergarten)" },
-            { "name": "Readers (Elementary)" },
-            { "name": "Children's Educational Books" }
+            {
+              "name": "Boys' Comics",
+              "subcategories": [
+                {
+                  "name": "Adventure Fantasy Vol.1"
+                },
+                {
+                  "name": "Sports Youth Manga Vol.1"
+                },
+                {
+                  "name": "Battle Action Vol.1"
+                },
+                {
+                  "name": "School Comedy Vol.1"
+                },
+                {
+                  "name": "Sci-fi Robot Manga Vol.1"
+                }
+              ]
+            },
+            {
+              "name": "Men's Comics",
+              "subcategories": [
+                {
+                  "name": "Historical Drama Manga Vol.1"
+                },
+                {
+                  "name": "Suspense Mystery Vol.1"
+                },
+                {
+                  "name": "Business Success Story Vol.1"
+                },
+                {
+                  "name": "Gourmet Cooking Manga Vol.1"
+                },
+                {
+                  "name": "Outlaw Manga Vol.1"
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
-      "name": "Gardening & DIY",
+      "name": "Food & Drinks",
       "subcategories": [
         {
-          "name": "Gardening Supplies",
+          "name": "Beverages & Alcohol",
           "subcategories": [
-            { "name": "Plants & Seeds" },
-            { "name": "Fertilizers & Materials" },
-            { "name": "Gardening Tools" },
-            { "name": "Planters" }
+            {
+              "name": "Soft Drinks",
+              "subcategories": [
+                {
+                  "name": "Mineral Water 2L x6"
+                },
+                {
+                  "name": "Unsweetened Sparkling Water 500ml x24"
+                },
+                {
+                  "name": "100% Orange Juice"
+                },
+                {
+                  "name": "Specified Health Food Tea"
+                },
+                {
+                  "name": "Vegetable Juice Case"
+                }
+              ]
+            },
+            {
+              "name": "Alcohol",
+              "subcategories": [
+                {
+                  "name": "Premium Beer 350ml"
+                },
+                {
+                  "name": "Junmai Daiginjo 720ml"
+                },
+                {
+                  "name": "Full-bodied Red Wine"
+                },
+                {
+                  "name": "Whisky 12-year Aged"
+                },
+                {
+                  "name": "Sweet Potato Shochu 1.8L"
+                }
+              ]
+            }
           ]
         },
         {
-          "name": "Garden Furniture",
+          "name": "Sweets",
           "subcategories": [
-            { "name": "Garden Tables" },
-            { "name": "Garden Chairs" },
-            { "name": "Garden Sofas" },
-            { "name": "Garden Benches" }
-          ]
-        },
-        {
-          "name": "Garden Decor",
-          "subcategories": [
-            { "name": "Garden Lights" },
-            { "name": "Garden Decorations" },
-            { "name": "Garden Fountains" },
-            { "name": "Garden Planters" }
-          ]
-        },
-        {
-          "name": "DIY Tools",
-          "subcategories": [
-            { "name": "Power Tools for DIY" },
-            { "name": "Hand Tools for DIY" },
-            { "name": "Painting Tools for DIY" },
-            { "name": "Protective Gear for DIY" }
+            {
+              "name": "Western Sweets",
+              "subcategories": [
+                {
+                  "name": "Premium Chocolate Assortment"
+                },
+                {
+                  "name": "Cheesecake Whole"
+                },
+                {
+                  "name": "Madeleine Gift Set"
+                },
+                {
+                  "name": "Fruit Jelly"
+                },
+                {
+                  "name": "Baumkuchen"
+                }
+              ]
+            },
+            {
+              "name": "Japanese Sweets",
+              "subcategories": [
+                {
+                  "name": "Yokan Assortment"
+                },
+                {
+                  "name": "Kasutera (Castella) 1 loaf"
+                },
+                {
+                  "name": "Dorayaki (10 pieces)"
+                },
+                {
+                  "name": "Daifuku (6-piece set)"
+                },
+                {
+                  "name": "Karinto Gift"
+                }
+              ]
+            }
           ]
         }
       ]

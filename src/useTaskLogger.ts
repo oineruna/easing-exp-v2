@@ -116,20 +116,14 @@ export function useTaskLogger() {
     (isCorrect: boolean, timedOut: boolean): Partial<TaskLog> => {
       const endTime = performance.now();
       const totalDurationMs = endTime - startTimeRef.current;
-      const totalTimeSec = (totalDurationMs / 1000).toFixed(2);
 
       return {
         isCorrect,
         timedOut,
-        startTime: startTimeRef.current,
-        endTime,
         totalDuration: totalDurationMs,
-        totalTime: totalTimeSec + "s",
         firstClickTime: firstClickTime || 0,
         clickCount: clicksThisTask.length,
         errorCount: errorCount,
-        totalClicks: clicksThisTask.length,
-        errorClicks: errorCount,
         clicks: clicksThisTask,
         menuTravelDistance: menuTravelDistance,
         mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）

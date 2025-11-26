@@ -73,22 +73,16 @@ export interface TaskSurveyResult {
  * 1タスクごとの実験記録（ログ）
  */
 export interface TaskLog {
-  participantId: string;
   trialNumber: number;
   taskId: string;
   targetItem: string;
   easingFunction: EasingFunction;
   isCorrect: boolean;
   timedOut: boolean;
-  startTime?: number;
-  endTime?: number;
   totalDuration: number;
-  totalTime?: string;
   firstClickTime?: number;
   clickCount: number;
   errorCount: number;
-  totalClicks?: number;
-  errorClicks?: number;
   clicks: ClickRecord[];
   menuTravelDistance?: number;
   mouseDistance?: number; // 🆕 マウスの総移動距離（ピクセル）
@@ -96,11 +90,9 @@ export interface TaskLog {
   seqScore?: number;
   usedEasing?: EasingFunction;
   fps?: {
-    current: number;
     average: number;
     min: number;
     max: number;
-    samples: number;
   };
 }
 
@@ -108,7 +100,6 @@ export interface TaskLog {
  * 事後アンケート結果の型
  */
 export interface PostSurveyResult {
-  participantId: string;
   noticeDifference: string;
   usabilityImpact: string[];
   usabilityImpactOther: string;
@@ -127,8 +118,8 @@ export interface ExperimentData {
   tasks: TaskLog[];
   postSurvey: PostSurveyResult;
   systemInfo?: {
-    clientIP: string;
-    publicIP: string;
+    // clientIP: string;
+    // publicIP: string;
     userAgent: string;
     screenInfo: {
       width: number;

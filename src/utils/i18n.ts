@@ -35,8 +35,8 @@ export const TEXT = {
     startTutorial: "チュートリアル開始",
     tutorialLabel: "チュートリアル",
     tutorialIntroText:
-      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />下のボタンで開始してください。<br /><br />制限時間は1タスク当たり15秒です。",
-    tutorialIntroClose: "閉じる",
+      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br />制限時間は1タスク当たり15秒です。",
+    tutorialIntroClose: "チュートリアル開始",
     tutorialInfo: (item: string) =>
       `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,
     tutorialWrong: "チュートリアル：違う項目です。",
@@ -146,7 +146,7 @@ export const TEXT = {
     dataSavedMsg: "実験データが保存されました。ご協力ありがとうございました。",
     dataSaveFailedMsg:
       "データの自動送信に失敗しました。手動でファイルをダウンロードしますか？\n(ダウンロードしたファイルを実験担当者に送付してください)",
-    
+
     // PreSurveyOverlay
     preSurveyTitle: "事前アンケート",
     preSurveyIntro:
@@ -166,7 +166,7 @@ export const TEXT = {
       "アニメーションの好みについて、何か気づいたことがあれば自由にお書きください...",
     preSurveyComplete: "完了",
     preSurveyAlert: "すべてのアニメーションを評価してください",
-    
+
     // Easing Labels (JA)
     easingLinearLabel: "一定速度",
     easingLinearDesc: "等速で動く",
@@ -178,7 +178,7 @@ export const TEXT = {
     easingExpoDesc: "急加速・急停止",
     easingBackLabel: "バウンス",
     easingBackDesc: "オーバーシュート",
-    
+
     // ConsentOverlay
     langJa: "日本語",
     langEn: "English",
@@ -309,7 +309,7 @@ export const TEXT = {
     dataSavedMsg: "Data saved successfully. Thank you!",
     dataSaveFailedMsg:
       "Automatic upload failed. Do you want to download the file manually?",
-    
+
     // PreSurveyOverlay
     preSurveyTitle: "Pre-Survey",
     preSurveyIntro:
@@ -328,7 +328,7 @@ export const TEXT = {
       "Feel free to share any thoughts about your animation preferences...",
     preSurveyComplete: "Complete",
     preSurveyAlert: "Please rate all animations",
-    
+
     // Easing Labels (EN)
     easingLinearLabel: "Linear",
     easingLinearDesc: "Constant speed",
@@ -340,7 +340,7 @@ export const TEXT = {
     easingExpoDesc: "Quick start/stop",
     easingBackLabel: "Bounce",
     easingBackDesc: "Overshoot effect",
-    
+
     // ConsentOverlay
     langJa: "日本語",
     langEn: "English",

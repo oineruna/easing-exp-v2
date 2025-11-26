@@ -55,7 +55,6 @@ export function PostSurveyOverlay({
     }
 
     const result: PostSurveyResult = {
-      participantId,
       noticeDifference,
       usabilityImpact,
       usabilityImpactOther,
@@ -70,7 +69,6 @@ export function PostSurveyOverlay({
   // ★ デバッグ用スキップ
   const handleDebugSkip = () => {
     const dummyResult: PostSurveyResult = {
-      participantId,
       noticeDifference: q2Options[0],
       usabilityImpact: [impactOptions[0]],
       usabilityImpactOther: "",

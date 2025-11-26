@@ -37,8 +37,8 @@ import {
 } from "./utils/task";
 import {
   FrameRateMonitor,
-  getClientIP,
-  getPublicIP,
+  // getClientIP,
+  // getPublicIP,
   getUserAgent,
   getScreenInfo,
 } from "./utils/systemInfo";
@@ -75,7 +75,7 @@ const hashCode = (str: string) => {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("consent");
+  const [appState, setAppState] = useState<AppState>("reward");
   const [participantId, setParticipantId] = useState<string>("");
 
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
@@ -110,8 +110,8 @@ export default function App() {
   // システム情報収集用
   const fpsMonitorRef = useRef<FrameRateMonitor | null>(null);
   const [systemInfo, setSystemInfo] = useState<{
-    clientIP: string;
-    publicIP: string;
+    // clientIP: string;
+    // publicIP: string;
     userAgent: string;
     screenInfo: ReturnType<typeof getScreenInfo>;
   } | null>(null);
@@ -175,21 +175,21 @@ export default function App() {
 
     // IP、ユーザーエージェント、画面情報を取得
     const collectSystemInfo = async () => {
-      const [clientIP, publicIP] = await Promise.all([
-        getClientIP(),
-        getPublicIP(),
-      ]);
+      // const [clientIP, publicIP] = await Promise.all([
+      //   getClientIP(),
+      //   getPublicIP(),
+      // ]);
 
       setSystemInfo({
-        clientIP,
-        publicIP,
+        // clientIP,
+        // publicIP,
         userAgent: getUserAgent(),
         screenInfo: getScreenInfo(),
       });
 
       console.log("[System Info] Collected:", {
-        clientIP,
-        publicIP,
+        // clientIP,
+        // publicIP,
         userAgent: getUserAgent(),
         screenInfo: getScreenInfo(),
       });
@@ -252,9 +252,9 @@ export default function App() {
   const handleTutorialCompleteClose = useCallback(
     () => {
       console.log("[App] handleTutorialCompleteClose called");
+      setFeedback(null);
+      setFeedbackType("");
       setAppState("ready");
-      // チュートリアル完了後、自動的に実験開始確認ダイアログを表示
-      setShowStartConfirm(true);
     },
     []
   );
@@ -293,12 +293,15 @@ export default function App() {
     if (currentTaskWithEasing) {
       const fullLog = {
         ...log,
-        participantId,
         trialNumber: currentTaskWithEasing.trial,
         taskId: currentTaskWithEasing.task.id,
         targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
         easingFunction: currentTaskWithEasing.easing,
-        fps: fpsStats,
+        fps: fpsStats ? {
+          average: fpsStats.average,
+          min: fpsStats.min,
+          max: fpsStats.max,
+        } : undefined,
       } as TaskLog;
       setTempTaskLog(fullLog);
     }
@@ -372,12 +375,15 @@ export default function App() {
         const log = taskLogger.stopTask(true, false);
         const fullLog = {
           ...log,
-          participantId,
           trialNumber: currentTaskWithEasing.trial,
           taskId: currentTaskWithEasing.task.id,
           targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
           easingFunction: currentTaskWithEasing.easing,
-          fps: fpsStats,
+          fps: fpsStats ? {
+            average: fpsStats.average,
+            min: fpsStats.min,
+            max: fpsStats.max,
+          } : undefined,
         } as TaskLog;
 
         setTempTaskLog(fullLog);
@@ -632,7 +638,7 @@ export default function App() {
                   ? "実験を開始しますか？"
                   : "Are you sure you want to start?"}
               </p>
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-2 justify-center">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -706,7 +712,7 @@ export default function App() {
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="py-6">
                 {/* Compact Task Instruction Bar */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-100 w-192">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-108 w-192">
                   <div className="flex items-center gap-3">
                     {/* Status Indicator */}
                     <div className="flex items-center gap-2 px-2 py-1">
@@ -728,9 +734,11 @@ export default function App() {
                       </div>
                       <div className="text-2xl font-bold text-gray-900 leading-tight">
                         {appState !== "tutorial" && currentTaskWithEasing
-                          ? currentTaskWithEasing.task.description
+                          ? lang === "en"
+                            ? `Find "${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}"`
+                            : `「${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}」を探してクリックしてください`
                           : lang === "en"
-                            ? "Find 'Dome Tent 4-person'"
+                            ? "Find 'Dome Tent for 4 People'"
                             : "「ドーム型テント 4人用」を探してクリックしてください"}
                       </div>
                     </div>

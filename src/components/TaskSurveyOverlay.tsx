@@ -74,10 +74,10 @@ export function TaskSurveyOverlay({
   const text = {
     ja: {
       title: `タスク ${taskNumber} の評価`,
-      q1: "アニメーションの動きやすさ",
-      scale1: "1: 非常に使いにくい - 5: 非常に使いやすい",
-      q2: "タスクの難易度",
-      scale2: "1: 非常に難しい - 5: 非常に簡単",
+      q1: "タスクの難易度",
+      scale1: "1: 非常に難しい - 5: 非常に簡単",
+      q2: "アニメーションの動きやすさ",
+      scale2: "1: 非常に使いにくい - 5: 非常に使いやすい",
       q3: "アニメーションの違和感",
       scale3: "1: 違和感がある - 5: 自然である",
       comment: "気になった点があれば教えてください（任意）",
@@ -86,9 +86,9 @@ export function TaskSurveyOverlay({
     },
     en: {
       title: `Task ${taskNumber} Evaluation`,
-      q1: "Animation Ease of Use",
+      q1: "Task Difficulty",
       scale1: "1: Very Difficult - 5: Very Easy",
-      q2: "Task Difficulty",
+      q2: "Animation Ease of Use",
       scale2: "1: Very Hard - 5: Very Easy",
       q3: "Animation Naturalness",
       scale3: "1: Unnatural - 5: Natural",
@@ -122,7 +122,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q1}
-                  <span className="block text-sm text-gray-600 font-normal mt-1">
+                  <span className="block text-xs text-gray-500 font-normal mt-1">
                     {text.scale1}
                   </span>
                 </div>
@@ -148,7 +148,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q2}
-                  <span className="block text-sm text-gray-600 font-normal mt-1">
+                  <span className="block text-xs text-gray-500 font-normal mt-1">
                     {text.scale2}
                   </span>
                 </div>
@@ -174,7 +174,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q3}
-                  <span className="block text-sm text-gray-600 font-normal mt-1">
+                  <span className="block text-xs text-gray-500 font-normal mt-1">
                     {text.scale3}
                   </span>
                 </div>

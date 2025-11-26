@@ -107,64 +107,64 @@ export class FrameRateMonitor {
     }
 }
 
-/**
- * IPアドレスを取得（WebRTC経由）
- */
-export async function getClientIP(): Promise<string> {
-    try {
-        // WebRTCを使用してローカルIPを取得
-        const pc = new RTCPeerConnection({
-            iceServers: [],
-        });
+// /**
+//  * IPアドレスを取得（WebRTC経由）
+//  */
+// export async function getClientIP(): Promise<string> {
+//     try {
+//         // WebRTCを使用してローカルIPを取得
+//         const pc = new RTCPeerConnection({
+//             iceServers: [],
+//         });
 
-        pc.createDataChannel("");
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
+//         pc.createDataChannel("");
+//         const offer = await pc.createOffer();
+//         await pc.setLocalDescription(offer);
 
-        return new Promise((resolve) => {
-            pc.onicecandidate = (event) => {
-                if (!event || !event.candidate) {
-                    resolve("unknown");
-                    return;
-                }
+//         return new Promise((resolve) => {
+//             pc.onicecandidate = (event) => {
+//                 if (!event || !event.candidate) {
+//                     resolve("unknown");
+//                     return;
+//                 }
 
-                const candidate = event.candidate.candidate;
-                const ipRegex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
-                const match = candidate.match(ipRegex);
+//                 const candidate = event.candidate.candidate;
+//                 const ipRegex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
+//                 const match = candidate.match(ipRegex);
 
-                if (match) {
-                    resolve(match[0]);
-                    pc.close();
-                }
-            };
+//                 if (match) {
+//                     resolve(match[0]);
+//                     pc.close();
+//                 }
+//             };
 
-            // タイムアウト処理（3秒）
-            setTimeout(() => {
-                resolve("unknown");
-                pc.close();
-            }, 3000);
-        });
-    } catch (error) {
-        console.error("Failed to get IP address:", error);
-        return "unknown";
-    }
-}
+//             // タイムアウト処理（3秒）
+//             setTimeout(() => {
+//                 resolve("unknown");
+//                 pc.close();
+//             }, 3000);
+//         });
+//     } catch (error) {
+//         console.error("Failed to get IP address:", error);
+//         return "unknown";
+//     }
+// }
 
-/**
- * 外部IPアドレスを取得（外部APIを使用）
- */
-export async function getPublicIP(): Promise<string> {
-    try {
-        const response = await fetch("https://api.ipify.org?format=json", {
-            signal: AbortSignal.timeout(3000),
-        });
-        const data = await response.json();
-        return data.ip || "unknown";
-    } catch (error) {
-        console.error("Failed to get public IP:", error);
-        return "unknown";
-    }
-}
+// /**
+//  * 外部IPアドレスを取得（外部APIを使用）
+//  */
+// export async function getPublicIP(): Promise<string> {
+//     try {
+//         const response = await fetch("https://api.ipify.org?format=json", {
+//             signal: AbortSignal.timeout(3000),
+//         });
+//         const data = await response.json();
+//         return data.ip || "unknown";
+//     } catch (error) {
+//         console.error("Failed to get public IP:", error);
+//         return "unknown";
+//     }
+// }
 
 /**
  * ユーザーエージェント情報を取得

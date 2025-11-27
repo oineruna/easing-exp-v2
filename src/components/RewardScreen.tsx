@@ -5,12 +5,17 @@ import { t } from "../utils/i18n";
 import type { Lang } from "../utils/i18n";
 
 interface RewardScreenProps {
-  allLogs: TaskLog[];
-  lang: Lang;
-  participantId: string;
-  onContinue: () => void;
+  allLogs: TaskLog[];       // 全タスクのログデータ
+  lang: Lang;               // 言語設定
+  participantId: string;    // 参加者ID
+  onContinue: () => void;   // 「次へ」ボタン押下時のコールバック
 }
 
+/**
+ * 実験結果表示画面（リワードスクリーン）
+ * 参加者のパフォーマンスを分析し、フィードバックを表示します
+ * 正答率、平均時間、イージングごとの成績などを可視化します
+ */
 export function RewardScreen({
   allLogs,
   lang,
@@ -18,24 +23,34 @@ export function RewardScreen({
   onContinue,
 }: RewardScreenProps) {
   // 統計データの計算ロジック
+  // レンダリングごとの再計算を防ぐためにuseMemoを使用
   const stats = useMemo(() => {
     const totalTasks = allLogs.length;
+
+    // 正解数（タイムアウトせず、エラーなし、クリック数0でない）
     const correctTasks = allLogs.filter(
       (log) => !log.timedOut && (log.errorCount ?? log.clickCount ?? 0) === 0
     ).length;
+
+    // 正答率
     const accuracy = totalTasks
       ? ((correctTasks / totalTasks) * 100).toFixed(1) + "%"
       : "0%";
+
+    // 総所要時間
     const totalTime = allLogs.reduce((sum, log) => {
       const time = log.totalDuration
         ? log.totalDuration / 1000
         : 0;
       return sum + time;
     }, 0);
+
+    // 平均所要時間
     const averageTime = totalTasks
       ? (totalTime / totalTasks).toFixed(2) + "s"
       : "0.00s";
 
+    // イージングごとの統計集計
     const easingStats: Record<
       EasingFunction,
       { total: number; correct: number; totalTime: number }
@@ -60,6 +75,8 @@ export function RewardScreen({
       easingStats[easing].totalTime += time;
     });
 
+    // 最も成績が良かったイージング（MVP）の判定
+    // スコア = 正答率(%) - 平均時間(s) * 2 という独自の重み付けで算出
     let bestEasing: EasingFunction | null = null;
     let bestScore = -1;
     Object.entries(easingStats).forEach(([easing, stat]) => {
@@ -72,6 +89,7 @@ export function RewardScreen({
       }
     });
 
+    // 最速タスク時間の算出
     const validLogs = allLogs.filter(
       (log) => !log.timedOut && (log.errorCount ?? log.clickCount ?? 0) === 0
     );
@@ -86,6 +104,8 @@ export function RewardScreen({
     });
     const fastestTaskTime =
       fastestTime !== Infinity ? fastestTime.toFixed(2) + "s" : "-";
+
+    // 総クリック数と総移動距離
     const totalClicks = allLogs.reduce(
       (sum, log) => sum + ((log.clicks?.length ?? log.clickCount) || 0),
       0
@@ -94,6 +114,7 @@ export function RewardScreen({
       (sum, log) => sum + (log.menuTravelDistance || 0),
       0
     );
+
     return {
       accuracy,
       averageTime,
@@ -110,7 +131,7 @@ export function RewardScreen({
   return (
     <div className="min-h-screen pb-16 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 pt-8">
-        {/* Hero Section */}
+        {/* ヒーローセクション（完了メッセージ） */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -141,7 +162,7 @@ export function RewardScreen({
           />
         </motion.div>
 
-        {/* Action Buttons (Moved to Top) */}
+        {/* アクションボタン（上部に配置してアクセスしやすく） */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -160,9 +181,10 @@ export function RewardScreen({
           </motion.button>
         </motion.div>
 
-        {/* Score Card（max-w-4xlを統一） */}
+        {/* スコアカード（主要指標の表示） */}
         <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-2xl bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 正答率 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
               className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl w-full"
@@ -176,6 +198,8 @@ export function RewardScreen({
                 {t(lang, "tasksCompletedSuffix")}
               </div>
             </motion.div>
+
+            {/* 平均時間 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: -2 }}
               className="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl p-6 text-white shadow-xl w-full"
@@ -188,6 +212,8 @@ export function RewardScreen({
                 ⚡ {t(lang, "fastestLabel")}: {stats.fastestTaskTime}
               </div>
             </motion.div>
+
+            {/* 総クリック数 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
               className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 text-white shadow-xl w-full"
@@ -203,7 +229,7 @@ export function RewardScreen({
           </div>
         </motion.div>
 
-        {/* MVP Easing（max-w-4xlを統一） */}
+        {/* MVPイージング（最も成績が良かった条件） */}
         <motion.div className="glass-effect rounded-3xl p-6 mb-2 shadow-xl text-center bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="flex flex-col items-center justify-center">
             <div className="text-6xl mb-2">🏆</div>
@@ -220,7 +246,7 @@ export function RewardScreen({
           </p>
         </motion.div>
 
-        {/* Easing Stats Table（max-w-4xlを統一） */}
+        {/* イージング別パフォーマンス表 */}
         <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-xl overflow-hidden bg-white/80 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="flex justify-center items-center mb-6">
             <span className="text-3xl mr-2">📊</span>
@@ -301,7 +327,7 @@ export function RewardScreen({
           </div>
         </motion.div>
 
-        {/* Confetti Effect（他は省略/画像パーツだけ） */}
+        {/* 紙吹雪エフェクト（背景装飾） */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

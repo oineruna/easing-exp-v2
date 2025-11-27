@@ -1,8 +1,13 @@
 // --- START OF FILE src/utils/i18n.ts ---
 
+// サポートされている言語の定義
 const SUPPORTED = ["ja", "en"] as const;
 export type Lang = (typeof SUPPORTED)[number];
 
+/**
+ * ブラウザの言語設定またはURLパラメータから言語を検出します
+ * URLパラメータ ?lang=en または ?lang=ja が優先されます
+ */
 export function detectLang(): Lang {
   const params = new URLSearchParams(window.location.search);
   const lang = params.get("lang");
@@ -17,6 +22,8 @@ export function detectLang(): Lang {
   return browserLang;
 }
 
+// アプリケーション全体で使用されるテキストリソース
+// 日本語(ja)と英語(en)の辞書オブジェクト
 export const TEXT = {
   ja: {
     // --- 共通・実験全体 ---
@@ -205,7 +212,7 @@ export const TEXT = {
     tutorialIntroClose: "Close",
     tutorialInfo: (item: string) => `[Tutorial] Find "${item}" and click it.`,
     tutorialWrong: "Tutorial: Incorrect item.",
-    tutorialTimeout: "(Tutorial: Time out. Try again.)",
+    tutorialTimeout: "(Tutorial: Timed out. Try again.)",
     tutorialCorrect: "Tutorial: Correct!",
     tutorialCompleted: "Tutorial Completed",
     tutorialCompletedText:
@@ -218,7 +225,7 @@ export const TEXT = {
       `Task ${idx}/${max}: Find "${item}" and click it.`,
     wrong: "Incorrect. Try again.",
     correct: "Correct!",
-    timeout: "Time out.",
+    timeout: "Timed out.",
 
     // --- Next Task ---
     nextTaskTitle: "Proceed to Next Task",
@@ -349,6 +356,10 @@ export const TEXT = {
 
 export type TextKey = keyof (typeof TEXT)["ja"];
 
+/**
+ * 指定された言語とキーに対応する翻訳テキストを取得します
+ * 関数型の場合は引数を適用して文字列を生成します
+ */
 export function t(lang: Lang, key: TextKey, ...args: any[]): any {
   const val = TEXT[lang][key];
   if (typeof val === "function") {

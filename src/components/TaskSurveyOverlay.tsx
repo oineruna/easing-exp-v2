@@ -4,29 +4,39 @@ import { t } from "../utils/i18n";
 import type { Lang } from "../utils/i18n";
 
 interface TaskSurveyOverlayProps {
-  isVisible: boolean;
-  lang: Lang;
-  taskNumber: number;
+  isVisible: boolean; // 表示状態
+  lang: Lang;         // 言語設定
+  taskNumber: number; // 現在のタスク番号（表示用）
   onComplete: (data: {
-    easeRating: number;
-    difficultyRating: number;
-    differenceRating: number;
-    comments: string;
+    easeRating: number;       // 操作感の評価値
+    difficultyRating: number; // 難易度の評価値
+    differenceRating: number; // 違和感の評価値
+    comments: string;         // 自由記述コメント
   }) => void;
 }
 
+/**
+ * タスクごとのアンケートオーバーレイ
+ * 各試行の直後に表示され、主観評価を収集します
+ */
 export function TaskSurveyOverlay({
   isVisible,
   lang,
   taskNumber,
   onComplete,
 }: TaskSurveyOverlayProps) {
+  // アンケートの回答状態
   const [easeRating, setEaseRating] = useState<number | null>(null);
   const [difficultyRating, setDifficultyRating] = useState<number | null>(null);
   const [differenceRating, setDifferenceRating] = useState<number | null>(null);
   const [comments, setComments] = useState("");
 
+  /**
+   * 送信ボタン押下時の処理
+   * 全項目が入力されているか確認し、親コンポーネントへデータを渡します
+   */
   const handleSubmit = () => {
+    // バリデーション: 全項目必須
     if (
       easeRating === null ||
       difficultyRating === null ||
@@ -35,24 +45,28 @@ export function TaskSurveyOverlay({
       alert(t(lang, "surveyAlert") || "Please rate all items.");
       return;
     }
+
+    // データ送信
     onComplete({
       easeRating,
       difficultyRating,
       differenceRating,
       comments,
     });
-    // 状態リセット
+
+    // 状態リセット（次のタスク用）
     setEaseRating(null);
     setDifficultyRating(null);
     setDifferenceRating(null);
     setComments("");
   };
 
-  // ★ デバッグ用スキップ (Shift + Enter)
+  // ★ デバッグ用ショートカット (Shift + Enter)
+  // 開発中にアンケート入力をスキップするために使用します
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.shiftKey && e.key === "Enter") {
-        // ダミーデータで完了
+        // ダミーデータで完了扱いにする
         onComplete({
           easeRating: 3,
           difficultyRating: 3,
@@ -70,7 +84,8 @@ export function TaskSurveyOverlay({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onComplete]);
 
-  // 文言定義（TaskEndOverlayを参考に調整）
+  // 文言定義オブジェクト
+  // 言語に応じて表示テキストを切り替えます
   const text = {
     ja: {
       title: `タスク ${taskNumber} の評価`,
@@ -113,12 +128,13 @@ export function TaskSurveyOverlay({
             exit={{ scale: 0.9, opacity: 0, y: -20 }}
             className="bg-white rounded-3xl p-8 max-w-3xl w-full shadow-2xl my-8"
           >
+            {/* タイトル */}
             <h2 className="text-2xl font-black mb-6 text-center text-gray-800 border-b pb-4">
               📝 {text.title}
             </h2>
 
             <div className="space-y-2">
-              {/* Q1 */}
+              {/* Q1: 難易度評価 */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q1}
@@ -144,7 +160,7 @@ export function TaskSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q2 */}
+              {/* Q2: 操作感評価 */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q2}
@@ -170,7 +186,7 @@ export function TaskSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q3 */}
+              {/* Q3: 違和感評価 */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q3}
@@ -196,7 +212,7 @@ export function TaskSurveyOverlay({
                 </div>
               </div>
 
-              {/* Comment */}
+              {/* 自由記述コメント欄 */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.comment}
@@ -211,6 +227,7 @@ export function TaskSurveyOverlay({
               </div>
             </div>
 
+            {/* 送信ボタン */}
             <div className="mt-8 text-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}

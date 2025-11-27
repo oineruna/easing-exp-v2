@@ -1,21 +1,15 @@
-// --- START OF FILE src/App.tsx ---
-
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
 import { ConsentOverlay } from "./components/ConsentOverlay";
 import { TutorialIntroOverlay } from "./components/TutorialIntroOverlay";
 import { TutorialCompleteOverlay } from "./components/TutorialCompleteOverlay";
 import { TaskMenu } from "./components/TaskMenu";
-
 import { RewardScreen } from "./components/RewardScreen";
 import { PreSurveyOverlay } from "./components/PreSurveyOverlay";
 import { NextTaskOverlay } from "./components/NextTaskOverlay";
 import { TaskSurveyOverlay } from "./components/TaskSurveyOverlay";
-// ★ 新規追加
 import { PostSurveyOverlay } from "./components/PostSurveyOverlay";
 import { StartScreen } from "./components/StartScreen";
-
 import { useTaskLogger } from "./useTaskLogger";
 import { detectLang, t } from "./utils/i18n";
 import type { Lang } from "./experiment";
@@ -43,26 +37,28 @@ import {
   getScreenInfo,
 } from "./utils/systemInfo";
 
-
+// アプリケーションの状態定義
 type AppState =
-  | "consent"
-  | "pre-survey"
-  | "ready"
-  | "tutorial-intro"
-  | "tutorial"
-  | "tutorial-complete"
-  | "task"
-  | "seq"
-  | "next-task-ready"
-  | "reward"
-  | "post-survey"; // ★ 追加
+  | "consent"           // 同意画面
+  | "pre-survey"        // 事前アンケート
+  | "ready"             // 開始待機画面
+  | "tutorial-intro"    // チュートリアル説明
+  | "tutorial"          // チュートリアル実行中
+  | "tutorial-complete" // チュートリアル完了
+  | "task"              // 本番タスク実行中
+  | "seq"               // タスク間アンケート（NASA-TLX簡易版）
+  | "next-task-ready"   // 次のタスクへの準備画面
+  | "reward"            // 全タスク完了・結果表示
+  | "post-survey";      // 事後アンケート
 
+// イージング情報付きタスク型
 interface TaskWithEasing {
   trial: number;
   task: Task;
   easing: EasingFunction;
 }
 
+// 文字列からハッシュ値を生成する関数（シード生成用）
 const hashCode = (str: string) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -73,37 +69,50 @@ const hashCode = (str: string) => {
   return Math.abs(hash);
 };
 
+/**
+ * メインアプリケーションコンポーネント
+ * 実験全体のフロー制御、状態管理、データ収集を担当します
+ */
 export default function App() {
+  // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("consent");
+  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
+  // メニューデータ
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
   const [tutorialCategories, setTutorialCategories] = useState<Category[]>([]);
 
+  // タスク管理
   const [experimentTasks, setExperimentTasks] = useState<TaskWithEasing[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [currentTaskWithEasing, setCurrentTaskWithEasing] =
     useState<TaskWithEasing | null>(null);
 
+  // データログ
   const [allLogs, setAllLogs] = useState<TaskLog[]>([]);
   const [preSurveyData, setPreSurveyData] = useState<PreSurveyData | null>(
     null
   );
   const [tempTaskLog, setTempTaskLog] = useState<TaskLog | null>(null);
 
+  // UIフィードバック
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackType, setFeedbackType] = useState<
     "correct" | "incorrect" | "timeout" | ""
   >("");
-  // ★ 実験開始確認用ステート
+
+  // 実験開始確認用ステート
   const [showStartConfirm, setShowStartConfirm] = useState(false);
-  // ★ チュートリアル用イージング選択
+
+  // チュートリアル用イージング選択
   const [tutorialEasing, setTutorialEasing] = useState<EasingFunction>("easeInOutExpo");
 
+  // 現在適用中のイージング関数
   const currentEasing: EasingFunction =
     appState === "tutorial" ? tutorialEasing : (currentTaskWithEasing?.easing || "easeInOutExpo");
 
+  // Refs
   const timeoutIdRef = useRef<number | null>(null);
   const taskLogger = useTaskLogger();
 
@@ -116,6 +125,8 @@ export default function App() {
     screenInfo: ReturnType<typeof getScreenInfo>;
   } | null>(null);
 
+  // --- Effects ---
+
   // 初期化 & localStorage復元確認
   useEffect(() => {
     setLang(detectLang());
@@ -123,6 +134,7 @@ export default function App() {
     const params = url.searchParams;
     let id = params.get("pid") || params.get("id");
 
+    // IDがない場合はランダム生成
     if (!id) {
       id = Math.floor(1000 + Math.random() * 9000).toString();
     }
@@ -131,7 +143,7 @@ export default function App() {
     params.set("pid", id);
     window.history.replaceState(null, "", url.toString());
 
-    // localStorage からバックアップを確認
+    // localStorage からバックアップを確認して復元
     const backup = localStorage.getItem(`experiment_backup_${id}`);
     if (backup) {
       const shouldRestore = window.confirm(
@@ -155,7 +167,7 @@ export default function App() {
     }
   }, []);
 
-  // データ読み込み
+  // メニューデータの読み込み
   useEffect(() => {
     const loadData = async () => {
       const mainCats = await loadMenuCategories(lang);
@@ -173,23 +185,14 @@ export default function App() {
       fpsMonitorRef.current = new FrameRateMonitor();
     }
 
-    // IP、ユーザーエージェント、画面情報を取得
+    // ユーザーエージェント、画面情報を取得
     const collectSystemInfo = async () => {
-      // const [clientIP, publicIP] = await Promise.all([
-      //   getClientIP(),
-      //   getPublicIP(),
-      // ]);
-
       setSystemInfo({
-        // clientIP,
-        // publicIP,
         userAgent: getUserAgent(),
         screenInfo: getScreenInfo(),
       });
 
       console.log("[System Info] Collected:", {
-        // clientIP,
-        // publicIP,
         userAgent: getUserAgent(),
         screenInfo: getScreenInfo(),
       });
@@ -224,19 +227,23 @@ export default function App() {
     }
   }, [allLogs.length, participantId, preSurveyData, currentTaskIndex]);
 
-  // --- ハンドラー ---
+  // --- Event Handlers ---
 
+  // 同意画面
   const handleConsentAgree = useCallback(() => setAppState("pre-survey"), []);
   const handleConsentDisagree = useCallback(
     () => alert(t(lang, "disagreeAlert")),
     [lang]
   );
+
+  // 事前アンケート完了
   const handlePreSurveyComplete = useCallback((data: PreSurveyData) => {
     console.log("[Pre-Survey]", data);
     setPreSurveyData(data);
     setAppState("ready");
   }, []);
 
+  // チュートリアル関連
   const handleStartTutorial = useCallback(
     () => setAppState("tutorial-intro"),
     []
@@ -259,6 +266,7 @@ export default function App() {
     []
   );
 
+  // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
     (itemName: string) => {
       const targetItem = lang === "en" ? "Dome Tent 4-person" : "ドーム型テント 4人用";
@@ -275,6 +283,7 @@ export default function App() {
     [lang]
   );
 
+  // タスクタイムアウト処理
   const handleTaskTimeout = useCallback(() => {
     if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
 
@@ -314,12 +323,14 @@ export default function App() {
   }, [currentTaskWithEasing, taskLogger, lang, participantId]);
 
 
+  // 実験タスク開始処理
   const handleStartTask = useCallback(async () => {
     // 確認ダイアログを閉じる
     setShowStartConfirm(false);
 
     if (menuCategories.length === 0) return;
 
+    // タスクシーケンス生成（ラテン方格法を使用）
     const seed = hashCode(participantId);
     const taskDefs = generateTasksFromCategories(menuCategories);
     const taskSequence = generateTaskSequence(seed, taskDefs);
@@ -348,6 +359,7 @@ export default function App() {
   }, [menuCategories, lang, participantId, taskLogger, handleTaskTimeout]);
 
 
+  // タスク中のアイテムクリック処理
   const handleTaskItemClick = useCallback(
     (itemName: string, isCorrectPath: boolean) => {
       if (!currentTaskWithEasing) return;
@@ -359,6 +371,7 @@ export default function App() {
         ];
 
       if (itemName === targetItem) {
+        // 正解の場合
         if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
 
         setFeedback(lang === "en" ? "Correct!" : "正解!");
@@ -394,6 +407,7 @@ export default function App() {
           setAppState("seq");
         }, 200);
       } else if (!isCorrectPath) {
+        // 不正解（間違ったパス）の場合
         setFeedback(lang === "en" ? "Incorrect" : "不正解");
         setFeedbackType("incorrect");
         setTimeout(() => {
@@ -405,6 +419,7 @@ export default function App() {
     [currentTaskWithEasing, menuCategories, taskLogger, lang, participantId]
   );
 
+  // タスク後アンケート完了処理
   const handleSurveyComplete = useCallback(
     (data: any) => {
       if (tempTaskLog) {
@@ -415,13 +430,14 @@ export default function App() {
       if (nextIndex < experimentTasks.length) {
         setAppState("next-task-ready");
       } else {
-        // ★ 修正: TaskEndOverlayをスキップして直接Rewardへ
+        // 全タスク終了時
         setAppState("reward");
       }
     },
     [currentTaskIndex, experimentTasks.length, tempTaskLog]
   );
 
+  // 次のタスクへ進む処理
   const handleNextTaskStart = useCallback(() => {
     const nextIndex = currentTaskIndex + 1;
     setCurrentTaskIndex(nextIndex);
@@ -445,7 +461,7 @@ export default function App() {
   }, [currentTaskIndex, experimentTasks, taskLogger, handleTaskTimeout]);
 
 
-  // ★ 事後アンケート完了＆データ保存
+  // 事後アンケート完了＆データ保存処理
   const handlePostSurveyComplete = useCallback(
     (surveyData: PostSurveyResult) => {
       // Pre-Survey データのチェック
@@ -521,9 +537,6 @@ export default function App() {
       } catch (e) {
         console.error("Error in submission flow:", e);
       }
-
-
-      // 必要ならIDをリセットする処理など
     },
     [allLogs, participantId, lang, preSurveyData]
   );
@@ -586,12 +599,12 @@ export default function App() {
           allLogs={allLogs}
           lang={lang}
           participantId={participantId}
-          // ★ 修正: Consentに戻るのではなく、事後アンケート(post-survey)に進む
+          // 事後アンケート(post-survey)へ遷移
           onContinue={() => setAppState("post-survey")}
         />
       )}
 
-      {/* ★ 事後アンケートオーバーレイ */}
+      {/* 事後アンケートオーバーレイ */}
       {appState === "post-survey" && (
         <PostSurveyOverlay
           isVisible={true}
@@ -615,7 +628,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* ★ 実験開始確認モーダル */}
+      {/* 実験開始確認モーダル */}
       <AnimatePresence>
         {showStartConfirm && (
           <motion.div
@@ -662,6 +675,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* メイン画面（ヘッダーとタスクエリア） */}
       {(appState === "tutorial" ||
         appState === "task" ||
         appState === "seq" ||
@@ -669,7 +683,7 @@ export default function App() {
           <div className="min-h-screen flex flex-col">
             <header className="bg-white border-b border-gray-300 py-3 px-6 sticky top-0 z-20 shadow-sm">
               <div className="flex items-center justify-between max-w-7xl mx-auto">
-                {/* Left: Participant Info */}
+                {/* 左側: 参加者情報 */}
                 <div className="flex items-center gap-4">
                   <div className="text-sm font-semibold text-gray-700">
                     {lang === "ja" ? "実験ID" : "Participant ID"}:
@@ -679,7 +693,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right: Easing Selector */}
+                {/* 右側: イージング選択（デバッグ/チュートリアル用） */}
                 <div className="flex items-center gap-4">
                   <label className="text-sm font-bold text-gray-700">
                     {lang === "ja" ? "イージング関数" : "Easing Function"}:
@@ -711,10 +725,10 @@ export default function App() {
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="py-6">
-                {/* Compact Task Instruction Bar */}
+                {/* タスク指示バー */}
                 <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-108 w-192">
                   <div className="flex items-center gap-3">
-                    {/* Status Indicator */}
+                    {/* ステータスインジケーター */}
                     <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full">
                       <motion.div
                         className="w-4 h-4 bg-green-500 rounded-full shadow-lg"
@@ -739,10 +753,9 @@ export default function App() {
                       </span>
                     </div>
 
-                    {/* Divider */}
                     <div className="w-px h-8 bg-gray-300"></div>
 
-                    {/* Task Description */}
+                    {/* タスク内容表示 */}
                     <div className="flex-1">
                       <div className="text-sm text-gray-500 font-medium mb-2 border-b-2 border-dotted border-gray-300 pb-1 inline-block">
                         {lang === "ja" ? "目標アイテム" : "Target Item"}
@@ -765,6 +778,7 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* フィードバック表示エリア */}
                 <div className="h-12 mb-4 flex items-center justify-center pointer-events-none z-30 relative">
                   <AnimatePresence mode="wait">
                     {feedback && (
@@ -785,6 +799,7 @@ export default function App() {
                   </AnimatePresence>
                 </div>
 
+                {/* メニューコンポーネント */}
                 <div className="relative h-[500px] z-0 -ml-64">
                   {appState === "tutorial" && (
                     <TaskMenu
@@ -812,10 +827,9 @@ export default function App() {
                     )}
                 </div>
               </div>
-            </main >
-          </div >
-        )
-      }
-    </div >
+            </main>
+          </div>
+        )}
+    </div>
   );
 }

@@ -3,14 +3,18 @@ import { t } from "../utils/i18n";
 import type { Lang } from "../experiment";
 
 interface StartScreenProps {
-  isVisible: boolean;
-  lang: Lang;
-  participantId: string;
-  isExperimentActive: boolean;
-  onStart: () => void;
-  onTutorial: () => void;
+  isVisible: boolean;         // 表示状態
+  lang: Lang;                 // 言語設定
+  participantId: string;      // 参加者ID
+  isExperimentActive: boolean; // 実験が既に進行中かどうか（ボタン制御用）
+  onStart: () => void;        // 「実験開始」ボタン押下時のコールバック
+  onTutorial: () => void;     // 「チュートリアル」ボタン押下時のコールバック
 }
 
+/**
+ * 実験開始画面コンポーネント
+ * 参加者IDの確認と、実験またはチュートリアルの開始を選択します
+ */
 export function StartScreen({
   isVisible,
   lang,
@@ -23,7 +27,7 @@ export function StartScreen({
     <AnimatePresence>
       {isVisible && (
         <>
-          {/* 背景 */}
+          {/* 背景オーバーレイ */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -31,7 +35,7 @@ export function StartScreen({
             className="fixed inset-0 overlay-bg z-40"
           />
 
-          {/* コンテンツ */}
+          {/* コンテンツコンテナ */}
           <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -50,7 +54,7 @@ export function StartScreen({
                 {t(lang, "experimentStart")}
               </motion.h2>
 
-              {/* ID表示 */}
+              {/* 参加者ID表示エリア */}
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -63,22 +67,25 @@ export function StartScreen({
                 </span>
               </motion.div>
 
-              {/* ボタン */}
+              {/* ボタンエリア */}
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
                 className="flex flex-col gap-4"
               >
+                {/* 実験開始ボタン */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={onStart}
-                  disabled={isExperimentActive}
+                  disabled={isExperimentActive} // 実験中は押せないようにする
                   className="w-full px-8 py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                 >
                   {t(lang, "startTask")}
                 </motion.button>
+
+                {/* チュートリアルボタン */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

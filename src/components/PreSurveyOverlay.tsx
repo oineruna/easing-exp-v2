@@ -10,6 +10,8 @@ interface PreSurveyOverlayProps {
   onComplete: (data: PreSurveyData) => void;
 }
 
+// イージング関数のデモ用データ定義
+// 各イージングの名称、翻訳キー、ベジェ曲線のパラメータを保持
 const EASING_DEMOS: Array<{
   name: EasingFunction;
   labelKey: TextKey;
@@ -48,30 +50,52 @@ const EASING_DEMOS: Array<{
     },
   ];
 
+/**
+ * 実験前のアンケートオーバーレイ
+ * 参加者のイージングに対する好みや属性を収集します
+ * ステップバイステップ形式（イントロ -> デモ評価 -> ランキング -> コメント）で進行します
+ */
 export function PreSurveyOverlay({
   isVisible,
   lang,
   onComplete,
 }: PreSurveyOverlayProps) {
+  // 現在のステップ管理
   const [currentStep, setCurrentStep] = useState<
     "intro" | "demo" | "ranking" | "comments"
   >("intro");
+
+  // 各イージングへの評価値 (1-5)
   const [preferences, setPreferences] = useState<
     Record<EasingFunction, number>
   >({} as any);
+
+  // 好みの順位付けリスト
   const [ranking, setRanking] = useState<EasingFunction[]>([]);
+
+  // 自由記述コメント
   const [comments, setComments] = useState("");
+
+  // ドラッグ＆ドロップ用の状態
   const [draggedItem, setDraggedItem] = useState<EasingFunction | null>(null);
 
+  /**
+   * 評価値が変更されたときの処理
+   */
   const handleRatingChange = (easing: EasingFunction, rating: number) => {
     setPreferences((prev) => ({ ...prev, [easing]: rating }));
   };
 
+  /**
+   * デモ評価画面からランキング画面へ進む処理
+   * 全てのイージングが評価されているか確認し、初期ランキングを生成します
+   */
   const handleNextFromDemo = () => {
     if (Object.keys(preferences).length < EASING_DEMOS.length) {
       alert(t(lang, "preSurveyAlert"));
       return;
     }
+    // 評価値が高い順にソートして初期ランキングを作成
     const sorted = EASING_DEMOS.map((d) => d.name).sort(
       (a, b) => (preferences[b] || 0) - (preferences[a] || 0)
     );
@@ -79,6 +103,7 @@ export function PreSurveyOverlay({
     setCurrentStep("ranking");
   };
 
+  // --- ドラッグ＆ドロップ処理 ---
   const handleDragStart = (easing: EasingFunction) => {
     setDraggedItem(easing);
   };
@@ -93,10 +118,15 @@ export function PreSurveyOverlay({
     setDraggedItem(null);
   };
 
+  /**
+   * アンケート完了時の処理
+   * 収集したデータを集計・分析して親コンポーネントへ渡します
+   */
   const handleSubmit = () => {
     const smoothEasings: EasingFunction[] = ["easeInOutQuad", "easeInOutQuint"];
     const snappyEasings: EasingFunction[] = ["easeInOutExpo", "linear"];
 
+    // 好みの傾向を簡易分析
     const smoothScore = smoothEasings.reduce(
       (sum, e) => sum + (preferences[e] || 0),
       0
@@ -123,7 +153,7 @@ export function PreSurveyOverlay({
     });
   };
 
-  // ★ デバッグ用スキップ
+  // ★ デバッグ用スキップ機能
   const handleDebugSkip = () => {
     const dummyRanking = EASING_DEMOS.map((d) => d.name);
     const dummyPreferences: any = {};
@@ -137,7 +167,7 @@ export function PreSurveyOverlay({
     });
   };
 
-  // ★ デバッグ用スキップ (Shift + Enter)
+  // Shift + Enter でスキップ可能にするイベントリスナー
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.shiftKey && e.key === "Enter") {
@@ -146,13 +176,7 @@ export function PreSurveyOverlay({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []); // handleDebugSkip is stable or can be omitted from deps if defined inside component but doesn't use reactive state that changes mid-survey (it uses constants/props mostly)
-  // Actually handleDebugSkip uses participantId which is prop, so it's fine. But to be safe/clean:
-  // Let's just suppress deps or include them. handleDebugSkip is defined inside, so it changes every render.
-  // Better to wrap handleDebugSkip in useCallback or just disable lint for this line if needed, but let's try to be clean.
-  // For now, empty deps [] is risky if props change, but participantId shouldn't change mid-overlay.
-  // Let's include handleDebugSkip in the previous tool call I tried to include it.
-  // Re-writing the target content to match exactly what's there.
+  }, []);
 
   return (
     <AnimatePresence>
@@ -170,7 +194,7 @@ export function PreSurveyOverlay({
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="glass-effect rounded-3xl p-6 max-w-3xl w-full shadow-2xl my-4"
           >
-            {/* イントロ */}
+            {/* ステップ1: イントロダクション */}
             {currentStep === "intro" && (
               <div>
                 <h2 className="text-2xl font-black mb-6 text-center">
@@ -198,7 +222,7 @@ export function PreSurveyOverlay({
               </div>
             )}
 
-            {/* デモと評価 */}
+            {/* ステップ2: デモアニメーションと評価 */}
             {currentStep === "demo" && (
               <div>
                 <h2 className="text-2xl font-black mb-6 text-center gradient-text">
@@ -215,7 +239,7 @@ export function PreSurveyOverlay({
                       className="bg-white/80 rounded-2xl p-4 shadow-md"
                     >
                       <div className="flex items-center gap-4">
-                        {/* アニメーションデモ */}
+                        {/* アニメーションプレビュー */}
                         <div className="flex-shrink-0 w-48 h-20 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg relative overflow-hidden">
                           <motion.div
                             animate={{ x: [0, 152, 0] }}
@@ -229,7 +253,7 @@ export function PreSurveyOverlay({
                           />
                         </div>
 
-                        {/* 説明 */}
+                        {/* 説明テキスト */}
                         <div className="flex-1">
                           <h3 className="text-2xl font-bold text-gray-800">
                             {t(lang, demo.labelKey)}
@@ -239,6 +263,7 @@ export function PreSurveyOverlay({
                           </p>
                         </div>
 
+                        {/* 評価ボタン (1-5) */}
                         <div className="flex-shrink-0">
                           <div className="text-base font-bold text-gray-600 mb-1 text-center">
                             {t(lang, "preSurveyPreference")}
@@ -287,7 +312,7 @@ export function PreSurveyOverlay({
               </div>
             )}
 
-            {/* ランキング */}
+            {/* ステップ3: ランキング並べ替え */}
             {currentStep === "ranking" && (
               <div>
                 <h2 className="text-2xl font-black mb-4 text-center gradient-text">
@@ -312,12 +337,12 @@ export function PreSurveyOverlay({
                           whileHover={{ scale: 1.02 }}
                           className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm cursor-move"
                         >
-                          {/* 順位表示 */}
+                          {/* 順位バッジ */}
                           <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-md flex items-center justify-center font-bold text-lg">
                             {index + 1}
                           </div>
 
-                          {/* 🆕 アニメーションプレビューを追加 */}
+                          {/* アニメーションプレビュー（小） */}
                           <div className="flex-shrink-0 w-32 h-12 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg relative overflow-hidden">
                             <motion.div
                               animate={{ x: [0, 96, 0] }} // w-32 (128px) - w-8 (32px) = 96px
@@ -331,7 +356,7 @@ export function PreSurveyOverlay({
                             />
                           </div>
 
-                          {/* ラベルと説明 */}
+                          {/* ラベル */}
                           <div className="flex-1">
                             <div className="font-bold text-xl text-gray-800">
                               {t(lang, demo.labelKey)}
@@ -341,7 +366,7 @@ export function PreSurveyOverlay({
                             </div>
                           </div>
 
-                          {/* ドラッグハンドル */}
+                          {/* ドラッグハンドルアイコン */}
                           <div className="text-xl text-gray-400">⋮⋮</div>
                         </motion.div>
                       );
@@ -362,7 +387,7 @@ export function PreSurveyOverlay({
               </div>
             )}
 
-            {/* コメント */}
+            {/* ステップ4: 自由記述コメント */}
             {currentStep === "comments" && (
               <div>
                 <h2 className="text-2xl font-black mb-4 text-center gradient-text">

@@ -5,10 +5,10 @@ import type { Lang, EasingFunction } from "../experiment";
 // 🔧 型名を変更して衝突を回避
 export interface EasingEvaluationData {
   easingFunction: EasingFunction;
-  usability: number;
-  smoothness: number;
-  responsiveness: number;
-  preference: number;
+  usability: number;      // 使いやすさ
+  smoothness: number;     // 滑らかさ
+  responsiveness: number; // 応答性
+  preference: number;     // 総合的好み
 }
 
 interface EasingEvaluationProps {
@@ -17,6 +17,7 @@ interface EasingEvaluationProps {
   onSubmit: (evaluations: EasingEvaluationData[]) => void;
 }
 
+// イージング関数の表示ラベル定義
 const easingLabels: Record<EasingFunction, { ja: string; en: string }> = {
   linear: { ja: "一定速度", en: "Linear" },
   easeInOutQuad: { ja: "滑らか(弱)", en: "Smooth (Weak)" },
@@ -25,15 +26,21 @@ const easingLabels: Record<EasingFunction, { ja: string; en: string }> = {
   easeInOutBack: { ja: "バウンス", en: "Bounce" },
 };
 
+/**
+ * イージング関数の詳細評価コンポーネント
+ * 各イージングについて、複数の観点から7段階評価を行います
+ */
 export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
   lang,
   easingFunctions,
   onSubmit,
 }) => {
+  // 評価データの状態管理
   const [evaluations, setEvaluations] = useState<
     Record<string, Partial<EasingEvaluationData>>
   >({});
 
+  // 言語リソース
   const labels = {
     ja: {
       title: "イージング関数の評価",
@@ -63,6 +70,9 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
 
   const text = labels[lang];
 
+  /**
+   * 評価値更新ハンドラ
+   */
   const handleRating = (
     easing: EasingFunction,
     criterion: keyof EasingEvaluationData,
@@ -78,6 +88,9 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
     }));
   };
 
+  /**
+   * 全ての項目が評価済みかチェック
+   */
   const isComplete = () => {
     return easingFunctions.every((easing) => {
       const evaluation = evaluations[easing];
@@ -90,6 +103,9 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
     });
   };
 
+  /**
+   * 送信処理
+   */
   const handleSubmit = () => {
     if (isComplete()) {
       const completeEvaluations = easingFunctions.map((easing) => ({
@@ -103,6 +119,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
     }
   };
 
+  // 評価項目リスト
   const criteria: Array<{ key: keyof EasingEvaluationData; label: string }> = [
     { key: "usability", label: text.usability },
     { key: "smoothness", label: text.smoothness },
@@ -136,6 +153,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
                     </span>
                   </div>
 
+                  {/* 7段階評価ボタン */}
                   <div className="flex gap-2">
                     {[1, 2, 3, 4, 5, 6, 7].map((value) => (
                       <motion.button
@@ -147,10 +165,9 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
                         whileTap={{ scale: 0.95 }}
                         className={`
                           flex-1 h-12 rounded-lg font-bold transition-all
-                          ${
-                            evaluations[easing]?.[criterion.key] === value
-                              ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-md"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          ${evaluations[easing]?.[criterion.key] === value
+                            ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-md"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }
                         `}
                       >
@@ -170,6 +187,7 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
         ))}
       </div>
 
+      {/* 送信ボタン */}
       <div className="text-center mt-8">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -178,10 +196,9 @@ export const EasingEvaluation: React.FC<EasingEvaluationProps> = ({
           disabled={!isComplete()}
           className={`
             px-16 py-4 rounded-xl font-bold text-lg shadow-lg
-            ${
-              isComplete()
-                ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white cursor-pointer"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            ${isComplete()
+              ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white cursor-pointer"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }
           `}
         >

@@ -1,23 +1,26 @@
-// --- START OF FILE src/components/PostSurveyOverlay.tsx ---
-
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { t } from "../utils/i18n";
 import type { Lang, PostSurveyResult } from "../experiment";
 
 interface PostSurveyOverlayProps {
-  isVisible: boolean;
-  lang: Lang;
-  participantId: string;
-  onComplete: (data: PostSurveyResult) => void;
+  isVisible: boolean;         // 表示状態
+  lang: Lang;                 // 言語設定
+  participantId: string;      // 参加者ID（表示用）
+  onComplete: (data: PostSurveyResult) => void; // 完了時のコールバック
 }
 
+/**
+ * 実験終了後のアンケートオーバーレイ
+ * 全タスク終了後に表示され、総合的な評価や感想を収集します
+ */
 export function PostSurveyOverlay({
   isVisible,
   lang,
   participantId,
   onComplete,
 }: PostSurveyOverlayProps) {
+  // アンケート回答の状態管理
   const [noticeDifference, setNoticeDifference] = useState<string>("");
   const [usabilityImpact, setUsabilityImpact] = useState<string[]>([]);
   const [usabilityImpactOther, setUsabilityImpactOther] = useState<string>("");
@@ -25,15 +28,17 @@ export function PostSurveyOverlay({
   const [worstFeature, setWorstFeature] = useState<string>("");
   const [improvements, setImprovements] = useState<string>("");
 
-  // i18nから選択肢配列を取得
+  // i18nから選択肢リストを取得
   const q2Options: string[] = t(lang, "postSurveyQ2Options");
   const impactOptions: string[] = t(lang, "postSurveyQ3Options");
   const featureOptions: string[] = t(lang, "postSurveyFeatureOptions");
 
-  // "その他" / "Other" の判定用 (配列の最後の要素と仮定するか、文字列で判定)
-  // ここでは文字列一致で判定します（i18nファイルの内容と合わせる必要があります）
+  // "その他" / "Other" の判定用ラベル
   const otherOptionLabel = lang === "en" ? "Other" : "その他";
 
+  /**
+   * 複数選択可能な設問（影響要因）の変更ハンドラ
+   */
   const handleImpactChange = (option: string) => {
     if (usabilityImpact.includes(option)) {
       setUsabilityImpact(usabilityImpact.filter((item) => item !== option));
@@ -42,8 +47,11 @@ export function PostSurveyOverlay({
     }
   };
 
+  /**
+   * 送信ボタン押下時の処理
+   */
   const handleSubmit = () => {
-    // バリデーション
+    // 必須項目のバリデーション
     if (
       !noticeDifference ||
       usabilityImpact.length === 0 ||
@@ -66,7 +74,7 @@ export function PostSurveyOverlay({
     onComplete(result);
   };
 
-  // ★ デバッグ用スキップ
+  // ★ デバッグ用スキップ機能
   const handleDebugSkip = () => {
     const dummyResult: PostSurveyResult = {
       noticeDifference: q2Options[0],
@@ -79,7 +87,7 @@ export function PostSurveyOverlay({
     onComplete(dummyResult);
   };
 
-  // ★ デバッグ用スキップ (Shift + Enter)
+  // Shift + Enter でスキップ可能にするイベントリスナー
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.shiftKey && e.key === "Enter") {
@@ -104,13 +112,14 @@ export function PostSurveyOverlay({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             className="bg-white rounded-3xl w-full max-w-4xl max-h-[85vh] overflow-y-auto shadow-2xl relative flex flex-col"
           >
+            {/* ヘッダー */}
             <h2 className="text-3xl font-black text-gray-800 mt-6 mb-2 flex items-center justify-center">
               <span className="text-2xl mr-2">📋</span>
               事後アンケート
             </h2>
 
             <div className="space-y-8 text-left pb-4">
-              {/* Q1: ID */}
+              {/* Q1: 参加者ID確認（読み取り専用） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-2">
                   {t(lang, "postSurveyQ1")}
@@ -126,7 +135,7 @@ export function PostSurveyOverlay({
                 </p>
               </div>
 
-              {/* Q2: 違いに気づいたか */}
+              {/* Q2: イージングの違いへの気付き（単一選択） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
                   {t(lang, "postSurveyQ2")}{" "}
@@ -152,7 +161,7 @@ export function PostSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q3: 影響 */}
+              {/* Q3: 操作性に影響した要因（複数選択） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
                   {t(lang, "postSurveyQ3")}{" "}
@@ -171,6 +180,7 @@ export function PostSurveyOverlay({
                         />
                         <span>{opt}</span>
                       </label>
+                      {/* 「その他」選択時の自由記述欄 */}
                       {opt === otherOptionLabel &&
                         usabilityImpact.includes(otherOptionLabel) && (
                           <textarea
@@ -192,7 +202,7 @@ export function PostSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q4: 最も使いやすかった特徴 */}
+              {/* Q4: 最も良かった特徴（単一選択） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
                   {t(lang, "postSurveyQ4")}{" "}
@@ -218,7 +228,7 @@ export function PostSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q5: 最も使いにくかった特徴 */}
+              {/* Q5: 最も悪かった特徴（単一選択） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-3">
                   {t(lang, "postSurveyQ5")}{" "}
@@ -244,7 +254,7 @@ export function PostSurveyOverlay({
                 </div>
               </div>
 
-              {/* Q6: 改善点 */}
+              {/* Q6: 改善点・要望（自由記述） */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <label className="block font-bold text-gray-800 mb-2">
                   {t(lang, "postSurveyQ6")}
@@ -263,7 +273,7 @@ export function PostSurveyOverlay({
               </div>
             </div>
 
-            {/* 送信ボタン */}
+            {/* 送信ボタンエリア */}
             <div className="mt-4 text-center pb-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}

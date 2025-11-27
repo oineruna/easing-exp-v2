@@ -715,9 +715,24 @@ export default function App() {
                 <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-108 w-192">
                   <div className="flex items-center gap-3">
                     {/* Status Indicator */}
-                    <div className="flex items-center gap-2 px-2 py-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs font-semibold text-gray-600">
+                    <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full">
+                      <motion.div
+                        className="w-4 h-4 bg-green-500 rounded-full shadow-lg"
+                        animate={{
+                          scale: [1, 1.3, 1],
+                          boxShadow: [
+                            "0 0 0 0 rgba(34, 197, 94, 0.4)",
+                            "0 0 0 8px rgba(34, 197, 94, 0)",
+                            "0 0 0 0 rgba(34, 197, 94, 0)"
+                          ]
+                        }}
+                        transition={{
+                          duration: 1.0,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      />
+                      <span className="text-sm font-bold text-green-700">
                         {appState === "tutorial"
                           ? (lang === "ja" ? "チュートリアル中" : "In Tutorial")
                           : (lang === "ja" ? "実験中" : "In Progress")}

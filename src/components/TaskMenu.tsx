@@ -32,17 +32,24 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   onItemClick,
 }) => {
   // 現在展開されているパスの状態管理
-  // 配列のインデックスが階層の深さに対応し、値が選択されたカテゴリ名になります
   const [activePath, setActivePath] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 画面サイズ監視
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // カテゴリデータが変更されたらパスをリセット
   useEffect(() => {
     setActivePath([]);
   }, [categories]);
 
-  /**
-   * クリックされたアイテムが正解パスに含まれているか判定
-   */
   const isInCorrectPath = useCallback(
     (itemName: string, depth: number): boolean => {
       if (!correctPath || correctPath.length === 0) return true;
@@ -51,18 +58,21 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     [correctPath]
   );
 
-  /**
-   * メニューアイテムクリック時のハンドラ
-   * @param cat クリックされたカテゴリ
-   * @param depth 階層の深さ
-   */
   const handleClick = (cat: Category, depth: number) => {
-    // 現在の階層より深いパスをクリアして、新しい選択で更新
-    const newPath = activePath.slice(0, depth);
-    newPath[depth] = cat.name;
-    setActivePath(newPath);
+    // モバイルの場合はトグル動作、デスクトップは階層切り替え
+    if (isMobile) {
+      const isActive = activePath[depth] === cat.name;
+      const newPath = activePath.slice(0, depth);
+      if (!isActive) {
+        newPath[depth] = cat.name;
+      }
+      setActivePath(newPath);
+    } else {
+      const newPath = activePath.slice(0, depth);
+      newPath[depth] = cat.name;
+      setActivePath(newPath);
+    }
 
-    // サブカテゴリがない場合（末端アイテム）は選択完了としてコールバックを実行
     const hasSub = cat.subcategories && cat.subcategories.length > 0;
     if (!hasSub) {
       const isCorrect = isInCorrectPath(cat.name, depth);
@@ -70,18 +80,15 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
   };
 
-  /**
-   * メニューを再帰的にレンダリングする関数
-   * @param cats カテゴリリスト
-   * @param depth 現在の階層深さ
-   */
   const renderMenu = (cats: Category[], depth = 0): React.ReactElement => {
     return (
       <ul
         className={`
-          w-72 bg-white text-gray-800
-          shadow-lg border border-gray-200
-          ${depth === 0 ? 'rounded-b-md' : 'rounded-md'}
+          bg-white text-gray-800
+          ${isMobile
+            ? 'w-full border-l-2 border-gray-100'
+            : `w-72 shadow-lg border border-gray-200 ${depth === 0 ? 'rounded-b-md' : 'rounded-md'}`
+          }
         `}
       >
         {cats.map((cat) => {
@@ -89,8 +96,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           const isActive = activePath[depth] === cat.name;
 
           return (
-            <li key={cat.name} className="relative border-b border-gray-100 last:border-b-0">
-              {/* メニュー項目ボタン */}
+            <li key={cat.name} className={`relative ${!isMobile && 'border-b border-gray-100 last:border-b-0'}`}>
               <button
                 onClick={() => handleClick(cat, depth)}
                 className={`
@@ -98,39 +104,37 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                   transition-all duration-150 focus:outline-none
                   text-base font-medium
                   ${isActive
-                    ? "bg-blue-500 text-white" // 選択中は青色
-                    : "hover:bg-gray-100 text-gray-800" // 通常時はホバーでグレー
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-gray-100 text-gray-800"
                   }
+                  ${isMobile && depth > 0 ? 'pl-8' : ''}
                 `}
               >
                 <span className="truncate">{cat.name}</span>
-                {/* サブメニューがある場合は矢印アイコンを表示 */}
                 {hasSub && (
                   <svg
-                    className={`w-4 h-4 ml-2 flex-shrink-0 transition-transform ${isActive ? 'rotate-0' : ''}`}
+                    className={`w-4 h-4 ml-2 flex-shrink-0 transition-transform ${isActive ? 'rotate-90 md:rotate-0' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={isMobile ? "M9 5l7 7-7 7" : "M9 5l7 7-7 7"} />
                   </svg>
                 )}
               </button>
 
-              {/* サブメニューのアニメーション表示 */}
               <AnimatePresence>
                 {hasSub && isActive && (
                   <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
+                    initial={isMobile ? { height: 0, opacity: 0 } : { opacity: 0, x: -10 }}
+                    animate={isMobile ? { height: "auto", opacity: 1 } : { opacity: 1, x: 0 }}
+                    exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{
-                      duration: 0.50, // アニメーション時間
-                      ease: bezierMap[currentEasing], // 実験条件のイージングを適用
+                      duration: 0.50,
+                      ease: bezierMap[currentEasing],
                     }}
-                    className="absolute top-0 left-full -z-10"
+                    className={isMobile ? "overflow-hidden" : "absolute top-0 left-full -z-10"}
                   >
-                    {/* 再帰呼び出しで次の階層を描画 */}
                     {renderMenu(cat.subcategories!, depth + 1)}
                   </motion.div>
                 )}
@@ -143,16 +147,18 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   };
 
   return (
-    <div className="relative inline-block align-top">
-      {/* メニューヘッダー */}
-      <div className="relative z-20 bg-gradient-to-r from-gray-700 to-gray-800 text-white px-5 py-3.5 font-semibold flex items-center gap-3 rounded-t-md shadow-md w-72">
+    <div className={`relative inline-block align-top ${isMobile ? 'w-full' : ''}`}>
+      <div className={`
+        relative z-20 bg-gradient-to-r from-gray-700 to-gray-800 text-white px-5 py-3.5 
+        font-semibold flex items-center gap-3 rounded-t-md shadow-md
+        ${isMobile ? 'w-full' : 'w-72'}
+      `}>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
         <span className="tracking-wide text-sm uppercase">カテゴリー</span>
       </div>
 
-      {/* メインメニュー本体 */}
       <div className="relative z-10">
         {renderMenu(categories)}
       </div>

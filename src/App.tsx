@@ -682,7 +682,7 @@ export default function App() {
         appState === "next-task-ready") && (
           <div className="min-h-screen flex flex-col">
             <header className="bg-white border-b border-gray-300 py-3 px-6 sticky top-0 z-20 shadow-sm">
-              <div className="flex items-center justify-between max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row md:items-center justify-between max-w-7xl mx-auto gap-4">
                 {/* 左側: 参加者情報 */}
                 <div className="flex items-center gap-4">
                   <div className="text-sm font-semibold text-gray-700">
@@ -712,7 +712,7 @@ export default function App() {
                         }
                       }
                     }}
-                    className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all"
+                    className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all w-full md:w-auto"
                   >
                     <option value="linear">linear</option>
                     <option value="easeInOutQuad">easeInOutQuad</option>
@@ -726,10 +726,10 @@ export default function App() {
             <main className="flex-1 overflow-y-auto bg-gray-50">
               <div className="py-6">
                 {/* タスク指示バー */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 ml-108 w-192">
-                  <div className="flex items-center gap-3">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 mx-4 md:mx-auto max-w-3xl">
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                     {/* ステータスインジケーター */}
-                    <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full">
+                    <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full self-start md:self-center">
                       <motion.div
                         className="w-4 h-4 bg-green-500 rounded-full shadow-lg"
                         animate={{
@@ -746,17 +746,17 @@ export default function App() {
                           ease: "linear"
                         }}
                       />
-                      <span className="text-sm font-bold text-green-700">
+                      <span className="text-sm font-bold text-green-700 whitespace-nowrap">
                         {appState === "tutorial"
                           ? (lang === "ja" ? "チュートリアル中" : "In Tutorial")
                           : (lang === "ja" ? "実験中" : "In Progress")}
                       </span>
                     </div>
 
-                    <div className="w-px h-8 bg-gray-300"></div>
+                    <div className="hidden md:block w-px h-8 bg-gray-300"></div>
 
                     {/* タスク内容表示 */}
-                    <div className="flex-1">
+                    <div className="flex-1 w-full">
                       <div className="text-sm text-gray-500 font-medium mb-2 border-b-2 border-dotted border-gray-300 pb-1 inline-block">
                         {lang === "ja" ? "目標アイテム" : "Target Item"}
                         {appState !== "tutorial" && (
@@ -765,7 +765,7 @@ export default function App() {
                           </span>
                         )}
                       </div>
-                      <div className="text-2xl font-bold text-gray-900 leading-tight">
+                      <div className="text-xl md:text-2xl font-bold text-gray-900 leading-tight break-words">
                         {appState !== "tutorial" && currentTaskWithEasing
                           ? lang === "en"
                             ? `Find "${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}"`
@@ -800,7 +800,7 @@ export default function App() {
                 </div>
 
                 {/* メニューコンポーネント */}
-                <div className="relative h-[500px] z-0 -ml-64">
+                <div className="relative min-h-[500px] z-0 w-full md:w-auto px-4 md:px-0 md:-ml-64 flex justify-center md:block">
                   {appState === "tutorial" && (
                     <TaskMenu
                       key="tutorial-menu"

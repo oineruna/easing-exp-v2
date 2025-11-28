@@ -42,14 +42,14 @@ export function StartScreen({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="glass-effect rounded-3xl p-10 max-w-md w-full shadow-2xl pointer-events-auto"
+              className="glass-effect rounded-3xl p-6 md:p-10 max-w-md w-full shadow-2xl pointer-events-auto mx-4"
             >
               {/* タイトル */}
               <motion.h2
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-4xl font-black mb-8 text-center gradient-text"
+                className="text-2xl md:text-4xl font-black mb-6 md:mb-8 text-center gradient-text"
               >
                 {t(lang, "experimentStart")}
               </motion.h2>
@@ -59,7 +59,7 @@ export function StartScreen({
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white/60 rounded-2xl px-6 py-4 mb-8 text-center border border-gray-200"
+                className="bg-white/60 rounded-2xl px-6 py-4 mb-6 md:mb-8 text-center border border-gray-200"
               >
                 <span className="text-sm text-gray-600 font-medium">ID: </span>
                 <span className="text-xl font-bold text-gray-800">
@@ -80,7 +80,7 @@ export function StartScreen({
                   whileTap={{ scale: 0.98 }}
                   onClick={onStart}
                   disabled={isExperimentActive} // 実験中は押せないようにする
-                  className="w-full px-8 py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+                  className="w-full px-8 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-base md:text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                 >
                   {t(lang, "startTask")}
                 </motion.button>
@@ -90,7 +90,7 @@ export function StartScreen({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={onTutorial}
-                  className="w-full px-8 py-4 bg-white/80 hover:bg-white transition text-gray-700 rounded-2xl font-bold border-2 border-gray-300 shadow-md"
+                  className="w-full px-8 py-3 md:py-4 bg-white/80 hover:bg-white transition text-gray-700 rounded-2xl font-bold border-2 border-gray-300 shadow-md text-base md:text-lg"
                 >
                   {t(lang, "tutorialLabel")}
                 </motion.button>

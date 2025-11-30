@@ -213,12 +213,7 @@ export function PreSurveyOverlay({
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      // デモ（レーティング）画面をスキップして直接ランキングへ
-                      // 初期ランキングはデフォルト順で設定
-                      setRanking(EASING_DEMOS.map((d) => d.name));
-                      setCurrentStep("ranking");
-                    }}
+                    onClick={() => setCurrentStep("demo")}
                     className="px-10 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg shadow-lg"
                   >
                     {t(lang, "preSurveyStart")} →

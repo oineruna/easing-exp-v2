@@ -7,8 +7,10 @@ interface TaskMenuProps {
   currentEasing: EasingFunction;    // 現在適用するイージング関数
   correctPath: string[];            // 正解のパス（デバッグやハイライト用）
   isTutorial: boolean;              // チュートリアルモードかどうか
-  onItemClick: (itemName: string, isCorrectPath: boolean) => void; // アイテムクリック時のコールバック
+  onItemClick: (itemName: string, isCorrectPath: boolean, depth: number, isLeaf: boolean) => void; // アイテムクリック時のコールバック
 }
+
+
 
 // イージング関数のベジェ曲線定義マップ
 // CSSの cubic-bezier() に渡すパラメータです
@@ -74,10 +76,10 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
 
     const hasSub = cat.subcategories && cat.subcategories.length > 0;
-    if (!hasSub) {
-      const isCorrect = isInCorrectPath(cat.name, depth);
-      onItemClick(cat.name, isCorrect);
-    }
+    
+    // 全てのクリックを親に通知（エラー判定のため）
+    const isCorrect = isInCorrectPath(cat.name, depth);
+    onItemClick(cat.name, isCorrect, depth, !hasSub);
   };
 
   const renderMenu = (cats: Category[], depth = 0): React.ReactElement => {
@@ -130,7 +132,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                     animate={isMobile ? { height: "auto", opacity: 1 } : { opacity: 1, x: 0 }}
                     exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{
-                      duration: 0.50,
+                      duration: 0.5,
                       ease: bezierMap[currentEasing],
                     }}
                     className={isMobile ? "overflow-hidden" : "absolute top-0 left-full -z-10"}
@@ -146,8 +148,24 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     );
   };
 
+  // クリックアウトサイド（メニュー外クリックで閉じる）の実装
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActivePath([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={`relative inline-block align-top ${isMobile ? 'w-full' : ''}`}>
+    <div ref={menuRef} className={`relative inline-block align-top ${isMobile ? 'w-full' : ''}`}>
       <div className={`
         relative z-20 bg-gradient-to-r from-gray-700 to-gray-800 text-white px-5 py-3.5 
         font-semibold flex items-center gap-3 rounded-t-md shadow-md

@@ -148,10 +148,10 @@ export function RewardScreen({
           >
             🎉
           </motion.div>
-          <h2 className="text-5xl font-black text-gray-800 drop-shadow-sm mb-2">
+          <h2 className="text-5xl font-black text-gray-800 drop-shadow-sm mb-6">
             {t(lang, "taskCompleted")}
           </h2>
-          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-2">
+          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-4">
             ID: {participantId}
           </div>
           <motion.div
@@ -167,13 +167,13 @@ export function RewardScreen({
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-4"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onContinue}
-            className="px-16 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center gap-2"
+            className="px-16 py-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-black text-2xl shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center gap-4"
           >
             <span>📋</span>
             {lang === "ja" ? "アンケートへ進む" : "Proceed to Survey"}
@@ -183,7 +183,7 @@ export function RewardScreen({
 
         {/* スコアカード（主要指標の表示） */}
         <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-2xl bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
-          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-2">
             {/* 正答率 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
@@ -194,7 +194,7 @@ export function RewardScreen({
               </div>
               <div className="text-5xl font-black">{stats.accuracy}</div>
               <div className="text-sm mt-2 opacity-80">
-                {stats.correctTasks}/{stats.totalTasks}{" "}
+               📖 {stats.correctTasks}/{stats.totalTasks}{" "}
                 {t(lang, "tasksCompletedSuffix")}
               </div>
             </motion.div>
@@ -230,7 +230,7 @@ export function RewardScreen({
         </motion.div>
 
         {/* MVPイージング（最も成績が良かった条件） */}
-        <motion.div className="glass-effect rounded-3xl p-6 mb-2 shadow-xl text-center bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
+        <motion.div className="glass-effect rounded-3xl p-6 mb-4 shadow-xl text-center bg-white/60 backdrop-blur-md max-w-4xl mx-auto w-full">
           <div className="flex flex-col items-center justify-center">
             <div className="text-6xl mb-2">🏆</div>
             <h3 className="flex items-center text-3xl font-black mb-2 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">

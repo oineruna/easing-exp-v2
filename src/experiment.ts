@@ -34,23 +34,10 @@ export interface Task {
   id: string;             // タスクの一意なID（パス結合文字列など）
   description: string;    // 画面に表示する指示文
   targetPath: string[];   // 目標アイテムまでの階層パス（正解判定用）
+  leafIndex?: number;     // 末端カテゴリ内でのインデックス（0-4）
 }
 
-/**
- * クリックイベントの詳細ログ
- * ユーザーの操作を詳細に記録するためのデータ構造です
- */
-export interface ClickRecord {
-  step: number;             // タスク内でのクリック順序（1始まり）
-  action: string;           // クリックしたカテゴリ名
-  depth: number;            // クリックした階層の深さ（0始まり）
-  duringAnimation: boolean; // アニメーション中にクリックしたか
-  stayTime: number;         // 前回のクリックからの経過時間（秒）
-  timestamp: string;        // クリック時の絶対時刻
-  isCorrect?: boolean;      // 正解アイテムだったか（タスク完了時のみ）
-  x?: number;               // クリック位置のX座標
-  y?: number;               // クリック位置のY座標
-}
+
 
 // ClickLogはClickRecordのエイリアスとして定義
 export type ClickLog = ClickRecord;
@@ -77,33 +64,58 @@ export interface TaskSurveyResult {
   comments: string;         // 自由記述コメント
 }
 
+export interface ClickRecord {
+  target: string;         // クリックしたアイテム名
+  timestamp: number;      // クリック時刻 (performance.now())
+  isCorrect: boolean;     // 正解かどうか
+  depth: number;          // 階層の深さ (0-indexed)
+  duringAnimation: boolean; // アニメーション中にクリックされたか
+  animationProgress?: number; // アニメーション進捗率 (0.0 - 1.0)
+  distanceFromLastClick?: number; // 直前のクリック位置からの距離
+  timeFromLastClick?: number;     // 直前のクリックからの経過時間
+}
+
+export interface MouseTrajectoryPoint {
+  x: number;
+  y: number;
+  timestamp: number;
+  duringAnimation: boolean;
+}
+
 /**
  * 1タスクごとの実験記録（ログ）
  * パフォーマンスデータと主観評価を統合したものです
  */
 export interface TaskLog {
-  trialNumber: number;            // 試行番号（通し番号）
-  taskId: string;                 // タスクID
-  targetItem: string;             // 目標アイテム名
-  easingFunction: EasingFunction; // 適用されたイージング関数
+  trialNumber: number;    // 試行番号
+  taskId: string;         // タスクID
+  targetItem: string;     // 目標アイテム名
+  easingFunction: EasingFunction; // 使用したイージング関数
 
-  // パフォーマンス指標
-  isCorrect: boolean;             // 正解したか
-  timedOut: boolean;              // 制限時間切れか
-  totalDuration: number;          // 所要時間（ミリ秒）
-  firstClickTime?: number;        // 初回クリックまでの時間（秒）
-  clickCount: number;             // 総クリック数
-  errorCount: number;             // エラー（誤クリック）数
-
-  // 詳細トラッキング
-  clicks: ClickRecord[];          // 全クリックの履歴
-  menuTravelDistance?: number;    // メニュー階層の移動距離
-  mouseDistance?: number;         // マウスカーソルの総移動距離（ピクセル）
-
-  // アニメーション関連のインタラクション
-  interactedDuringAnimation?: boolean; // アニメーション中に操作が発生したか
+  isCorrect: boolean;     // 正解したか（タイムアウト含む）
+  timedOut: boolean;      // タイムアウトしたか
+  totalDuration: number;  // 総所要時間 (ms)
+  firstClickTime: number; // 最初のクリックまでの時間 (ms)
+  clickCount: number;     // 総クリック数
+  errorCount: number;     // エラー数
+  
+  clicks: ClickRecord[];  // クリック詳細ログ
+  
+  menuTravelDistance: number; // メニュー階層移動距離
+  mouseDistance: number;      // マウス総移動距離 (px)
+  
+  interactedDuringAnimation: boolean; // アニメーション中の操作があったか
   animationClickCount?: number;        // アニメーション中のクリック総数
   animationErrorCount?: number;        // アニメーション中の誤クリック数
+
+  // 新しい指標
+  clickEfficiency?: number; // クリック効率 (最短パス長 / 総クリック数)
+  frustrationCount?: number; // フラストレーション回数 (連打など)
+
+  // マウス軌跡・詳細指標
+  mouseTrajectory?: MouseTrajectoryPoint[]; // マウス軌跡データ
+  jitteriness?: number; // ふらつき指標 (角度変化の総和)
+  overshootCount?: number; // オーバーシュート回数
 
   // 主観評価
   survey?: TaskSurveyResult;      // タスク後アンケート結果

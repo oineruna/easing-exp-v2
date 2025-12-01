@@ -298,7 +298,7 @@ export default function App() {
       console.log("[FPS] Task timeout - Stats:", fpsStats);
     }
 
-    const log = taskLogger.stopTask(false, true);
+    const log = taskLogger.stopTask(false, true, currentTaskWithEasing ? currentTaskWithEasing.task.targetPath.length : 0);
     if (currentTaskWithEasing) {
       const fullLog = {
         ...log,
@@ -361,7 +361,7 @@ export default function App() {
 
   // タスク中のアイテムクリック処理
   const handleTaskItemClick = useCallback(
-    (itemName: string, isCorrectPath: boolean) => {
+    (itemName: string, isCorrectPath: boolean, depth: number, isLeaf: boolean) => {
       if (!currentTaskWithEasing) return;
       taskLogger.recordClick(itemName, menuCategories);
 
@@ -385,7 +385,7 @@ export default function App() {
           console.log("[FPS] Task completed - Stats:", fpsStats);
         }
 
-        const log = taskLogger.stopTask(true, false);
+        const log = taskLogger.stopTask(true, false, currentTaskWithEasing.task.targetPath.length);
         const fullLog = {
           ...log,
           trialNumber: currentTaskWithEasing.trial,
@@ -408,12 +408,19 @@ export default function App() {
         }, 200);
       } else if (!isCorrectPath) {
         // 不正解（間違ったパス）の場合
-        setFeedback(lang === "en" ? "Incorrect" : "不正解");
-        setFeedbackType("incorrect");
-        setTimeout(() => {
-          setFeedback(null);
-          setFeedbackType("");
-        }, 1000);
+        // エラーカウント処理（重み付け、再訪問判定など）
+        taskLogger.handleWrongClick(itemName, depth, isLeaf);
+
+        // 末端ノード（行き止まり）の場合のみフィードバックを表示
+        if (isLeaf) {
+          setFeedback(lang === "en" ? "Incorrect" : "不正解");
+          setFeedbackType("incorrect");
+          setTimeout(() => {
+            setFeedback(null);
+            setFeedbackType("");
+          }, 1000);
+        }
+        // 中間ノードの場合はフィードバックなし（Silent Error）
       }
     },
     [currentTaskWithEasing, menuCategories, taskLogger, lang, participantId]

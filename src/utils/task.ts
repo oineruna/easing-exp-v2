@@ -4,7 +4,7 @@ import type { Category, Task, EasingFunction } from "../experiment";
 
 // タスクの制限時間（ミリ秒）
 // 現状は100秒と長めに設定されています
-export const TIME_LIMIT_MS = 10000;
+export const TIME_LIMIT_MS = 1000000;
 
 // 実験で使用するイージング関数のリスト
 // 以下の5種類を比較対象とします
@@ -84,7 +84,7 @@ export const generateTasksFromCategories = (categories: Category[]): Task[] => {
 
   // 再帰的にカテゴリを探索
   const traverse = (cats: Category[], path: string[]) => {
-    cats.forEach((cat) => {
+    cats.forEach((cat, index) => {
       const currentPath = [...path, cat.name];
       // サブカテゴリがない場合、それをタスクのターゲットとする
       if (!cat.subcategories || cat.subcategories.length === 0) {
@@ -93,6 +93,7 @@ export const generateTasksFromCategories = (categories: Category[]): Task[] => {
           // 説明文はApp.tsx側で動的に生成されるため、ここはプレースホルダー的な役割
           description: `「${cat.name}」を探してクリックしてください`,
           targetPath: currentPath,
+          leafIndex: index, // 親カテゴリ内でのインデックス（0-4）
         });
       } else {
         // サブカテゴリがある場合、さらに深く探索
@@ -118,42 +119,47 @@ export const generateTaskSequence = (
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
   const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
-  const TRIALS_PER_EASING = 5; // 1つのイージングにつき5回試行
-  const TOTAL_TRIALS = EASING_FUNCS.length * TRIALS_PER_EASING; // 合計25回
+  const TRIALS_PER_EASING = 4; // 1つのイージングにつき4回試行
+  const POSITIONS = [1, 2, 3, 4]; // 使用するポジション（0=一番上を除外）
 
-  // 1. 利用可能なタスクからランダムに25個選出（重複なし）
-  // Fisher-Yates的なランダムソートでシャッフル
-  const shuffledAvailableTasks = [...availableTasks].sort(
-    () => Math.random() - 0.5
-  );
-  // 必要な数だけ切り出し
-  const selectedTasks = shuffledAvailableTasks.slice(0, TOTAL_TRIALS);
+  // タスクをポジション（leafIndex）ごとにグループ化
+  const tasksByPosition: Record<number, Task[]> = {};
+  POSITIONS.forEach(pos => {
+    tasksByPosition[pos] = availableTasks.filter(t => t.leafIndex === pos);
+    // ランダムにシャッフルしておく
+    tasksByPosition[pos].sort(() => Math.random() - 0.5);
+  });
 
-  // 2. ラテン方格に基づくイージング順序の決定
-  // 参加者IDに基づいて開始位置（オフセット）を決定 (0-4)
-  const startOffset = participantId % EASING_FUNCS.length;
+  // (Easing, Position) のペアを作成
+  // 各イージングについて、1-4のポジションを1回ずつ割り当てる
+  let pairs: { easing: EasingFunction; position: number }[] = [];
+  EASING_FUNCS.forEach(easing => {
+    POSITIONS.forEach(pos => {
+      pairs.push({ easing, position: pos });
+    });
+  });
 
-  // 基本となるイージング順序を作成 (例: ID=1 -> [1, 2, 3, 4, 0])
-  // これにより、参加者によって [A,B,C,D,E] だったり [B,C,D,E,A] だったりする
-  const baseEasingSequence: EasingFunction[] = [];
-  for (let i = 0; i < EASING_FUNCS.length; i++) {
-    const index = (startOffset + i) % EASING_FUNCS.length;
-    baseEasingSequence.push(EASING_FUNCS[index]);
+  // ペアの順序をランダムにシャッフル
+  for (let i = pairs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
   }
 
-  // 3. タスクとイージングを結合
-  // イージング順序は固定（ラテン方格）、タスクはランダムに割り当て
-  selectedTasks.forEach((task, index) => {
-    // 5回ごとにイージングを切り替える (ブロックデザイン)
-    // index 0-4: Easing A
-    // index 5-9: Easing B ...
-    const easingIndex = Math.floor(index / TRIALS_PER_EASING) % baseEasingSequence.length;
-    const easing = baseEasingSequence[easingIndex];
+  // ペアに基づいてタスクを割り当て
+  pairs.forEach((pair, index) => {
+    // 指定されたポジションのタスクプールから1つ取り出す
+    let task = tasksByPosition[pair.position].pop();
+    
+    // 万が一足りない場合は、再度フィルタしてランダムに取得
+    if (!task) {
+      const candidates = availableTasks.filter(t => t.leafIndex === pair.position);
+      task = candidates[Math.floor(Math.random() * candidates.length)];
+    }
 
     sequence.push({
       trial: index + 1,
-      task,
-      easing,
+      task: task!,
+      easing: pair.easing,
     });
   });
 

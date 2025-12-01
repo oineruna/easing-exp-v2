@@ -131,12 +131,14 @@ export const generateTaskSequence = (
   });
 
   // (Easing, Position) のペアを作成
-  // 各イージングについて、1-4のポジションを1回ずつ割り当てる
+  // 各イージングについて、TRIALS_PER_EASING回数分、ポジションを割り当てる
   let pairs: { easing: EasingFunction; position: number }[] = [];
   EASING_FUNCS.forEach(easing => {
-    POSITIONS.forEach(pos => {
+    for (let i = 0; i < TRIALS_PER_EASING; i++) {
+      // ポジションを順番に割り当て（足りなくなったらループ）
+      const pos = POSITIONS[i % POSITIONS.length];
       pairs.push({ easing, position: pos });
-    });
+    }
   });
 
   // ペアの順序をランダムにシャッフル

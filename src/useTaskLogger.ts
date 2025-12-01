@@ -339,7 +339,7 @@ export function useTaskLogger() {
           : 0,
         
         // マウス軌跡・詳細指標
-        mouseTrajectory: mouseTrajectory,
+        // mouseTrajectory: mouseTrajectory, // 削除
         jitteriness: parseFloat(jitteriness.toFixed(3)),
         overshootCount: overshootCount,
       };

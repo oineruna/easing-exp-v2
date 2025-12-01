@@ -113,7 +113,7 @@ export interface TaskLog {
   frustrationCount?: number; // フラストレーション回数 (連打など)
 
   // マウス軌跡・詳細指標
-  mouseTrajectory?: MouseTrajectoryPoint[]; // マウス軌跡データ
+  // mouseTrajectory?: MouseTrajectoryPoint[]; // 削除: データ量削減のため
   jitteriness?: number; // ふらつき指標 (角度変化の総和)
   overshootCount?: number; // オーバーシュート回数
 

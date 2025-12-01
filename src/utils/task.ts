@@ -122,12 +122,19 @@ export const generateTaskSequence = (
   const TRIALS_PER_EASING = 4; // 1つのイージングにつき4回試行
   const POSITIONS = [1, 2, 3, 4]; // 使用するポジション（0=一番上を除外）
 
+  // シード付き乱数生成器 (Linear Congruential Generator)
+  let localSeed = participantId;
+  const random = () => {
+    localSeed = (localSeed * 9301 + 49297) % 233280;
+    return localSeed / 233280;
+  };
+
   // タスクをポジション（leafIndex）ごとにグループ化
   const tasksByPosition: Record<number, Task[]> = {};
   POSITIONS.forEach(pos => {
     tasksByPosition[pos] = availableTasks.filter(t => t.leafIndex === pos);
     // ランダムにシャッフルしておく
-    tasksByPosition[pos].sort(() => Math.random() - 0.5);
+    tasksByPosition[pos].sort(() => random() - 0.5);
   });
 
   // (Easing, Position) のペアを作成
@@ -143,7 +150,7 @@ export const generateTaskSequence = (
 
   // ペアの順序をランダムにシャッフル
   for (let i = pairs.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(random() * (i + 1));
     [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
   }
 
@@ -155,7 +162,7 @@ export const generateTaskSequence = (
     // 万が一足りない場合は、再度フィルタしてランダムに取得
     if (!task) {
       const candidates = availableTasks.filter(t => t.leafIndex === pair.position);
-      task = candidates[Math.floor(Math.random() * candidates.length)];
+      task = candidates[Math.floor(random() * candidates.length)];
     }
 
     sequence.push({

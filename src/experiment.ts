@@ -65,14 +65,15 @@ export interface TaskSurveyResult {
 }
 
 export interface ClickRecord {
+  step: number;           // ステップ数 (1-indexed)
   target: string;         // クリックしたアイテム名
-  timestamp: number;      // クリック時刻 (performance.now())
+  // timestamp: number;   // 削除: ユーザー要望により削除
   isCorrect: boolean;     // 正解かどうか
   depth: number;          // 階層の深さ (0-indexed)
   duringAnimation: boolean; // アニメーション中にクリックされたか
   animationProgress?: number; // アニメーション進捗率 (0.0 - 1.0)
   distanceFromLastClick?: number; // 直前のクリック位置からの距離
-  timeFromLastClick?: number;     // 直前のクリックからの経過時間
+  stayTime?: number;      // 滞在時間（直前のクリックからの経過時間）
 }
 
 export interface MouseTrajectoryPoint {
@@ -109,6 +110,7 @@ export interface TaskLog {
   animationErrorCount?: number;        // アニメーション中の誤クリック数
 
   // 新しい指標
+  optimalPathLength?: number; // 最短パス長（理論値）
   clickEfficiency?: number; // クリック効率 (最短パス長 / 総クリック数)
   frustrationCount?: number; // フラストレーション回数 (連打など)
 

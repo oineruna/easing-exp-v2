@@ -422,19 +422,6 @@ export default function App() {
           fpsStats = fpsMonitorRef.current.getStats();
           fpsMonitorRef.current.stop();
           console.log("[FPS] Task completed - Stats:", fpsStats);
-        }
-
-        const log = taskLogger.stopTask(true, false, currentTaskWithEasing.task.targetPath.length);
-        const fullLog = {
-          ...log,
-          trialNumber: currentTaskWithEasing.trial,
-          taskId: currentTaskWithEasing.task.id,
-          targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
-          easingFunction: currentTaskWithEasing.easing,
-          fps: fpsStats ? {
-            average: fpsStats.average,
-            min: fpsStats.min,
-            max: fpsStats.max,
           } : undefined,
         } as TaskLog;
 

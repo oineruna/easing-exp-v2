@@ -148,21 +148,7 @@ export function useTaskLogger() {
 
       // 新しいクリックログオブジェクトの作成
       // アニメーション進捗率の計算
-      let animationProgress: number | undefined = undefined;
-      if (isAnimatingRef.current) {
-        const elapsed = currentClickTime - animationStartTimeRef.current;
-        // 0.0 〜 1.0 にクランプ (500ms = 0.5秒)
-        animationProgress = Math.min(Math.max(elapsed / 500, 0), 1.0);
-        // 小数点3桁に丸める
-        animationProgress = Math.round(animationProgress * 1000) / 1000;
-      }
-
-      const newClick: ClickLog = {
-        target: categoryName,   // 'action' -> 'target'
-        depth: currentDepth,
-        duringAnimation: isAnimatingRef.current,
-        animationProgress: animationProgress,
-        timestamp: currentClickTime,
+        stayTime: stayTime, // 滞在時間
         isCorrect: false, // 初期値（後で判定されるか、この時点では不明）
         // 必要な他のフィールドがあれば追加
       };

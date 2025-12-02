@@ -128,31 +128,6 @@ export function useTaskLogger() {
    * クリックイベントを記録する関数
    * @param categoryName クリックされたカテゴリ名
    * @param categories 現在のカテゴリ構造（深さ計算用）
-   */
-  const recordClick = useCallback(
-    (categoryName: string, categories: Category[]) => {
-      const currentClickTime = performance.now();
-      const currentDepth = getCategoryDepth(categories, categoryName);
-
-      // 初回クリック時間の記録
-      if (firstClickTime === null) {
-        const delay = (currentClickTime - startTimeRef.current) / 1000;
-        setFirstClickTime(delay);
-      }
-
-      // 滞在時間（前のクリックからの経過時間）の計算
-      let stayTime = 0;
-      if (lastClickTimeRef.current !== 0) {
-        stayTime = (currentClickTime - lastClickTimeRef.current) / 1000;
-      }
-
-      // 新しいクリックログオブジェクトの作成
-      // アニメーション進捗率の計算
-        stayTime: stayTime, // 滞在時間
-        isCorrect: false, // 初期値（後で判定されるか、この時点では不明）
-        // 必要な他のフィールドがあれば追加
-      };
-
       // 状態更新
       setClicksThisTask((prev) => [...prev, newClick]);
       setMenuTravelDistance(

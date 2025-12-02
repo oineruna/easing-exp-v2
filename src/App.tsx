@@ -422,7 +422,16 @@ export default function App() {
           fpsStats = fpsMonitorRef.current.getStats();
           fpsMonitorRef.current.stop();
           console.log("[FPS] Task completed - Stats:", fpsStats);
-          } : undefined,
+        const log = taskLogger.stopTask(true, false, currentTaskWithEasing.task.targetPath.length);
+        const fullLog = {
+          ...log,
+          trialNumber: currentTaskWithEasing.trial,
+          taskId: currentTaskWithEasing.task.id,
+          targetItem: currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1], // 末端アイテム名
+          targetPath: currentTaskWithEasing.task.targetPath.join(" > "), // フルパス
+          optimalPathLength: currentTaskWithEasing.task.targetPath.length, // 最短パス長
+          easingFunction: currentTaskWithEasing.easing,
+          fps: fpsStats ? fpsStats.average : undefined, // 平均FPSのみ
         } as TaskLog;
 
         setTempTaskLog(fullLog);

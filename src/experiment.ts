@@ -151,7 +151,9 @@ export interface PostSurveyResult {
  */
 export interface ExperimentData {
   participantId: string;        // 参加者ID
-  timestamp: string;            // 実験実施日時
+  timestamp: string;            // 実験実施日時（提出日時）
+  startTime?: string;           // 実験開始日時
+  endTime?: string;             // 実験終了日時
 
   preSurvey: PreSurveyData;     // 事前アンケートデータ
   tasks: TaskLog[];             // 全タスクのログ配列

@@ -7,6 +7,7 @@ interface StartScreenProps {
   lang: Lang;                 // 言語設定
   participantId: string;      // 参加者ID
   isExperimentActive: boolean; // 実験が既に進行中かどうか（ボタン制御用）
+  isTutorialCompleted: boolean; // チュートリアル完了状態
   onStart: () => void;        // 「実験開始」ボタン押下時のコールバック
   onTutorial: () => void;     // 「チュートリアル」ボタン押下時のコールバック
 }
@@ -20,6 +21,7 @@ export function StartScreen({
   lang,
   participantId,
   isExperimentActive,
+  isTutorialCompleted,
   onStart,
   onTutorial,
 }: StartScreenProps) {
@@ -51,21 +53,25 @@ export function StartScreen({
                 transition={{ delay: 0.1 }}
                 className="text-2xl md:text-4xl font-black mb-6 md:mb-8 text-center gradient-text"
               >
-                {t(lang, "experimentStart")}
+                {isTutorialCompleted
+                  ? t(lang, "experimentStart")
+                  : t(lang, "tutorialLabel")}
               </motion.h2>
 
-              {/* 参加者ID表示エリア */}
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="bg-white/60 rounded-2xl px-6 py-4 mb-6 md:mb-8 text-center border border-gray-200"
-              >
-                <span className="text-sm text-gray-600 font-medium">ID: </span>
-                <span className="text-xl font-bold text-gray-800">
-                  {participantId}
-                </span>
-              </motion.div>
+              {/* 参加者ID表示エリア - チュートリアル完了後のみ表示 */}
+              {isTutorialCompleted && (
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-white/60 rounded-2xl px-6 py-4 mb-6 md:mb-8 text-center border border-gray-200"
+                >
+                  <span className="text-sm text-gray-600 font-medium">ID: </span>
+                  <span className="text-xl font-bold text-gray-800">
+                    {participantId}
+                  </span>
+                </motion.div>
+              )}
 
               {/* ボタンエリア */}
               <motion.div
@@ -74,26 +80,39 @@ export function StartScreen({
                 transition={{ delay: 0.3 }}
                 className="flex flex-col gap-4"
               >
-                {/* 実験開始ボタン */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={onStart}
-                  disabled={isExperimentActive} // 実験中は押せないようにする
-                  className="w-full px-8 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-base md:text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
-                >
-                  {t(lang, "startTask")}
-                </motion.button>
+                {!isTutorialCompleted ? (
+                  /* チュートリアル未完了時: チュートリアルボタンのみ表示（メイン） */
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onTutorial}
+                    className="w-full px-8 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-base md:text-lg shadow-xl"
+                  >
+                    {t(lang, "tutorialLabel")}
+                  </motion.button>
+                ) : (
+                  /* チュートリアル完了時: 実験開始ボタン（メイン） + チュートリアル再試行（サブ） */
+                  <>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={onStart}
+                      disabled={isExperimentActive}
+                      className="w-full px-8 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 transition text-white rounded-2xl font-bold text-base md:text-lg shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+                    >
+                      {t(lang, "startTask")}
+                    </motion.button>
 
-                {/* チュートリアルボタン */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={onTutorial}
-                  className="w-full px-8 py-3 md:py-4 bg-white/80 hover:bg-white transition text-gray-700 rounded-2xl font-bold border-2 border-gray-300 shadow-md text-base md:text-lg"
-                >
-                  {t(lang, "tutorialLabel")}
-                </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={onTutorial}
+                      className="w-full px-8 py-3 md:py-4 bg-white/80 hover:bg-white transition text-gray-700 rounded-2xl font-bold border-2 border-gray-300 shadow-md text-base md:text-lg"
+                    >
+                      {lang === "ja" ? "チュートリアルをやり直す" : "Redo Tutorial"}
+                    </motion.button>
+                  </>
+                )}
               </motion.div>
             </motion.div>
           </div>

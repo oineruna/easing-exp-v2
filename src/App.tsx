@@ -104,9 +104,14 @@ export default function App() {
 
   // 実験開始確認用ステート
   const [showStartConfirm, setShowStartConfirm] = useState(false);
+  // チュートリアル開始確認用ステート
+  const [showTutorialConfirm, setShowTutorialConfirm] = useState(false);
 
   // チュートリアル用イージング選択
   const [tutorialEasing, setTutorialEasing] = useState<EasingFunction>("easeInOutExpo");
+
+  // チュートリアル完了状態
+  const [isTutorialCompleted, setIsTutorialCompleted] = useState(false);
 
   // 現在適用中のイージング関数
   const currentEasing: EasingFunction =
@@ -227,6 +232,13 @@ export default function App() {
     }
   }, [allLogs.length, participantId, preSurveyData, currentTaskIndex]);
 
+  // 初期ロード時にチュートリアル未完了なら確認モーダルを自動表示
+  useEffect(() => {
+    if (appState === "ready" && !isTutorialCompleted) {
+      setShowTutorialConfirm(true);
+    }
+  }, [appState, isTutorialCompleted]);
+
   // --- Event Handlers ---
 
   // 同意画面
@@ -244,8 +256,18 @@ export default function App() {
   }, []);
 
   // チュートリアル関連
-  const handleStartTutorial = useCallback(
-    () => setAppState("tutorial-intro"),
+  // チュートリアル開始ボタンが押されたとき（確認モーダルを表示）
+  const handleStartTutorialClick = useCallback(
+    () => setShowTutorialConfirm(true),
+    []
+  );
+
+  // 確認モーダルで「開始」が押されたとき（実際に開始）
+  const handleConfirmStartTutorial = useCallback(
+    () => {
+      setShowTutorialConfirm(false);
+      setAppState("tutorial-intro");
+    },
     []
   );
   const handleTutorialIntroClose = useCallback(
@@ -256,15 +278,24 @@ export default function App() {
     },
     []
   );
+
+
+  // ... (existing code)
+
   const handleTutorialCompleteClose = useCallback(
     () => {
       console.log("[App] handleTutorialCompleteClose called");
       setFeedback(null);
       setFeedbackType("");
+      setIsTutorialCompleted(true); // チュートリアル完了フラグを立てる
       setAppState("ready");
     },
     []
   );
+
+  // ... (existing code)
+
+
 
   // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
@@ -273,7 +304,7 @@ export default function App() {
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
-        setTimeout(() => setAppState("tutorial-complete"), 1000);
+        setTimeout(() => setAppState("tutorial-complete"), 500);
       } else {
         if (isLeaf) {
           setFeedback(t(lang, "tutorialWrong"));
@@ -325,12 +356,18 @@ export default function App() {
   }, [currentTaskWithEasing, taskLogger, lang, participantId]);
 
 
+  // 実験開始時間
+  const [experimentStartTime, setExperimentStartTime] = useState<string | null>(null);
+
   // 実験タスク開始処理
   const handleStartTask = useCallback(async () => {
     // 確認ダイアログを閉じる
     setShowStartConfirm(false);
 
     if (menuCategories.length === 0) return;
+
+    // 実験開始時間を記録
+    setExperimentStartTime(new Date().toISOString());
 
     // タスクシーケンス生成（ラテン方格法を使用）
     const seed = hashCode(participantId);
@@ -489,6 +526,8 @@ export default function App() {
       const finalData: ExperimentData = {
         participantId,
         timestamp: new Date().toISOString(),
+        startTime: experimentStartTime || undefined,
+        endTime: new Date().toISOString(),
         preSurvey: preSurveyData!,
         tasks: allLogs,
         postSurvey: surveyData,
@@ -631,8 +670,9 @@ export default function App() {
             lang={lang}
             participantId={participantId}
             isExperimentActive={experimentTasks.length > 0}
+            isTutorialCompleted={isTutorialCompleted}
             onStart={() => setShowStartConfirm(true)}
-            onTutorial={handleStartTutorial}
+            onTutorial={handleStartTutorialClick}
           />
         )}
       </AnimatePresence>
@@ -657,7 +697,7 @@ export default function App() {
               </h3>
               <p className="text-gray-600 mb-8 text-lg">
                 {lang === "ja"
-                  ? "実験を開始しますか？"
+                  ? "実験を開始してもよろしいですか？"
                   : "Are you sure you want to start?"}
               </p>
               <div className="flex gap-2 justify-center">
@@ -677,7 +717,52 @@ export default function App() {
                 >
                   {lang === "ja" ? "キャンセル" : "Cancel"}
                 </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* チュートリアル開始確認モーダル */}
+      <AnimatePresence>
+        {showTutorialConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60]"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl text-center mx-4"
+            >
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                {lang === "ja" ? "確認" : "Confirmation"}
+              </h3>
+              <p className="text-gray-600 mb-8 text-lg">
+                {lang === "ja"
+                  ? "チュートリアルを開始してもよろしいですか？"
+                  : "Would you like to start the tutorial?"}
+              </p>
+              <div className="flex gap-2 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleConfirmStartTutorial}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-xl font-bold shadow-lg hover:bg-blue-600 transition"
+                >
+                  {lang === "ja" ? "開始する" : "Start"}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowTutorialConfirm(false)}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition"
+                >
+                  {lang === "ja" ? "キャンセル" : "Cancel"}
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>

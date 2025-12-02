@@ -457,6 +457,7 @@ export default function App() {
         }
         // 中間ノードの場合はフィードバックなし（Silent Error）
       }
+      }
     },
     [currentTaskWithEasing, menuCategories, taskLogger, lang, participantId]
   );

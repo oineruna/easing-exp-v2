@@ -3,6 +3,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { ClickLog, Category, TaskLog, MouseTrajectoryPoint } from "./experiment"; // パスを修正
 
+// 内部計算用にタイムスタンプを保持する拡張インターフェース
+interface InternalClickLog extends ClickLog {
+  timestamp: number;
+}
+
 /**
  * タスク実行中のログ記録を行うカスタムフック
  * クリック、マウス移動、エラー、時間などを管理します
@@ -11,7 +16,7 @@ export function useTaskLogger() {
   // --- State Variables (Reactの状態管理) ---
 
   // 現在のタスク内でのクリック履歴
-  const [clicksThisTask, setClicksThisTask] = useState<ClickLog[]>([]);
+  const [clicksThisTask, setClicksThisTask] = useState<InternalClickLog[]>([]);
 
   // 誤クリック（エラー）の回数
   const [errorCount, setErrorCount] = useState(0);
@@ -128,6 +133,46 @@ export function useTaskLogger() {
    * クリックイベントを記録する関数
    * @param categoryName クリックされたカテゴリ名
    * @param categories 現在のカテゴリ構造（深さ計算用）
+   */
+  const recordClick = useCallback(
+    (categoryName: string, categories: Category[]) => {
+      const currentClickTime = performance.now();
+      const currentDepth = getCategoryDepth(categories, categoryName);
+
+      // 初回クリック時間の記録
+      if (firstClickTime === null) {
+        const delay = (currentClickTime - startTimeRef.current) / 1000;
+        setFirstClickTime(delay);
+      }
+
+      // 滞在時間（前のクリックからの経過時間）の計算
+      let stayTime = 0;
+      if (lastClickTimeRef.current !== 0) {
+        stayTime = (currentClickTime - lastClickTimeRef.current) / 1000;
+      }
+
+      // アニメーション進捗率の計算
+      let animationProgress: number | undefined = undefined;
+      if (isAnimatingRef.current) {
+        const elapsed = currentClickTime - animationStartTimeRef.current;
+        // 0.0 〜 1.0 にクランプ (500ms = 0.5秒)
+        animationProgress = Math.min(Math.max(elapsed / 500, 0), 1.0);
+        // 小数点3桁に丸める
+        animationProgress = Math.round(animationProgress * 1000) / 1000;
+      }
+
+      const newClick: InternalClickLog = {
+        step: clicksThisTask.length + 1, // ステップ数 (1から開始)
+        target: categoryName,   // 'action' -> 'target'
+        depth: currentDepth,
+        duringAnimation: isAnimatingRef.current,
+        animationProgress: animationProgress,
+        timestamp: currentClickTime,
+        stayTime: stayTime, // 滞在時間
+        isCorrect: false, // 初期値（後で判定されるか、この時点では不明）
+        // 必要な他のフィールドがあれば追加
+      };
+
       // 状態更新
       setClicksThisTask((prev) => [...prev, newClick]);
       setMenuTravelDistance(
@@ -284,7 +329,7 @@ export function useTaskLogger() {
         firstClickTime: firstClickTime || 0,
         clickCount: clicksThisTask.length,
         errorCount: errorCount,
-        clicks: clicksThisTask,
+        clicks: clicksThisTask.map(({ timestamp, ...rest }) => rest), // タイムスタンプを除外して返す
         menuTravelDistance: menuTravelDistance,
         mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）
 

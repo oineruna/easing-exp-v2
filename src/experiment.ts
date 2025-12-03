@@ -37,44 +37,23 @@ export interface Task {
   leafIndex?: number;     // 末端カテゴリ内でのインデックス（0-4）
 }
 
-
-
-// ClickLogはClickRecordのエイリアスとして定義
-export type ClickLog = ClickRecord;
-
 /**
- * 事前アンケート結果のデータ構造
- * 実験開始前に取得する参加者の属性や好み
+ * ナビゲーションパスの各ステップ（過去のデータ形式）
+ * 旧: ClickRecord -> 新: NavigationStep
  */
-export interface PreSurveyData {
-  preferences: Record<EasingFunction, number>; // 各イージングへの評価（1-5）
-  ranking: EasingFunction[];                   // 好みの順位付け
-  preferenceType: 'smooth' | 'snappy' | 'other'; // 自動分類された好みのタイプ
-  comments: string;                            // 自由記述コメント
-}
-
-/**
- * タスク終了後のアンケート結果
- * 各タスク直後に表示されるポップアップでの回答
- */
-export interface TaskSurveyResult {
-  easeRating: number;       // 操作のしやすさ（1-5）
-  difficultyRating: number; // タスクの難易度（1-5）
-  differenceRating: number; // 違和感の有無（1-5）
-  comments: string;         // 自由記述コメント
-}
-
-export interface ClickRecord {
+export interface NavigationStep {
   step: number;           // ステップ数 (1-indexed)
-  target: string;         // クリックしたアイテム名
-  // timestamp: number;   // 削除: ユーザー要望により削除
-  isCorrect: boolean;     // 正解かどうか
+  action: string;         // クリックしたアイテム名（旧: target）
   depth: number;          // 階層の深さ (0-indexed)
   duringAnimation: boolean; // アニメーション中にクリックされたか
   animationProgress?: number; // アニメーション進捗率 (0.0 - 1.0)
-  distanceFromLastClick?: number; // 直前のクリック位置からの距離
-  stayTime?: number;      // 滞在時間（直前のクリックからの経過時間）
+  stayTime: number;       // 滞在時間（秒単位）
+  timestamp: string;      // ISO 8601形式のタイムスタンプ
 }
+
+// 後方互換性のため
+export type ClickRecord = NavigationStep;
+export type ClickLog = NavigationStep;
 
 export interface MouseTrajectoryPoint {
   x: number;
@@ -84,95 +63,162 @@ export interface MouseTrajectoryPoint {
 }
 
 /**
- * 1タスクごとの実験記録（ログ）
- * パフォーマンスデータと主観評価を統合したものです
+ * 事前アンケート結果のデータ構造
  */
-export interface TaskLog {
-  trialNumber: number;    // 試行番号
-  taskId: string;         // タスクID
-  targetItem: string;     // 目標アイテム名
-  easingFunction: EasingFunction; // 使用したイージング関数
-
-  isCorrect: boolean;     // 正解したか（タイムアウト含む）
-  timedOut: boolean;      // タイムアウトしたか
-  totalDuration: number;  // 総所要時間 (ms)
-  firstClickTime: number; // 最初のクリックまでの時間 (ms)
-  clickCount: number;     // 総クリック数
-  errorCount: number;     // エラー数
-  
-  clicks: ClickRecord[];  // クリック詳細ログ
-  
-  menuTravelDistance: number; // メニュー階層移動距離
-  mouseDistance: number;      // マウス総移動距離 (px)
-  
-  interactedDuringAnimation: boolean; // アニメーション中の操作があったか
-  animationClickCount?: number;        // アニメーション中のクリック総数
-  animationErrorCount?: number;        // アニメーション中の誤クリック数
-
-  // 新しい指標
-  optimalPathLength?: number; // 最短パス長（理論値）
-  clickEfficiency?: number; // クリック効率 (最短パス長 / 総クリック数)
-  frustrationCount?: number; // フラストレーション回数 (連打など)
-
-  // マウス軌跡・詳細指標
-  // mouseTrajectory?: MouseTrajectoryPoint[]; // 削除: データ量削減のため
-  jitteriness?: number; // ふらつき指標 (角度変化の総和)
-  overshootCount?: number; // オーバーシュート回数
-
-  // 主観評価
-  survey?: TaskSurveyResult;      // タスク後アンケート結果
-
-  // その他
-  seqScore?: number;              // （内部用）シーケンススコア
-  usedEasing?: EasingFunction;    // 実際に使用されたイージング（確認用）
-
-  // システムパフォーマンス
-  fps?: {
-    average: number; // 平均フレームレート
-    min: number;     // 最小フレームレート
-    max: number;     // 最大フレームレート
-  };
+export interface PreSurveyData {
+  preferences: Record<EasingFunction, number>;
+  ranking: EasingFunction[];
+  preferenceType: 'smooth' | 'snappy' | 'other';
+  comments: string;
 }
 
 /**
- * 事後アンケート結果のデータ構造
- * 全タスク終了後に取得する総合的な評価
+ * タスク終了後のアンケート結果（内部使用）
+ */
+export interface TaskSurveyResult {
+  easeRating: number;       // 操作のしやすさ（1-5）
+  difficultyRating: number; // タスクの難易度（1-5）
+  differenceRating: number; // 違和感の有無（1-5）
+  comments: string;         // 自由記述コメント
+}
+
+/**
+ * ユーザーフィードバック（出力用 - 過去のデータ形式）
+ */
+export interface UserFeedback {
+  animationEaseRating: string;    // 操作のしやすさ（1-5）文字列形式
+  taskDifficultyRating: string;   // タスクの難易度（1-5）文字列形式
+  animationDifferenceRating: string; // 違和感の有無（1-5）文字列形式
+  comments: string;               // 自由記述コメント
+}
+
+/**
+ * タスク概要（過去のデータ形式）
+ */
+export interface TaskOverview {
+  taskIndex: number;          // タスク番号（1-indexed）
+  targetItem: string;         // 目標アイテム名
+  targetPath: string;         // フルパス（" > "区切り）
+  optimalPath: string[];      // 最適解のパス配列
+  easingFunction: EasingFunction; // 使用したイージング関数
+  usedEasing: EasingFunction; // 実際に使用されたイージング（確認用）
+  totalTimeSec: number;       // 総所要時間（秒）
+  firstClickDelaySec: number; // 最初のクリックまでの時間（秒）
+  success: boolean;           // 成功したか（旧: isCorrect）
+}
+
+/**
+ * パフォーマンス指標（過去のデータ形式）
+ */
+export interface Performance {
+  actualPath: string[];       // 実際にクリックした項目のリスト
+  errorCount: number;         // エラー数
+  menuTravelDistance: number; // メニュー階層移動距離
+  pathEfficiency: number;     // パス効率（旧: clickEfficiency）
+  timedOut: boolean;          // タイムアウトしたか
+  
+  // アニメーション関連指標
+  interactedDuringAnimation: boolean; // アニメーション中の操作があったか
+  animationClickCount: number;        // アニメーション中のクリック総数
+  animationErrorCount: number;        // アニメーション中の誤クリック数
+  
+  // 追加の詳細指標
+  mouseDistance?: number;      // マウス総移動距離 (px)
+  jitteriness?: number;        // ふらつき指標
+  overshootCount?: number;     // オーバーシュート回数
+  frustrationCount?: number;   // フラストレーション回数
+}
+
+/**
+ * タスク結果（過去のデータ形式に合わせた新構造）
+ */
+export interface TaskResult {
+  taskOverview: TaskOverview;
+  navigationPath: NavigationStep[];
+  performance: Performance;
+  userFeedback: UserFeedback;
+}
+
+/**
+ * 事後アンケート結果
  */
 export interface PostSurveyResult {
-  noticeDifference: string;     // イージングの違いに気づいたか
-  usabilityImpact: string[];    // 操作性に影響した要素（複数回答）
-  usabilityImpactOther: string; // その他（自由記述）
-  bestFeature: string;          // 最も良かった点
-  worstFeature: string;         // 最も悪かった点
-  improvements: string;         // 改善点・要望
+  noticeDifference: string;
+  usabilityImpact: string[];
+  usabilityImpactOther: string;
+  bestFeature: string;
+  worstFeature: string;
+  improvements: string;
 }
 
 /**
- * 実験全体のデータ構造（ルートオブジェクト）
- * 最終的にJSONとして保存されるデータの形式です
+ * メタデータ（過去のデータ形式）
+ */
+export interface Metadata {
+  participantId: string;
+  experimentDate: string;    // ISO 8601形式
+  totalTasks: number;
+  averageFps?: number;
+}
+
+/**
+ * 実験全体のデータ構造（過去のデータ形式に合わせた新構造）
  */
 export interface ExperimentData {
-  participantId: string;        // 参加者ID
-  timestamp: string;            // 実験実施日時（提出日時）
-  startTime?: string;           // 実験開始日時
-  endTime?: string;             // 実験終了日時
-
-  preSurvey: PreSurveyData;     // 事前アンケートデータ
-  tasks: TaskLog[];             // 全タスクのログ配列
-  postSurvey: PostSurveyResult; // 事後アンケートデータ
-
-  // 参加者の環境情報
+  metadata: Metadata;
+  taskResults: TaskResult[];
+  preSurvey?: PreSurveyData;
+  postSurvey?: PostSurveyResult;
+  
+  // システム情報
   systemInfo?: {
-    // clientIP: string;        // IPアドレス（現在は無効化）
-    // publicIP: string;
-    userAgent: string;          // ブラウザ・OS情報
+    userAgent: string;
     screenInfo: {
-      width: number;            // 画面幅
-      height: number;           // 画面高さ
-      availWidth: number;       // 有効画面幅
-      availHeight: number;      // 有効画面高さ
-      colorDepth: number;       // 色深度
-      pixelRatio: number;       // ピクセル比
+      width: number;
+      height: number;
+      availWidth: number;
+      availHeight: number;
+      colorDepth: number;
+      pixelRatio: number;
     };
   };
+}
+
+// 後方互換性のため、古い TaskLog インターフェースも残す（内部処理用）
+export interface TaskLog {
+  trialNumber: number;
+  targetItem: string;
+  targetPath: string;
+  optimalPath: string[];
+  actualPath: string[];
+  easingFunction: EasingFunction;
+  
+  isCorrect: boolean;
+  timedOut: boolean;
+  totalDuration: number;  // ms
+  firstClickTime: number; // ms
+  clickCount: number;
+  errorCount: number;
+  
+  clicks: NavigationStep[];
+  
+  menuTravelDistance: number;
+  mouseDistance: number;
+  
+  interactedDuringAnimation: boolean;
+  animationClickCount?: number;
+  animationErrorCount?: number;
+  
+  optimalPathLength?: number;
+  clickEfficiency?: number;
+  frustrationCount?: number;
+  
+  jitteriness?: number;
+  overshootCount?: number;
+  
+  
+  survey?: TaskSurveyResult;
+  
+  seqScore?: number;
+  usedEasing?: EasingFunction;
 }

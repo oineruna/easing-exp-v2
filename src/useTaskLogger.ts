@@ -1,11 +1,12 @@
 // --- START OF FILE src/hooks/useTaskLogger.ts ---
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import type { ClickLog, Category, TaskLog, MouseTrajectoryPoint } from "./experiment"; // パスを修正
+import type { NavigationStep, Category, TaskLog, MouseTrajectoryPoint } from "./experiment"; // パス〉2修正
 
-// 内部計算用にタイムスタンプを保持する拡張インターフェース
-interface InternalClickLog extends ClickLog {
-  timestamp: number;
+// 内部計算用にミリ秒のタイムスタンプを保持する拡張インターフェース
+interface InternalClickLog extends Omit<NavigationStep, 'timestamp'> {
+  timestampMs: number; // 内部計算用（ミリ秒）
+  timestamp: string;   // ISO 8601形式
 }
 
 /**
@@ -52,6 +53,9 @@ export function useTaskLogger() {
   // アニメーション開始時刻
   const animationStartTimeRef = useRef<number>(0);
 
+  // タスクがアクティブかどうかのフラグ（マウストラッキング制御用）
+  const isTaskActiveRef = useRef<boolean>(false);
+
   // マウス移動距離トラッキング用
   const mouseDistanceRef = useRef(0);
   const lastMousePosRef = useRef<{ x: number; y: number } | null>(null);
@@ -66,6 +70,9 @@ export function useTaskLogger() {
    */
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      // タスクがアクティブでない場合は記録しない
+      if (!isTaskActiveRef.current) return;
+
       const currentTime = performance.now();
       
       // 距離計算（全フレームで計算）
@@ -163,14 +170,13 @@ export function useTaskLogger() {
 
       const newClick: InternalClickLog = {
         step: clicksThisTask.length + 1, // ステップ数 (1から開始)
-        target: categoryName,   // 'action' -> 'target'
+        action: categoryName,   // 'target' -> 'action'
         depth: currentDepth,
         duringAnimation: isAnimatingRef.current,
         animationProgress: animationProgress,
-        timestamp: currentClickTime,
-        stayTime: stayTime, // 滞在時間
-        isCorrect: false, // 初期値（後で判定されるか、この時点では不明）
-        // 必要な他のフィールドがあれば追加
+        timestampMs: currentClickTime, // 内部計算用
+        timestamp: new Date(Date.now()).toISOString(), // ISO 8601形式
+        stayTime: stayTime, // 滞在時間（秒）
       };
 
       // 状態更新
@@ -243,11 +249,16 @@ export function useTaskLogger() {
 
     // マウストラッキングをリセット
     mouseDistanceRef.current = 0;
+    // 現在のマウス位置を取得してリセット（次のタスクの基準点とする）
+    // nullにすると次のmousemoveで自動的に新しい基準点が設定される
     lastMousePosRef.current = null;
 
     // 開始時刻をリセット
     startTimeRef.current = performance.now();
     isAnimatingRef.current = false;
+    
+    // タスクをアクティブ化（マウストラッキング開始）
+    isTaskActiveRef.current = true;
     
     // 新しい状態のリセット
     setVisitedCategories(new Set());
@@ -264,6 +275,9 @@ export function useTaskLogger() {
    */
   const stopTask = useCallback(
     (isCorrect: boolean, timedOut: boolean, correctPathLength: number = 0): Partial<TaskLog> => {
+      // タスクを非アクティブ化（マウストラッキング停止）
+      isTaskActiveRef.current = false;
+
       const endTime = performance.now();
       const totalDurationMs = endTime - startTimeRef.current;
 
@@ -295,7 +309,7 @@ export function useTaskLogger() {
       clicksThisTask.forEach(click => {
         // クリック直前500msの軌跡を抽出
         const relevantPoints = mouseTrajectory.filter(p => 
-          p.timestamp <= click.timestamp && p.timestamp >= click.timestamp - 500
+          p.timestamp <= click.timestampMs && p.timestamp >= click.timestampMs - 500
         );
         
         if (relevantPoints.length < 5) return;
@@ -329,14 +343,15 @@ export function useTaskLogger() {
         firstClickTime: firstClickTime || 0,
         clickCount: clicksThisTask.length,
         errorCount: errorCount,
-        clicks: clicksThisTask.map(({ timestamp, ...rest }) => rest), // タイムスタンプを除外して返す
+        clicks: clicksThisTask.map(({ timestampMs, ...rest }) => rest), // timestampMsを除外して返す
+        actualPath: clicksThisTask.map(c => c.action), // 実際にクリックした項目のリスト
         menuTravelDistance: menuTravelDistance,
         mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）
 
         // アニメーション関連の集計
         interactedDuringAnimation: clicksThisTask.some(click => click.duringAnimation), // アニメーション中に操作したか
         animationClickCount: clicksThisTask.filter(click => click.duringAnimation).length, // アニメーション中のクリック数
-        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation && click.isCorrect === false).length, // アニメーション中の誤クリック数
+        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation).length, // アニメーション中の誤クリック数 (isCorrect削除のため全クリックをカウント)
 
         // 新しい指標
         frustrationCount: frustrationCount,

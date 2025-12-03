@@ -16,6 +16,7 @@ import type { Lang } from "./experiment";
 import type {
   Category,
   TaskLog,
+  TaskResult,
   Task,
   EasingFunction,
   PostSurveyResult,
@@ -336,14 +337,14 @@ export default function App() {
       const fullLog = {
         ...log,
         trialNumber: currentTaskWithEasing.trial,
-        taskId: currentTaskWithEasing.task.id,
-        targetItem: currentTaskWithEasing.task.targetPath.join(" > "),
+        // taskId: 削除 - targetPathと重複
+        targetItem: currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1],
+        targetPath: currentTaskWithEasing.task.targetPath.join(" > "),
+        optimalPath: currentTaskWithEasing.task.targetPath,
+        // actualPath は stopTask から自動的に含まれる
+        optimalPathLength: currentTaskWithEasing.task.targetPath.length,
         easingFunction: currentTaskWithEasing.easing,
-        fps: fpsStats ? {
-          average: fpsStats.average,
-          min: fpsStats.min,
-          max: fpsStats.max,
-        } : undefined,
+        // fps: 削除 - 実験全体で1つにする
       } as TaskLog;
       setTempTaskLog(fullLog);
     }
@@ -355,19 +356,12 @@ export default function App() {
     }, 200);
   }, [currentTaskWithEasing, taskLogger, lang, participantId]);
 
-
-  // 実験開始時間
-  const [experimentStartTime, setExperimentStartTime] = useState<string | null>(null);
-
   // 実験タスク開始処理
   const handleStartTask = useCallback(async () => {
     // 確認ダイアログを閉じる
     setShowStartConfirm(false);
 
     if (menuCategories.length === 0) return;
-
-    // 実験開始時間を記録
-    setExperimentStartTime(new Date().toISOString());
 
     // タスクシーケンス生成（ラテン方格法を使用）
     const seed = hashCode(participantId);
@@ -413,6 +407,7 @@ export default function App() {
         // 正解の場合
         if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
 
+
         setFeedback(lang === "en" ? "Correct!" : "正解!");
         setFeedbackType("correct");
 
@@ -422,16 +417,20 @@ export default function App() {
           fpsStats = fpsMonitorRef.current.getStats();
           fpsMonitorRef.current.stop();
           console.log("[FPS] Task completed - Stats:", fpsStats);
+        }
+        
         const log = taskLogger.stopTask(true, false, currentTaskWithEasing.task.targetPath.length);
         const fullLog = {
           ...log,
           trialNumber: currentTaskWithEasing.trial,
-          taskId: currentTaskWithEasing.task.id,
+          // taskId: 削除 - targetPathと重複
           targetItem: currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1], // 末端アイテム名
           targetPath: currentTaskWithEasing.task.targetPath.join(" > "), // フルパス
+          optimalPath: currentTaskWithEasing.task.targetPath, // 最適解のパス
+          // actualPath は stopTask から自動的に含まれる
           optimalPathLength: currentTaskWithEasing.task.targetPath.length, // 最短パス長
           easingFunction: currentTaskWithEasing.easing,
-          fps: fpsStats ? fpsStats.average : undefined, // 平均FPSのみ
+          // fps: 削除 - 実験全体で1つにする
         } as TaskLog;
 
         setTempTaskLog(fullLog);
@@ -456,7 +455,6 @@ export default function App() {
           }, 1000);
         }
         // 中間ノードの場合はフィードバックなし（Silent Error）
-      }
       }
     },
     [currentTaskWithEasing, menuCategories, taskLogger, lang, participantId]
@@ -519,14 +517,56 @@ export default function App() {
         }
       }
 
-      // 最終データの構築
+      // TaskLog を TaskResult に変換するヘルパー関数
+      const convertToTaskResult = (log: TaskLog, index: number): TaskResult => {
+        return {
+          taskOverview: {
+            taskIndex: index + 1,
+            targetItem: log.targetItem,
+            targetPath: log.targetPath,
+            optimalPath: log.optimalPath, // 追加
+            easingFunction: log.easingFunction,
+            usedEasing: log.usedEasing || log.easingFunction, // 追加（確認用）
+            totalTimeSec: log.totalDuration / 1000, // msから秒へ変換
+            firstClickDelaySec: log.firstClickTime / 1000, // msから秒へ変換
+            success: log.isCorrect, // isCorrect → success
+          },
+          navigationPath: log.clicks, // NavigationStep[]
+          performance: {
+            actualPath: log.actualPath, // 追加
+            errorCount: log.errorCount,
+            menuTravelDistance: log.menuTravelDistance,
+            pathEfficiency: log.clickEfficiency || 0,
+            timedOut: log.timedOut,
+            // アニメーション関連指標（追加）
+            interactedDuringAnimation: log.interactedDuringAnimation,
+            animationClickCount: log.animationClickCount || 0,
+            animationErrorCount: log.animationErrorCount || 0,
+            // 詳細指標
+            mouseDistance: log.mouseDistance,
+            jitteriness: log.jitteriness,
+            overshootCount: log.overshootCount,
+            frustrationCount: log.frustrationCount,
+          },
+          userFeedback: {
+            animationEaseRating: log.survey?.easeRating?.toString() || "",
+            taskDifficultyRating: log.survey?.difficultyRating?.toString() || "",
+            animationDifferenceRating: log.survey?.differenceRating?.toString() || "",
+            comments: log.survey?.comments || "",
+          },
+        };
+      };
+
+      // 最終データの構築（新しい形式）
       const finalData: ExperimentData = {
-        participantId,
-        timestamp: new Date().toISOString(),
-        startTime: experimentStartTime || undefined,
-        endTime: new Date().toISOString(),
-        preSurvey: preSurveyData!,
-        tasks: allLogs,
+        metadata: {
+          participantId,
+          experimentDate: new Date().toISOString(),
+          totalTasks: allLogs.length,
+          averageFps: fpsMonitorRef.current ? fpsMonitorRef.current.getStats().average : undefined,
+        },
+        taskResults: allLogs.map(convertToTaskResult),
+        preSurvey: preSurveyData || undefined,
         postSurvey: surveyData,
         systemInfo: systemInfo || undefined,
       };

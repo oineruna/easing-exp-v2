@@ -1,0 +1,448 @@
+{
+  "participantId": "4888",
+  "timestamp": "2025-12-02T12:43:44.781Z",
+  "startTime": "2025-12-02T12:41:51.246Z",
+  "endTime": "2025-12-02T12:43:44.781Z",
+  "preSurvey": {
+    "preferences": {
+      "linear": 4,
+      "easeInOutQuad": 2,
+      "easeInOutQuint": 3,
+      "easeInOutExpo": 3,
+      "easeInOutBack": 2
+    },
+    "ranking": [
+      "linear",
+      "easeInOutQuint",
+      "easeInOutBack",
+      "easeInOutExpo",
+      "easeInOutQuad"
+    ],
+    "preferenceType": "snappy",
+    "comments": "特になし"
+  },
+  "tasks": [
+    {
+      "isCorrect": true,
+      "timedOut": false,
+      "totalDuration": 9851,
+      "firstClickTime": 3.029,
+      "clickCount": 4,
+      "errorCount": 0,
+      "clicks": [
+        {
+          "step": 1,
+          "target": "ホーム・キッチン",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0,
+          "isCorrect": false
+        },
+        {
+          "step": 2,
+          "target": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 2.175,
+          "isCorrect": false
+        },
+        {
+          "step": 3,
+          "target": "スイーツ",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.541,
+          "isCorrect": false
+        },
+        {
+          "step": 4,
+          "target": "洋菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.73,
+          "isCorrect": false
+        }
+      ],
+      "menuTravelDistance": 0,
+      "mouseDistance": 1048,
+      "interactedDuringAnimation": false,
+      "animationClickCount": 0,
+      "animationErrorCount": 0,
+      "frustrationCount": 0,
+      "clickEfficiency": 1,
+      "jitteriness": 25.894,
+      "overshootCount": 0,
+      "trialNumber": 1,
+      "taskId": "食品・ドリンク-スイーツ-洋菓子-チーズケーキ ホール",
+      "targetItem": "チーズケーキ ホール",
+      "targetPath": "食品・ドリンク > スイーツ > 洋菓子 > チーズケーキ ホール",
+      "optimalPathLength": 4,
+      "easingFunction": "easeInOutBack",
+      "fps": 143,
+      "survey": {
+        "easeRating": 4,
+        "difficultyRating": 3,
+        "differenceRating": 4,
+        "comments": ""
+      }
+    },
+    {
+      "isCorrect": true,
+      "timedOut": false,
+      "totalDuration": 9867,
+      "firstClickTime": 2.465,
+      "clickCount": 6,
+      "errorCount": 0,
+      "clicks": [
+        {
+          "step": 1,
+          "target": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0,
+          "isCorrect": false
+        },
+        {
+          "step": 2,
+          "target": "スイーツ",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.711,
+          "isCorrect": false
+        },
+        {
+          "step": 3,
+          "target": "洋菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.026,
+          "isCorrect": false
+        },
+        {
+          "step": 4,
+          "target": "和菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.175,
+          "isCorrect": false
+        },
+        {
+          "step": 5,
+          "target": "洋菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.567,
+          "isCorrect": false
+        },
+        {
+          "step": 6,
+          "target": "和菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.092,
+          "isCorrect": false
+        }
+      ],
+      "menuTravelDistance": 0,
+      "mouseDistance": 1275,
+      "interactedDuringAnimation": false,
+      "animationClickCount": 0,
+      "animationErrorCount": 0,
+      "frustrationCount": 0,
+      "clickEfficiency": 0.667,
+      "jitteriness": 24.76,
+      "overshootCount": 0,
+      "trialNumber": 2,
+      "taskId": "食品・ドリンク-スイーツ-和菓子-カステラ 1斤",
+      "targetItem": "カステラ 1斤",
+      "targetPath": "食品・ドリンク > スイーツ > 和菓子 > カステラ 1斤",
+      "optimalPathLength": 4,
+      "easingFunction": "linear",
+      "fps": 144,
+      "survey": {
+        "easeRating": 2,
+        "difficultyRating": 3,
+        "differenceRating": 3,
+        "comments": ""
+      }
+    },
+    {
+      "isCorrect": true,
+      "timedOut": false,
+      "totalDuration": 7533,
+      "firstClickTime": 2.334,
+      "clickCount": 3,
+      "errorCount": 0,
+      "clicks": [
+        {
+          "step": 1,
+          "target": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0,
+          "isCorrect": false
+        },
+        {
+          "step": 2,
+          "target": "飲料・お酒",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.255,
+          "isCorrect": false
+        },
+        {
+          "step": 3,
+          "target": "ソフトドリンク",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.389,
+          "isCorrect": false
+        }
+      ],
+      "menuTravelDistance": 0,
+      "mouseDistance": 968,
+      "interactedDuringAnimation": false,
+      "animationClickCount": 0,
+      "animationErrorCount": 0,
+      "frustrationCount": 0,
+      "clickEfficiency": 1.333,
+      "jitteriness": 21.746,
+      "overshootCount": 0,
+      "trialNumber": 3,
+      "taskId": "食品・ドリンク-飲料・お酒-ソフトドリンク-無糖炭酸水 500ml×24",
+      "targetItem": "無糖炭酸水 500ml×24",
+      "targetPath": "食品・ドリンク > 飲料・お酒 > ソフトドリンク > 無糖炭酸水 500ml×24",
+      "optimalPathLength": 4,
+      "easingFunction": "easeInOutExpo",
+      "fps": 143,
+      "survey": {
+        "easeRating": 3,
+        "difficultyRating": 3,
+        "differenceRating": 3,
+        "comments": ""
+      }
+    },
+    {
+      "isCorrect": true,
+      "timedOut": false,
+      "totalDuration": 16376,
+      "firstClickTime": 1.695,
+      "clickCount": 9,
+      "errorCount": 0,
+      "clicks": [
+        {
+          "step": 1,
+          "target": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0,
+          "isCorrect": false
+        },
+        {
+          "step": 2,
+          "target": "飲料・お酒",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.155,
+          "isCorrect": false
+        },
+        {
+          "step": 3,
+          "target": "スイーツ",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.332,
+          "isCorrect": false
+        },
+        {
+          "step": 4,
+          "target": "飲料・お酒",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.841,
+          "isCorrect": false
+        },
+        {
+          "step": 5,
+          "target": "ソフトドリンク",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 0.641,
+          "isCorrect": false
+        },
+        {
+          "step": 6,
+          "target": "スイーツ",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 3.63,
+          "isCorrect": false
+        },
+        {
+          "step": 7,
+          "target": "洋菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.082,
+          "isCorrect": false
+        },
+        {
+          "step": 8,
+          "target": "飲料・お酒",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.617,
+          "isCorrect": false
+        },
+        {
+          "step": 9,
+          "target": "アルコール",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.633,
+          "isCorrect": false
+        }
+      ],
+      "menuTravelDistance": 0,
+      "mouseDistance": 2313,
+      "interactedDuringAnimation": false,
+      "animationClickCount": 0,
+      "animationErrorCount": 0,
+      "frustrationCount": 0,
+      "clickEfficiency": 0.444,
+      "jitteriness": 47.908,
+      "overshootCount": 0,
+      "trialNumber": 4,
+      "taskId": "食品・ドリンク-飲料・お酒-アルコール-純米大吟醸 720ml",
+      "targetItem": "純米大吟醸 720ml",
+      "targetPath": "食品・ドリンク > 飲料・お酒 > アルコール > 純米大吟醸 720ml",
+      "optimalPathLength": 4,
+      "easingFunction": "easeInOutQuad",
+      "fps": 144,
+      "survey": {
+        "easeRating": 3,
+        "difficultyRating": 3,
+        "differenceRating": 3,
+        "comments": ""
+      }
+    },
+    {
+      "isCorrect": true,
+      "timedOut": false,
+      "totalDuration": 13845,
+      "firstClickTime": 1.408,
+      "clickCount": 8,
+      "errorCount": 0,
+      "clicks": [
+        {
+          "step": 1,
+          "target": "ホーム・キッチン",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0,
+          "isCorrect": false
+        },
+        {
+          "step": 2,
+          "target": "寝具・ベッド",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.788,
+          "isCorrect": false
+        },
+        {
+          "step": 3,
+          "target": "書籍・コミック",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 1.199,
+          "isCorrect": false
+        },
+        {
+          "step": 4,
+          "target": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 2.056,
+          "isCorrect": false
+        },
+        {
+          "step": 5,
+          "target": "書籍・コミック",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 2.597,
+          "isCorrect": false
+        },
+        {
+          "step": 6,
+          "target": "ビジネス・経済",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.971,
+          "isCorrect": false
+        },
+        {
+          "step": 7,
+          "target": "コミック",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.317,
+          "isCorrect": false
+        },
+        {
+          "step": 8,
+          "target": "青年コミック",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.37,
+          "isCorrect": false
+        }
+      ],
+      "menuTravelDistance": 0,
+      "mouseDistance": 2118,
+      "interactedDuringAnimation": false,
+      "animationClickCount": 0,
+      "animationErrorCount": 0,
+      "frustrationCount": 0,
+      "clickEfficiency": 0.5,
+      "jitteriness": 45.116,
+      "overshootCount": 0,
+      "trialNumber": 5,
+      "taskId": "書籍・コミック-コミック-青年コミック-サスペンスミステリー 1巻",
+      "targetItem": "サスペンスミステリー 1巻",
+      "targetPath": "書籍・コミック > コミック > 青年コミック > サスペンスミステリー 1巻",
+      "optimalPathLength": 4,
+      "easingFunction": "easeInOutQuint",
+      "fps": 144,
+      "survey": {
+        "easeRating": 2,
+        "difficultyRating": 3,
+        "differenceRating": 4,
+        "comments": ""
+      }
+    }
+  ],
+  "postSurvey": {
+    "noticeDifference": "はい",
+    "usabilityImpact": [
+      "ストレスが減った",
+      "どこを操作すればいいか分かりやすくなった"
+    ],
+    "usabilityImpactOther": "",
+    "bestFeature": "素早く動く",
+    "worstFeature": "弾むような動き",
+    "improvements": ""
+  },
+  "systemInfo": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "screenInfo": {
+      "width": 1920,
+      "height": 1080,
+      "availWidth": 1920,
+      "availHeight": 1080,
+      "colorDepth": 24,
+      "pixelRatio": 1
+    }
+  }
+}

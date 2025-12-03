@@ -301,7 +301,7 @@ export default function App() {
   // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
     (itemName: string, _isCorrect: boolean, _depth: number, isLeaf: boolean) => {
-      const targetItem = lang === "en" ? "Dome Tent 4-person" : "ドーム型テント 4人用";
+      const targetItem = lang === "en" ? "Dome Tent for 4 People" : "ドーム型テント 4人用";
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
@@ -418,7 +418,7 @@ export default function App() {
           fpsMonitorRef.current.stop();
           console.log("[FPS] Task completed - Stats:", fpsStats);
         }
-        
+
         const log = taskLogger.stopTask(true, false, currentTaskWithEasing.task.targetPath.length);
         const fullLog = {
           ...log,

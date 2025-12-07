@@ -76,7 +76,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
 
     const hasSub = cat.subcategories && cat.subcategories.length > 0;
-    
+
     // 全てのクリックを親に通知（エラー判定のため）
     const isCorrect = isInCorrectPath(cat.name, depth);
     onItemClick(cat.name, isCorrect, depth, !hasSub);

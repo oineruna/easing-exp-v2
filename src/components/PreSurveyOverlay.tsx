@@ -278,10 +278,10 @@ export function PreSurveyOverlay({
                                   handleRatingChange(demo.name, value)
                                 }
                                 className={`
-                                  w-10 h-10 rounded-md font-bold text-base transition-all
+                                  w-10 h-10 rounded-lg font-bold text-base transition-all flex items-center justify-center
                                   ${preferences[demo.name] === value
-                                    ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-md scale-110"
-                                    : "bg-white text-gray-700 hover:bg-purple-100"
+                                    ? "bg-gradient-to-b from-purple-500 to-pink-500 text-white shadow-md scale-105 border-0"
+                                    : "bg-white text-gray-700 hover:bg-blue-50 border-2 border-gray-300 hover:border-blue-300"
                                   }
                                 `}
                               >

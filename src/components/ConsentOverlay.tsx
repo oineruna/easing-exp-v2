@@ -91,21 +91,50 @@ export function ConsentOverlay({
             <motion.h2
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-4xl font-black text-center mb-6 text-gray-800"
+              className="text-4xl font-black text-center mb-4 text-gray-800"
             >
               {t(lang, "consentTitle")}
             </motion.h2>
+
+            {/* 但し書き（プロバイソ） */}
+            <motion.p
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="mb-6 text-gray-600 text-center font-bold"
+            >
+              {t(lang, "consentProviso")}
+            </motion.p>
 
             {/* 同意書の本文 */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="mb-8 text-gray-700 leading-relaxed text-lg"
+              transition={{ delay: 0.2 }}
+              className="mb-6 text-gray-700 leading-relaxed text-lg"
             >
               <div
                 className="bg-gray-50 rounded-xl p-4 border border-gray-200"
                 dangerouslySetInnerHTML={{ __html: t(lang, "consentText") }}
               />
+            </motion.div>
+
+            {/* 実験詳細へのリンク */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mb-6 text-center"
+            >
+              <a
+                href="https://mailkyutechjp-my.sharepoint.com/:w:/g/personal/tsunemori_shunsei127_mail_kyutech_jp/EY_yH9h79CRHsyEYN3SF4U0B-NvzqNC0rJJBuuQbfLgMNA?e=X8G2vm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline font-bold text-lg flex items-center justify-center gap-2"
+              >
+                <span>📄</span>
+                {t(lang, "consentLinkText")}
+              </a>
             </motion.div>
 
             {/* 同意ボタン */}

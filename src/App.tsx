@@ -583,40 +583,51 @@ export default function App() {
         })
           .then((res) => {
             if (res.ok) {
-              alert(
-                lang === "ja"
-                  ? "実験データが正常に送信されました。\nご協力ありがとうございました。"
-                  : "Experiment data submitted successfully.\nThank you for your cooperation."
-              );
+              // 成功時: バックアップを削除してタブを閉じる
+              localStorage.removeItem(`experiment_backup_${participantId}`);
+
+              // タブを閉じる（スクリプトで開いたタブでない場合、警告が出るか機能しない可能性があります）
+              window.close();
+
+              // window.close() が効かない場合のフォールバック表示（画面をクリアしてメッセージを表示）
+              document.body.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+                  <h1 style="margin-bottom: 20px;">${lang === "ja" ? "実験終了" : "Experiment Completed"}</h1>
+                  <p>${lang === "ja" ? "ご協力ありがとうございました。" : "Thank you for your cooperation."}</p>
+                  <p>${lang === "ja" ? "このタブを閉じてください。" : "Please close this tab."}</p>
+                </div>
+              `;
             } else {
               throw new Error("Server error");
             }
           })
           .catch((err) => {
             console.error("Submission error:", err);
-            alert(
-              lang === "ja"
-                ? "データの自動送信に失敗しました。\nダウンロードされるJSONファイルを実験担当者に送付してください。"
-                : "Failed to submit data automatically.\nPlease send the downloaded JSON file to the experimenter."
-            );
-          })
-          .finally(() => {
-            // バックアップとして必ずJSONダウンロードを実行
-            const dataStr =
-              "data:text/json;charset=utf-8," +
-              encodeURIComponent(JSON.stringify(finalData, null, 2));
-            const downloadAnchorNode = document.createElement("a");
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute(
-              "download",
-              `experiment_data_${participantId}.json`
-            );
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
 
-            // データをクリアして終了状態へ
-            localStorage.removeItem(`experiment_backup_${participantId}`);
+            // エラー時: 手動ダウンロードを促す
+            const proceed = window.confirm(
+              lang === "ja"
+                ? "データの自動送信に失敗しました。\nデータを手動でダウンロードして実験担当者に送付してください。\n\nダウンロードしますか？"
+                : "Failed to submit data automatically.\nPlease download the data manually and send it to the experimenter.\n\nDownload now?"
+            );
+
+            if (proceed) {
+              // JSONダウンロードを実行
+              const dataStr =
+                "data:text/json;charset=utf-8," +
+                encodeURIComponent(JSON.stringify(finalData, null, 2));
+              const downloadAnchorNode = document.createElement("a");
+              downloadAnchorNode.setAttribute("href", dataStr);
+              downloadAnchorNode.setAttribute(
+                "download",
+                `experiment_data_${participantId}.json`
+              );
+              document.body.appendChild(downloadAnchorNode);
+              downloadAnchorNode.click();
+              downloadAnchorNode.remove();
+            }
+
+            // エラー後も一応初期画面に戻る（あるいはリトライさせるか要検討だが、一旦戻る）
             setAppState("consent");
           });
       } catch (e) {
@@ -855,9 +866,9 @@ export default function App() {
               </div>
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">
-              <div className="py-6">
+              <div className="py-2">
                 {/* タスク指示バー */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-3 mb-6 mx-4 md:mx-auto max-w-3xl">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-2 mb-2 mx-4 md:mx-auto max-w-3xl">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                     {/* ステータスインジケーター */}
                     <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full self-start md:self-center">
@@ -910,7 +921,7 @@ export default function App() {
                 </div>
 
                 {/* フィードバック表示エリア */}
-                <div className="h-12 mb-4 flex items-center justify-center pointer-events-none z-30 relative">
+                <div className="h-12 mb-2 flex items-center justify-center pointer-events-none z-30 relative">
                   <AnimatePresence mode="wait">
                     {feedback && (
                       <motion.div
@@ -931,7 +942,7 @@ export default function App() {
                 </div>
 
                 {/* メニューコンポーネント */}
-                <div className="relative min-h-[500px] z-0 w-full md:w-auto px-4 md:px-0 md:-ml-64 flex justify-center md:block">
+                <div className="relative min-h-[500px] z-0 w-full md:w-auto px-4 md:px-0 md:-ml-64 flex items-start pt-2 md:block -mt-2">
                   {appState === "tutorial" && (
                     <TaskMenu
                       key="tutorial-menu"

@@ -32,8 +32,11 @@ export const TEXT = {
     welcomeTitle: "実験へようこそ",
     welcomeSubtitle: "メニュー探索タスクにおける操作性の評価",
     consentTitle: "実験へのご協力に関する同意",
+    consentProviso:
+      "本システムの使用を開始した時点で、以下の実験内容および条件に同意したものとみなされます。",
     consentText:
       "本実験では操作ログ等を記録します。データは匿名化され、研究以外に利用しません。<br />同意いただけたら「同意する」をクリックし、F11キーで全画面表示してください。",
+    consentLinkText: "実験について（詳細）",
     agree: "同意する",
     disagree: "同意しない",
     disagreeAlert: "同意いただけない場合は実験に参加できません。",
@@ -160,10 +163,10 @@ export const TEXT = {
       "これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。",
     preSurveyNote: "※ この情報は実験データの分析に使用されます",
     preSurveyStart: "開始する",
-    preSurveyDemoTitle: "あなたの好みをもとにアニメーションを評価してください",
-    preSurveyPreference: "好み度",
-    preSurveyLow: "低",
-    preSurveyHigh: "高",
+    preSurveyDemoTitle: "あなたの感覚に最も近い評価を選んでください",
+    preSurveyPreference: "操作感",
+    preSurveyLow: "不快",
+    preSurveyHigh: "快適",
     preSurveyNext: "次へ",
     preSurveyRankingTitle: "好みの順に並べ替えてください",
     preSurveyRankingDesc:
@@ -177,13 +180,13 @@ export const TEXT = {
     // Easing Labels (JA)
     easingLinearLabel: "一定速度",
     easingLinearDesc: "等速で動く",
-    easingQuadLabel: "滑らか(弱)",
+    easingQuadLabel: "ゆったり",
     easingQuadDesc: "ゆっくり加速・減速",
-    easingQuintLabel: "滑らか(強)",
+    easingQuintLabel: "なめらか",
     easingQuintDesc: "とても滑らか",
-    easingExpoLabel: "キビキビ",
+    easingExpoLabel: "メリハリ",
     easingExpoDesc: "急加速・急停止",
-    easingBackLabel: "バウンス",
+    easingBackLabel: "弾む",
     easingBackDesc: "オーバーシュート",
 
     // ConsentOverlay
@@ -197,8 +200,11 @@ export const TEXT = {
     welcomeTitle: "Welcome to the Experiment",
     welcomeSubtitle: "Evaluation of usability in menu selection tasks",
     consentTitle: "Consent for Participation",
+    consentProviso:
+      "By starting to use this system, you are deemed to have agreed to the following experimental content and conditions.",
     consentText:
       "This experiment records operation logs. Data will be anonymized and used only for research.<br />If you agree, click 'Agree' and press F11 for full screen.",
+    consentLinkText: "About Experiment (Details)",
     agree: "Agree",
     disagree: "Disagree",
     disagreeAlert:

@@ -25,7 +25,9 @@ export function PostSurveyOverlay({
   const [usabilityImpact, setUsabilityImpact] = useState<string[]>([]);
   const [usabilityImpactOther, setUsabilityImpactOther] = useState<string>("");
   const [bestFeature, setBestFeature] = useState<string>("");
+  const [bestFeatureOther, setBestFeatureOther] = useState<string>("");
   const [worstFeature, setWorstFeature] = useState<string>("");
+  const [worstFeatureOther, setWorstFeatureOther] = useState<string>("");
   const [improvements, setImprovements] = useState<string>("");
 
   // i18nから選択肢リストを取得
@@ -67,7 +69,9 @@ export function PostSurveyOverlay({
       usabilityImpact,
       usabilityImpactOther,
       bestFeature,
+      bestFeatureOther,
       worstFeature,
+      worstFeatureOther,
       improvements,
     };
 
@@ -81,7 +85,9 @@ export function PostSurveyOverlay({
       usabilityImpact: [impactOptions[0]],
       usabilityImpactOther: "",
       bestFeature: featureOptions[0],
+      bestFeatureOther: "",
       worstFeature: featureOptions[0],
+      worstFeatureOther: "",
       improvements: "Debug Skip",
     };
     onComplete(dummyResult);
@@ -226,6 +232,20 @@ export function PostSurveyOverlay({
                     </label>
                   ))}
                 </div>
+                {/* Q4 その他理由入力欄 */}
+                {bestFeature === otherOptionLabel && (
+                  <textarea
+                    value={bestFeatureOther}
+                    onChange={(e) => setBestFeatureOther(e.target.value)}
+                    placeholder={
+                      lang === "ja"
+                        ? "具体的に教えてください..."
+                        : "Please specify..."
+                    }
+                    className="w-full mt-2 p-3 border border-gray-300 rounded-lg text-sm ml-2 max-w-[95%]"
+                    rows={2}
+                  />
+                )}
               </div>
 
               {/* Q5: 最も悪かった特徴（単一選択） */}
@@ -252,6 +272,20 @@ export function PostSurveyOverlay({
                     </label>
                   ))}
                 </div>
+                {/* Q5 その他理由入力欄 */}
+                {worstFeature === otherOptionLabel && (
+                  <textarea
+                    value={worstFeatureOther}
+                    onChange={(e) => setWorstFeatureOther(e.target.value)}
+                    placeholder={
+                      lang === "ja"
+                        ? "具体的に教えてください..."
+                        : "Please specify..."
+                    }
+                    className="w-full mt-2 p-3 border border-gray-300 rounded-lg text-sm ml-2 max-w-[95%]"
+                    rows={2}
+                  />
+                )}
               </div>
 
               {/* Q6: 改善点・要望（自由記述） */}

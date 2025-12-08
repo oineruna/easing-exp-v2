@@ -133,8 +133,12 @@ export const generateTaskSequence = (
   const tasksByPosition: Record<number, Task[]> = {};
   POSITIONS.forEach(pos => {
     tasksByPosition[pos] = availableTasks.filter(t => t.leafIndex === pos);
-    // ランダムにシャッフルしておく
-    tasksByPosition[pos].sort(() => random() - 0.5);
+    // Fisher-Yates シャッフルで公平にランダム化
+    const arr = tasksByPosition[pos];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
   });
 
   // (Easing, Position) のペアを作成

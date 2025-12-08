@@ -116,12 +116,12 @@ export interface Performance {
   menuTravelDistance: number; // メニュー階層移動距離
   pathEfficiency: number;     // パス効率（旧: clickEfficiency）
   timedOut: boolean;          // タイムアウトしたか
-  
+
   // アニメーション関連指標
   interactedDuringAnimation: boolean; // アニメーション中の操作があったか
   animationClickCount: number;        // アニメーション中のクリック総数
   animationErrorCount: number;        // アニメーション中の誤クリック数
-  
+
   // 追加の詳細指標
   mouseDistance?: number;      // マウス総移動距離 (px)
   jitteriness?: number;        // ふらつき指標
@@ -147,7 +147,9 @@ export interface PostSurveyResult {
   usabilityImpact: string[];
   usabilityImpactOther: string;
   bestFeature: string;
+  bestFeatureOther?: string;
   worstFeature: string;
+  worstFeatureOther?: string;
   improvements: string;
 }
 
@@ -169,7 +171,7 @@ export interface ExperimentData {
   taskResults: TaskResult[];
   preSurvey?: PreSurveyData;
   postSurvey?: PostSurveyResult;
-  
+
   // システム情報
   systemInfo?: {
     userAgent: string;
@@ -192,33 +194,33 @@ export interface TaskLog {
   optimalPath: string[];
   actualPath: string[];
   easingFunction: EasingFunction;
-  
+
   isCorrect: boolean;
   timedOut: boolean;
   totalDuration: number;  // ms
   firstClickTime: number; // ms
   clickCount: number;
   errorCount: number;
-  
+
   clicks: NavigationStep[];
-  
+
   menuTravelDistance: number;
   mouseDistance: number;
-  
+
   interactedDuringAnimation: boolean;
   animationClickCount?: number;
   animationErrorCount?: number;
-  
+
   optimalPathLength?: number;
   clickEfficiency?: number;
   frustrationCount?: number;
-  
+
   jitteriness?: number;
   overshootCount?: number;
-  
-  
+
+
   survey?: TaskSurveyResult;
-  
+
   seqScore?: number;
   usedEasing?: EasingFunction;
 }

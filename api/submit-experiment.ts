@@ -24,16 +24,26 @@ export default async function handler(
         const data = req.body;
 
         // データ検証
-        if (!data.participantId || !data.tasks) {
-            return res.status(400).json({ error: 'Invalid data: missing required fields' });
+        // フロントエンドの ExperimentData 型に合わせて修正
+        // data.metadata.participantId と data.taskResults をチェック
+        const participantId = data.metadata?.participantId || data.participantId;
+        const taskResults = data.taskResults || data.tasks;
+
+        if (!participantId || !taskResults) {
+            console.error('[Experiment Data] Validation failed:', {
+                hasMetadata: !!data.metadata,
+                hasParticipantId: !!participantId,
+                hasTaskResults: !!taskResults
+            });
+            return res.status(400).json({ error: 'Invalid data: missing required fields (metadata.participantId or taskResults)' });
         }
 
-        console.log('[Experiment Data] Received from participant:', data.participantId);
+        console.log('[Experiment Data] Received from participant:', participantId);
 
         // Vercel Blob Storageに保存
         // ファイル名: experiments/experiment_data_{participantId}_{timestamp}.json
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `experiments/experiment_data_${data.participantId}_${timestamp}.json`;
+        const filename = `experiments/experiment_data_${participantId}_${timestamp}.json`;
 
         const blob = await put(filename, JSON.stringify(data, null, 2), {
             access: 'public',
@@ -45,7 +55,7 @@ export default async function handler(
         return res.status(200).json({
             success: true,
             message: 'Data received and saved successfully',
-            participantId: data.participantId,
+            participantId: participantId,
             url: blob.url
         });
     } catch (error) {

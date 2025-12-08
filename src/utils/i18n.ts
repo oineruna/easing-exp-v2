@@ -149,6 +149,7 @@ export const TEXT = {
       "素早く動く",
       "弾むような動き",
       "一定速度で動く",
+      "その他",
     ],
     postSurveyQ6:
       "6. アニメーションや操作性について、改善してほしい点や気になったことがあれば教えてください",
@@ -316,6 +317,7 @@ export const TEXT = {
       "Quick movement",
       "Bouncy movement",
       "Constant speed movement",
+      "Other",
     ],
     postSurveyQ6: "6. Any feedback on animation or usability?",
     postSurveyNote: "* Data will be downloaded upon clicking",

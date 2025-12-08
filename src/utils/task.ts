@@ -119,7 +119,7 @@ export const generateTaskSequence = (
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
   const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
-  const TRIALS_PER_EASING = 1; // 1つのイージングにつき4回試行
+  const TRIALS_PER_EASING = 2; // 1つのイージングにつき4回試行
   const POSITIONS = [1, 2, 3, 4]; // 使用するポジション（0=一番上を除外）
 
   // シード付き乱数生成器 (Linear Congruential Generator)
@@ -158,7 +158,7 @@ export const generateTaskSequence = (
   pairs.forEach((pair, index) => {
     // 指定されたポジションのタスクプールから1つ取り出す
     let task = tasksByPosition[pair.position].pop();
-    
+
     // 万が一足りない場合は、再度フィルタしてランダムに取得
     if (!task) {
       const candidates = availableTasks.filter(t => t.leafIndex === pair.position);

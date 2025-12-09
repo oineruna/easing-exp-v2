@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Revised Women's Items)",
+    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Clarified Bath vs Body)",
     "structure": "Root(5) > Sub(2) > SubSub(2) > Items(5)"
   },
   "categories": [
@@ -59,13 +59,13 @@
               "name": "Tops",
               "subcategories": [
                 {
-                  "name": "Women's Hoodie"
+                  "name": "Women's T-Shirt"
                 },
                 {
                   "name": "Women's Blouse"
                 },
                 {
-                  "name": "Women's T-Shirt"
+                  "name": "Women's Hoodie"
                 },
                 {
                   "name": "Women's Sweater"
@@ -112,7 +112,7 @@
                   "name": "Sports Earphones"
                 },
                 {
-                  "name": "Noise Cancelling Headphones"
+                  "name": "Noise Cancelling"
                 },
                 {
                   "name": "Gaming Headset"
@@ -266,13 +266,13 @@
               ]
             },
             {
-              "name": "Bath Items",
+              "name": "Towels & Mats",
               "subcategories": [
                 {
-                  "name": "Face Towel"
+                  "name": "Hand Towel"
                 },
                 {
-                  "name": "Hand Towel"
+                  "name": "Face Towel"
                 },
                 {
                   "name": "Bath Mat"
@@ -319,7 +319,7 @@
               "name": "Body Care",
               "subcategories": [
                 {
-                  "name": "Deodorant Spray"
+                  "name": "Body Soap"
                 },
                 {
                   "name": "Hand Cream"
@@ -328,7 +328,7 @@
                   "name": "Body Oil"
                 },
                 {
-                  "name": "Body Soap"
+                  "name": "Deodorant Spray"
                 },
                 {
                   "name": "Body Lotion"
@@ -353,7 +353,7 @@
                   "name": "Hair Treatment"
                 },
                 {
-                  "name": "Hair Rinse"
+                  "name": "Scalp Tonic"
                 },
                 {
                   "name": "Hair Oil"
@@ -448,7 +448,7 @@
                   "name": "Mixed Nuts"
                 },
                 {
-                  "name": "Corn Snacks"
+                  "name": "Pretzels"
                 },
                 {
                   "name": "Potato Chips"

@@ -62,7 +62,7 @@ export function TutorialIntroOverlay({ isVisible, lang, onClose }: TutorialIntro
                 transition={{ delay: 0.2 }}
                 src="/tutorial.png"
                 alt="Tutorial"
-                className="max-w-full h-auto rounded-2xl mb-6 shadow-lg"
+                className="max-w-2xl w-full h-auto rounded-2xl mb-6 shadow-lg mx-auto"
               />
 
               {/* 説明文 */}

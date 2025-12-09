@@ -1,78 +1,32 @@
 {
   "meta": {
-    "description": "Dataset for Easing Experiment (English: Culturally Neutral)",
-    "structure_depth": 4,
-    "items_per_category": "5"
+    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Revised Women's Items)",
+    "structure": "Root(5) > Sub(2) > SubSub(2) > Items(5)"
   },
   "categories": [
     {
       "name": "Fashion",
       "subcategories": [
         {
-          "name": "Women's",
+          "name": "Men's",
           "subcategories": [
             {
               "name": "Tops",
               "subcategories": [
                 {
-                  "name": "T-Shirt"
+                  "name": "Dress Shirt"
                 },
                 {
-                  "name": "Blouse"
+                  "name": "Men's Hoodie"
                 },
                 {
-                  "name": "Sweater"
+                  "name": "Men's T-Shirt"
                 },
                 {
-                  "name": "Hoodie"
+                  "name": "Men's Jacket"
                 },
                 {
-                  "name": "Cardigan"
-                }
-              ]
-            },
-            {
-              "name": "Bags",
-              "subcategories": [
-                {
-                  "name": "Shoulder Bag"
-                },
-                {
-                  "name": "Tote Bag"
-                },
-                {
-                  "name": "Backpack"
-                },
-                {
-                  "name": "Handbag"
-                },
-                {
-                  "name": "Clutch Bag"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Men's",
-          "subcategories": [
-            {
-              "name": "Outerwear",
-              "subcategories": [
-                {
-                  "name": "Down Jacket"
-                },
-                {
-                  "name": "Trench Coat"
-                },
-                {
-                  "name": "Leather Jacket"
-                },
-                {
-                  "name": "Denim Jacket"
-                },
-                {
-                  "name": "Raincoat"
+                  "name": "Men's Polo Shirt"
                 }
               ]
             },
@@ -80,19 +34,64 @@
               "name": "Accessories",
               "subcategories": [
                 {
-                  "name": "Wristwatch"
+                  "name": "Men's Scarf"
                 },
                 {
-                  "name": "Sunglasses"
+                  "name": "Men's Gloves"
+                },
+                {
+                  "name": "Necktie"
                 },
                 {
                   "name": "Leather Belt"
                 },
                 {
-                  "name": "Scarf"
+                  "name": "Men's Cap"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Women's",
+          "subcategories": [
+            {
+              "name": "Tops",
+              "subcategories": [
+                {
+                  "name": "Women's Hoodie"
                 },
                 {
-                  "name": "Cap"
+                  "name": "Women's Blouse"
+                },
+                {
+                  "name": "Women's T-Shirt"
+                },
+                {
+                  "name": "Women's Sweater"
+                },
+                {
+                  "name": "Women's Dress"
+                }
+              ]
+            },
+            {
+              "name": "Accessories",
+              "subcategories": [
+                {
+                  "name": "Women's Scarf"
+                },
+                {
+                  "name": "Women's Gloves"
+                },
+                {
+                  "name": "Women's Belt"
+                },
+                {
+                  "name": "Necklace"
+                },
+                {
+                  "name": "Women's Hat"
                 }
               ]
             }
@@ -110,16 +109,16 @@
               "name": "Headphones",
               "subcategories": [
                 {
-                  "name": "Wireless Earbuds"
+                  "name": "Sports Earphones"
                 },
                 {
-                  "name": "Noise Cancelling"
+                  "name": "Noise Cancelling Headphones"
                 },
                 {
                   "name": "Gaming Headset"
                 },
                 {
-                  "name": "Sports Earphones"
+                  "name": "Wireless Earbuds"
                 },
                 {
                   "name": "Wired Earphones"
@@ -130,10 +129,10 @@
               "name": "Speakers",
               "subcategories": [
                 {
-                  "name": "Bluetooth Speaker"
+                  "name": "Waterproof Speaker"
                 },
                 {
-                  "name": "Soundbar"
+                  "name": "TV Soundbar"
                 },
                 {
                   "name": "Smart Speaker"
@@ -142,14 +141,14 @@
                   "name": "PC Speaker"
                 },
                 {
-                  "name": "Portable Speaker"
+                  "name": "Bluetooth Speaker"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Computer Accessories",
+          "name": "Computers",
           "subcategories": [
             {
               "name": "Input Devices",
@@ -175,13 +174,13 @@
               "name": "Storage",
               "subcategories": [
                 {
-                  "name": "USB Flash Drive"
-                },
-                {
                   "name": "External HDD"
                 },
                 {
                   "name": "External SSD"
+                },
+                {
+                  "name": "USB Flash Drive"
                 },
                 {
                   "name": "SD Card"
@@ -205,7 +204,7 @@
               "name": "Cookware",
               "subcategories": [
                 {
-                  "name": "Frying Pan"
+                  "name": "Measuring Cup"
                 },
                 {
                   "name": "Saucepan"
@@ -217,7 +216,7 @@
                   "name": "Cutting Board"
                 },
                 {
-                  "name": "Measuring Cup"
+                  "name": "Frying Pan"
                 }
               ]
             },
@@ -231,29 +230,26 @@
                   "name": "Dinner Plate"
                 },
                 {
-                  "name": "Bowl"
+                  "name": "Chopsticks Set"
                 },
                 {
-                  "name": "Fork & Spoon"
+                  "name": "Rice Bowl"
                 },
                 {
-                  "name": "Glass Cup"
+                  "name": "Dessert Plate"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Bedding & Bath",
+          "name": "Bed & Bath",
           "subcategories": [
             {
               "name": "Bedding",
               "subcategories": [
                 {
-                  "name": "Pillow"
-                },
-                {
-                  "name": "Bed Sheet"
+                  "name": "Bed Pad"
                 },
                 {
                   "name": "Duvet Cover"
@@ -263,26 +259,29 @@
                 },
                 {
                   "name": "Blanket"
+                },
+                {
+                  "name": "Memory Foam Pillow"
                 }
               ]
             },
             {
-              "name": "Bath",
+              "name": "Bath Items",
               "subcategories": [
                 {
-                  "name": "Bath Towel"
+                  "name": "Face Towel"
                 },
                 {
-                  "name": "Face Towel"
+                  "name": "Hand Towel"
                 },
                 {
                   "name": "Bath Mat"
                 },
                 {
-                  "name": "Shower Curtain"
+                  "name": "Bathrobe"
                 },
                 {
-                  "name": "Bathrobe"
+                  "name": "Bath Towel"
                 }
               ]
             }
@@ -320,19 +319,19 @@
               "name": "Body Care",
               "subcategories": [
                 {
-                  "name": "Body Soap"
+                  "name": "Deodorant Spray"
                 },
                 {
                   "name": "Hand Cream"
                 },
                 {
+                  "name": "Body Oil"
+                },
+                {
+                  "name": "Body Soap"
+                },
+                {
                   "name": "Body Lotion"
-                },
-                {
-                  "name": "Bath Salt"
-                },
-                {
-                  "name": "Hand Soap"
                 }
               ]
             }
@@ -342,7 +341,7 @@
           "name": "Hair Care",
           "subcategories": [
             {
-              "name": "Shampoo & Treatment",
+              "name": "Shampoo & More",
               "subcategories": [
                 {
                   "name": "Shampoo"
@@ -351,13 +350,13 @@
                   "name": "Conditioner"
                 },
                 {
+                  "name": "Hair Treatment"
+                },
+                {
+                  "name": "Hair Rinse"
+                },
+                {
                   "name": "Hair Oil"
-                },
-                {
-                  "name": "Hair Mask"
-                },
-                {
-                  "name": "Scalp Tonic"
                 }
               ]
             },
@@ -374,10 +373,10 @@
                   "name": "Hair Wax"
                 },
                 {
-                  "name": "Hair Spray"
+                  "name": "Hair Brush"
                 },
                 {
-                  "name": "Hair Brush"
+                  "name": "Hair Spray"
                 }
               ]
             }
@@ -392,33 +391,13 @@
           "name": "Beverages",
           "subcategories": [
             {
-              "name": "Coffee & Tea",
-              "subcategories": [
-                {
-                  "name": "Coffee Beans"
-                },
-                {
-                  "name": "Tea Bags"
-                },
-                {
-                  "name": "Instant Coffee"
-                },
-                {
-                  "name": "Green Tea"
-                },
-                {
-                  "name": "Herbal Tea"
-                }
-              ]
-            },
-            {
               "name": "Soft Drinks",
               "subcategories": [
                 {
                   "name": "Mineral Water"
                 },
                 {
-                  "name": "Orange Juice"
+                  "name": "100% Fruit Juice"
                 },
                 {
                   "name": "Cola"
@@ -430,12 +409,52 @@
                   "name": "Energy Drink"
                 }
               ]
+            },
+            {
+              "name": "Coffee & Tea",
+              "subcategories": [
+                {
+                  "name": "Coffee Beans"
+                },
+                {
+                  "name": "Instant Coffee"
+                },
+                {
+                  "name": "Tea Bags"
+                },
+                {
+                  "name": "Green Tea"
+                },
+                {
+                  "name": "Matcha Powder"
+                }
+              ]
             }
           ]
         },
         {
           "name": "Snacks",
           "subcategories": [
+            {
+              "name": "Savory Snacks",
+              "subcategories": [
+                {
+                  "name": "Tortilla Chips"
+                },
+                {
+                  "name": "Popcorn"
+                },
+                {
+                  "name": "Mixed Nuts"
+                },
+                {
+                  "name": "Corn Snacks"
+                },
+                {
+                  "name": "Potato Chips"
+                }
+              ]
+            },
             {
               "name": "Sweets",
               "subcategories": [
@@ -446,33 +465,13 @@
                   "name": "Cookies"
                 },
                 {
+                  "name": "Candy"
+                },
+                {
                   "name": "Gummy Candy"
                 },
                 {
-                  "name": "Hard Candy"
-                },
-                {
                   "name": "Marshmallow"
-                }
-              ]
-            },
-            {
-              "name": "Salty Snacks",
-              "subcategories": [
-                {
-                  "name": "Potato Chips"
-                },
-                {
-                  "name": "Popcorn"
-                },
-                {
-                  "name": "Mixed Nuts"
-                },
-                {
-                  "name": "Crackers"
-                },
-                {
-                  "name": "Pretzels"
                 }
               ]
             }

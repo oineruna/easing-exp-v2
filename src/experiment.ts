@@ -48,7 +48,6 @@ export interface NavigationStep {
   duringAnimation: boolean; // アニメーション中にクリックされたか
   animationProgress?: number; // アニメーション進捗率 (0.0 - 1.0)
   stayTime: number;       // 滞在時間（秒単位）
-  timestamp: string;      // ISO 8601形式のタイムスタンプ
 }
 
 // 後方互換性のため
@@ -98,7 +97,6 @@ export interface UserFeedback {
 export interface TaskOverview {
   taskIndex: number;          // タスク番号（1-indexed）
   targetItem: string;         // 目標アイテム名
-  targetPath: string;         // フルパス（" > "区切り）
   optimalPath: string[];      // 最適解のパス配列
   easingFunction: EasingFunction; // 使用したイージング関数
   usedEasing: EasingFunction; // 実際に使用されたイージング（確認用）

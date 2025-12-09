@@ -4,9 +4,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import type { NavigationStep, Category, TaskLog, MouseTrajectoryPoint } from "./experiment"; // パス〉2修正
 
 // 内部計算用にミリ秒のタイムスタンプを保持する拡張インターフェース
-interface InternalClickLog extends Omit<NavigationStep, 'timestamp'> {
+interface InternalClickLog extends NavigationStep {
   timestampMs: number; // 内部計算用（ミリ秒）
-  timestamp: string;   // ISO 8601形式
 }
 
 /**
@@ -74,7 +73,7 @@ export function useTaskLogger() {
       if (!isTaskActiveRef.current) return;
 
       const currentTime = performance.now();
-      
+
       // 距離計算（全フレームで計算）
       if (lastMousePosRef.current) {
         const dx = e.clientX - lastMousePosRef.current.x;
@@ -175,7 +174,6 @@ export function useTaskLogger() {
         duringAnimation: isAnimatingRef.current,
         animationProgress: animationProgress,
         timestampMs: currentClickTime, // 内部計算用
-        timestamp: new Date(Date.now()).toISOString(), // ISO 8601形式
         stayTime: stayTime, // 滞在時間（秒）
       };
 
@@ -256,10 +254,10 @@ export function useTaskLogger() {
     // 開始時刻をリセット
     startTimeRef.current = performance.now();
     isAnimatingRef.current = false;
-    
+
     // タスクをアクティブ化（マウストラッキング開始）
     isTaskActiveRef.current = true;
-    
+
     // 新しい状態のリセット
     setVisitedCategories(new Set());
     setFrustrationCount(0);
@@ -292,12 +290,12 @@ export function useTaskLogger() {
 
           const angle1 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
           const angle2 = Math.atan2(p3.y - p2.y, p3.x - p2.x);
-          
+
           // 角度差を -PI ~ PI に正規化
           let diff = angle2 - angle1;
           while (diff <= -Math.PI) diff += 2 * Math.PI;
           while (diff > Math.PI) diff -= 2 * Math.PI;
-          
+
           jitteriness += Math.abs(diff);
         }
       }
@@ -308,10 +306,10 @@ export function useTaskLogger() {
       // 各クリックについて判定
       clicksThisTask.forEach(click => {
         // クリック直前500msの軌跡を抽出
-        const relevantPoints = mouseTrajectory.filter(p => 
+        const relevantPoints = mouseTrajectory.filter(p =>
           p.timestamp <= click.timestampMs && p.timestamp >= click.timestampMs - 500
         );
-        
+
         if (relevantPoints.length < 5) return;
 
         // Y軸方向の動きを分析（縦長メニューなので）
@@ -355,10 +353,10 @@ export function useTaskLogger() {
 
         // 新しい指標
         frustrationCount: frustrationCount,
-        clickEfficiency: correctPathLength > 0 && clicksThisTask.length > 0 
-          ? parseFloat((correctPathLength / clicksThisTask.length).toFixed(3)) 
+        clickEfficiency: correctPathLength > 0 && clicksThisTask.length > 0
+          ? parseFloat((correctPathLength / clicksThisTask.length).toFixed(3))
           : 0,
-        
+
         // マウス軌跡・詳細指標
         // mouseTrajectory: mouseTrajectory, // 削除
         jitteriness: parseFloat(jitteriness.toFixed(3)),

@@ -42,6 +42,10 @@ export const TEXT = {
     disagreeAlert: "同意いただけない場合は実験に参加できません。",
 
     // --- チュートリアル ---
+    completionTitle: "実験終了",
+    completionMessage: "すべてのタスクとアンケートが完了しました。<br />ご協力ありがとうございました。",
+    completionClose: "完了してタブを閉じる",
+
     startTutorial: "チュートリアル開始",
     tutorialLabel: "チュートリアル",
     tutorialIntroText:
@@ -212,6 +216,10 @@ export const TEXT = {
       "You cannot participate in the experiment if you do not agree.",
 
     // --- Tutorial ---
+    completionTitle: "Experiment Completed",
+    completionMessage: "All tasks and surveys have been completed.<br />Thank you for your cooperation.",
+    completionClose: "Complete and Close Tab",
+
     startTutorial: "Start Tutorial",
     tutorialLabel: "Tutorial",
     tutorialIntroText:

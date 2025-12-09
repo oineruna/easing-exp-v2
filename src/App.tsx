@@ -50,7 +50,8 @@ type AppState =
   | "seq"               // タスク間アンケート（NASA-TLX簡易版）
   | "next-task-ready"   // 次のタスクへの準備画面
   | "reward"            // 全タスク完了・結果表示
-  | "post-survey";      // 事後アンケート
+  | "post-survey"       // 事後アンケート
+  | "completed";        // 実験終了（Thanks画面）
 
 // イージング情報付きタスク型
 interface TaskWithEasing {
@@ -149,28 +150,9 @@ export default function App() {
     params.set("pid", id);
     window.history.replaceState(null, "", url.toString());
 
-    // localStorage からバックアップを確認して復元
-    const backup = localStorage.getItem(`experiment_backup_${id}`);
-    if (backup) {
-      const shouldRestore = window.confirm(
-        lang === "ja"
-          ? "前回の実験データが見つかりました。続きから再開しますか？"
-          : "Previous experiment data found. Resume from where you left off?"
-      );
-      if (shouldRestore) {
-        try {
-          const data = JSON.parse(backup);
-          setAllLogs(data.tasks || []);
-          setPreSurveyData(data.preSurvey || null);
-          setCurrentTaskIndex(data.currentTaskIndex || 0);
-          console.log("[Backup] Restored from localStorage", data);
-        } catch (e) {
-          console.error("[Backup] Failed to restore", e);
-        }
-      } else {
-        localStorage.removeItem(`experiment_backup_${id}`);
-      }
-    }
+    // localStorage からバックアップを確認して復元する機能を削除
+    // (ユーザーリクエストにより、別人のデータ干渉を防ぐため)
+    localStorage.removeItem(`experiment_backup_${id}`);
   }, []);
 
   // メニューデータの読み込み
@@ -216,22 +198,8 @@ export default function App() {
 
 
   // localStorage 自動バックアップ（5タスクごと）
-  useEffect(() => {
-    if (allLogs.length > 0 && allLogs.length % 5 === 0) {
-      const backupData = {
-        participantId,
-        preSurvey: preSurveyData,
-        tasks: allLogs,
-        currentTaskIndex,
-        timestamp: new Date().toISOString(),
-      };
-      localStorage.setItem(
-        `experiment_backup_${participantId}`,
-        JSON.stringify(backupData)
-      );
-      console.log(`[Backup] Auto-saved at task ${allLogs.length}`);
-    }
-  }, [allLogs.length, participantId, preSurveyData, currentTaskIndex]);
+  // localStorage 自動バックアップ機能を削除
+  // (ユーザーリクエストにより、別人のデータ干渉を防ぐため)
 
   // 初期ロード時にチュートリアル未完了なら確認モーダルを自動表示
   useEffect(() => {
@@ -523,7 +491,6 @@ export default function App() {
           taskOverview: {
             taskIndex: index + 1,
             targetItem: log.targetItem,
-            targetPath: log.targetPath,
             optimalPath: log.optimalPath, // 追加
             easingFunction: log.easingFunction,
             usedEasing: log.usedEasing || log.easingFunction, // 追加（確認用）
@@ -571,7 +538,6 @@ export default function App() {
         systemInfo: systemInfo || undefined,
       };
 
-
       // サーバーへ送信
       try {
         fetch("/api/submit-experiment", {
@@ -583,58 +549,42 @@ export default function App() {
         })
           .then((res) => {
             if (res.ok) {
-              // 成功時: バックアップを削除してタブを閉じる
+              // 成功時: バックアップを削除して完了画面へ
               localStorage.removeItem(`experiment_backup_${participantId}`);
-
-              // タブを閉じる（スクリプトで開いたタブでない場合、警告が出るか機能しない可能性があります）
-              window.close();
-
-              // window.close() が効かない場合のフォールバック表示（画面をクリアしてメッセージを表示）
-              document.body.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
-                  <h1 style="margin-bottom: 20px;">${lang === "ja" ? "実験終了" : "Experiment Completed"}</h1>
-                  <p>${lang === "ja" ? "ご協力ありがとうございました。" : "Thank you for your cooperation."}</p>
-                  <p>${lang === "ja" ? "このタブを閉じてください。" : "Please close this tab."}</p>
-                </div>
-              `;
+              setAppState("completed");
             } else {
-              throw new Error("Server error");
+              throw new Error("Server returned " + res.status);
             }
           })
           .catch((err) => {
             console.error("Submission error:", err);
-
-            // エラー時: 手動ダウンロードを促す
-            const proceed = window.confirm(
+            alert(
               lang === "ja"
-                ? "データの自動送信に失敗しました。\nデータを手動でダウンロードして実験担当者に送付してください。\n\nダウンロードしますか？"
-                : "Failed to submit data automatically.\nPlease download the data manually and send it to the experimenter.\n\nDownload now?"
+                ? "データの送信に失敗しました。手動でデータを保存してください。"
+                : "Failed to submit data. Please save the data manually."
             );
+            // エラー時: 自動ダウンロード
+            const dataStr =
+              "data:text/json;charset=utf-8," +
+              encodeURIComponent(JSON.stringify(finalData, null, 2));
+            const downloadAnchorNode = document.createElement("a");
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute(
+              "download",
+              `experiment_data_${participantId}.json`
+            );
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
 
-            if (proceed) {
-              // JSONダウンロードを実行
-              const dataStr =
-                "data:text/json;charset=utf-8," +
-                encodeURIComponent(JSON.stringify(finalData, null, 2));
-              const downloadAnchorNode = document.createElement("a");
-              downloadAnchorNode.setAttribute("href", dataStr);
-              downloadAnchorNode.setAttribute(
-                "download",
-                `experiment_data_${participantId}.json`
-              );
-              document.body.appendChild(downloadAnchorNode);
-              downloadAnchorNode.click();
-              downloadAnchorNode.remove();
-            }
-
-            // エラー後も一応初期画面に戻る（あるいはリトライさせるか要検討だが、一旦戻る）
-            setAppState("consent");
+            // エラー後も完了画面へ
+            setAppState("completed");
           });
-      } catch (e) {
-        console.error("Error in submission flow:", e);
+      } catch (error) {
+        console.error("Unexpected error during submission:", error);
       }
     },
-    [allLogs, participantId, lang, preSurveyData]
+    [lang, participantId, allLogs, preSurveyData, systemInfo]
   );
 
   return (
@@ -709,6 +659,49 @@ export default function App() {
           onComplete={handlePostSurveyComplete}
         />
       )}
+
+      <AnimatePresence>
+        {appState === "completed" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center p-8 text-center"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="max-w-2xl w-full"
+            >
+              <div className="text-6xl mb-6">🎉</div>
+              <h1 className="text-4xl font-black text-gray-800 mb-6">
+                {t(lang, "completionTitle")}
+              </h1>
+              <p
+                className="text-xl text-gray-600 mb-12 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: t(lang, "completionMessage") }}
+              />
+
+              <div className="flex flex-col items-center gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.close()}
+                  className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-full font-bold text-xl shadow-xl hover:shadow-2xl transition-all"
+                >
+                  {t(lang, "completionClose")}
+                </motion.button>
+                <p className="text-sm text-gray-400 mt-4">
+                  {lang === "ja"
+                    ? "※ボタンを押しても閉じない場合は、ブラウザの×ボタンで閉じてください"
+                    : "* If the button doesn't work, please close the tab manually"}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {appState === "ready" && (

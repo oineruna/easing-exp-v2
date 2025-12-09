@@ -281,7 +281,7 @@ export function PreSurveyOverlay({
                                   w-10 h-10 rounded-lg font-bold text-base transition-all flex items-center justify-center
                                   ${preferences[demo.name] === value
                                     ? "bg-gradient-to-b from-purple-500 to-pink-500 text-white shadow-md scale-105 border-0"
-                                    : "bg-white text-gray-700 hover:bg-blue-50 border-2 border-gray-300 hover:border-blue-300"
+                                    : "bg-white text-gray-700 hover:bg-purple-50 border-2 border-gray-300 hover:border-purple-300"
                                   }
                                 `}
                               >

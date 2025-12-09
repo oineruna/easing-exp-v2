@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Clarified Bath vs Body)",
+    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Snacks Fixed / Towels Fixed)",
     "structure": "Root(5) > Sub(2) > SubSub(2) > Items(5)"
   },
   "categories": [
@@ -436,27 +436,27 @@
           "name": "Snacks",
           "subcategories": [
             {
-              "name": "Savory Snacks",
+              "name": "Salty Snacks",
               "subcategories": [
                 {
-                  "name": "Tortilla Chips"
+                  "name": "Potato Chips"
                 },
                 {
                   "name": "Popcorn"
                 },
                 {
-                  "name": "Mixed Nuts"
+                  "name": "Tortilla Chips"
                 },
                 {
                   "name": "Pretzels"
                 },
                 {
-                  "name": "Potato Chips"
+                  "name": "Crackers"
                 }
               ]
             },
             {
-              "name": "Sweets",
+              "name": "Sweet Treats",
               "subcategories": [
                 {
                   "name": "Chocolate"

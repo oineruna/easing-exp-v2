@@ -1,0 +1,1372 @@
+{
+  "metadata": {
+    "participantId": "3718",
+    "experimentDate": "2025-12-09T13:33:44.798Z",
+    "averageFps": 144
+  },
+  "taskResults": [
+    {
+      "taskOverview": {
+        "taskIndex": 1,
+        "targetItem": "茶碗",
+        "optimalPath": [
+          "ホーム・キッチン",
+          "キッチン用品",
+          "食器類",
+          "茶碗"
+        ],
+        "easingFunction": "easeInOutExpo",
+        "totalTimeSec": 7.92989999999851,
+        "firstClickDelaySec": 0.0023535,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ホーム・キッチン",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "キッチン用品",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 3.1585
+        },
+        {
+          "step": 2,
+          "action": "食器類",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 0.9593999999985099
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ホーム・キッチン",
+          "キッチン用品",
+          "食器類"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 906,
+        "jitteriness": 15.831,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "4",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 2,
+        "targetItem": "マシュマロ",
+        "optimalPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スイーツ",
+          "マシュマロ"
+        ],
+        "easingFunction": "linear",
+        "totalTimeSec": 8.80830000000447,
+        "firstClickDelaySec": 0.0012542000000029803,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "お菓子・スナック",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.7906999999955298
+        },
+        {
+          "step": 2,
+          "action": "スナック菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.5881000000014902
+        },
+        {
+          "step": 3,
+          "action": "スイーツ",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.7892000000029802
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スナック菓子",
+          "スイーツ"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1041,
+        "jitteriness": 32.586,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "4",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 3,
+        "targetItem": "キーボード",
+        "optimalPath": [
+          "エレクトロニクス",
+          "PC周辺機器",
+          "入力デバイス",
+          "キーボード"
+        ],
+        "easingFunction": "easeInOutExpo",
+        "totalTimeSec": 6.709599999994039,
+        "firstClickDelaySec": 0.0013470999999940397,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "エレクトロニクス",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "オーディオ機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.12410000000149
+        },
+        {
+          "step": 2,
+          "action": "PC周辺機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.0708999999985098
+        },
+        {
+          "step": 3,
+          "action": "入力デバイス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.8754000000059605
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "PC周辺機器",
+          "入力デバイス"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 951,
+        "jitteriness": 20.803,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 4,
+        "targetItem": "リップクリーム",
+        "optimalPath": [
+          "ビューティー",
+          "スキンケア",
+          "フェイスケア",
+          "リップクリーム"
+        ],
+        "easingFunction": "easeInOutQuint",
+        "totalTimeSec": 5.83260000000149,
+        "firstClickDelaySec": 0.0021482000000029805,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ビューティー",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "スキンケア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.3806999999955296
+        },
+        {
+          "step": 2,
+          "action": "フェイスケア",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.2152000000029803
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ビューティー",
+          "スキンケア",
+          "フェイスケア"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 843,
+        "jitteriness": 9.762,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 5,
+        "targetItem": "ワンピース",
+        "optimalPath": [
+          "ファッション",
+          "レディースウェア",
+          "トップス",
+          "ワンピース"
+        ],
+        "easingFunction": "easeInOutQuad",
+        "totalTimeSec": 5.71,
+        "firstClickDelaySec": 0.0014706999999955297,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "レディースウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.7005
+        },
+        {
+          "step": 2,
+          "action": "トップス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.325
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "レディースウェア",
+          "トップス"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1036,
+        "jitteriness": 9.963,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 6,
+        "targetItem": "紳士用手袋",
+        "optimalPath": [
+          "ファッション",
+          "メンズウェア",
+          "防寒・小物",
+          "紳士用手袋"
+        ],
+        "easingFunction": "easeInOutQuad",
+        "totalTimeSec": 5.518700000002981,
+        "firstClickDelaySec": 0.0013652000000029803,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "メンズウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.125
+        },
+        {
+          "step": 2,
+          "action": "防寒・小物",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.2880999999940395
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "メンズウェア",
+          "防寒・小物"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1091,
+        "jitteriness": 15.287,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 7,
+        "targetItem": "USBハブ",
+        "optimalPath": [
+          "エレクトロニクス",
+          "PC周辺機器",
+          "入力デバイス",
+          "USBハブ"
+        ],
+        "easingFunction": "easeInOutExpo",
+        "totalTimeSec": 15.523899999998509,
+        "firstClickDelaySec": 0.0015387999999970196,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "エレクトロニクス",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "オーディオ機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.7536000000014901
+        },
+        {
+          "step": 2,
+          "action": "PC周辺機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 2.01039999999851
+        },
+        {
+          "step": 3,
+          "action": "記録メディア",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.2041000000014903
+        },
+        {
+          "step": 4,
+          "action": "入力デバイス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 5.4377999999970195
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "PC周辺機器",
+          "記録メディア",
+          "入力デバイス"
+        ],
+        "errorCount": 2,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 0.8,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1830,
+        "jitteriness": 43.51,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "2",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 8,
+        "targetItem": "メンズTシャツ",
+        "optimalPath": [
+          "ファッション",
+          "メンズウェア",
+          "トップス",
+          "メンズTシャツ"
+        ],
+        "easingFunction": "easeInOutExpo",
+        "totalTimeSec": 4.94169999999553,
+        "firstClickDelaySec": 0.0013505000000000001,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "メンズウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.8236999999955297
+        },
+        {
+          "step": 2,
+          "action": "トップス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.0116000000014902
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "メンズウェア",
+          "トップス"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 976,
+        "jitteriness": 9.941,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "4",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 9,
+        "targetItem": "ヘアトリートメント",
+        "optimalPath": [
+          "ビューティー",
+          "ヘアケア",
+          "シャンプー類",
+          "ヘアトリートメント"
+        ],
+        "easingFunction": "easeInOutQuint",
+        "totalTimeSec": 7.63519999999553,
+        "firstClickDelaySec": 0.0019965,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ホーム・キッチン",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "ビューティー",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 1.3621999999955297
+        },
+        {
+          "step": 2,
+          "action": "ヘアケア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.455
+        },
+        {
+          "step": 3,
+          "action": "シャンプー類",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.125
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ホーム・キッチン",
+          "ビューティー",
+          "ヘアケア",
+          "シャンプー類"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 918,
+        "jitteriness": 17.44,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 10,
+        "targetItem": "緑茶葉",
+        "optimalPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "コーヒー・お茶",
+          "緑茶葉"
+        ],
+        "easingFunction": "linear",
+        "totalTimeSec": 9.11069999999553,
+        "firstClickDelaySec": 0.0023276999999955294,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "ドリンク",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 2.7873000000044703
+        },
+        {
+          "step": 2,
+          "action": "コーヒー・お茶",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.6647999999970198
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "コーヒー・お茶"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1227,
+        "jitteriness": 20.227,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 11,
+        "targetItem": "ミックスナッツ",
+        "optimalPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スナック菓子",
+          "ミックスナッツ"
+        ],
+        "easingFunction": "easeInOutQuad",
+        "totalTimeSec": 5.35839999999851,
+        "firstClickDelaySec": 0.0016937000000029803,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "お菓子・スナック",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.1555
+        },
+        {
+          "step": 2,
+          "action": "スナック菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.3215999999940395
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スナック菓子"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 806,
+        "jitteriness": 15.327,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "4",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 12,
+        "targetItem": "紅茶ティーバッグ",
+        "optimalPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "コーヒー・お茶",
+          "紅茶ティーバッグ"
+        ],
+        "easingFunction": "easeInOutBack",
+        "totalTimeSec": 8.9565,
+        "firstClickDelaySec": 0.00239039999999851,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "ドリンク",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.9819000000059604
+        },
+        {
+          "step": 2,
+          "action": "ソフトドリンク",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.737
+        },
+        {
+          "step": 3,
+          "action": "コーヒー・お茶",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.02929999999702
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "ソフトドリンク",
+          "コーヒー・お茶"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1028,
+        "jitteriness": 28.777,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "1",
+        "animationDifferenceRating": "1",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 13,
+        "targetItem": "インスタントコーヒー",
+        "optimalPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "コーヒー・お茶",
+          "インスタントコーヒー"
+        ],
+        "easingFunction": "easeInOutBack",
+        "totalTimeSec": 6.37720000000298,
+        "firstClickDelaySec": 0.0012962000000029802,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "ドリンク",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.4112999999970197
+        },
+        {
+          "step": 2,
+          "action": "ソフトドリンク",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.13239999999851
+        },
+        {
+          "step": 3,
+          "action": "コーヒー・お茶",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.415
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "ドリンク",
+          "ソフトドリンク",
+          "コーヒー・お茶"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1096,
+        "jitteriness": 25.453,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "4",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 14,
+        "targetItem": "掛け布団カバー",
+        "optimalPath": [
+          "ホーム・キッチン",
+          "寝具・バス用品",
+          "寝具",
+          "掛け布団カバー"
+        ],
+        "easingFunction": "linear",
+        "totalTimeSec": 8.26639999999851,
+        "firstClickDelaySec": 0.0020583000000044703,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ホーム・キッチン",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "寝具・バス用品",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 2.0991999999955295
+        },
+        {
+          "step": 2,
+          "action": "寝具",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.6027000000029803
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ホーム・キッチン",
+          "寝具・バス用品",
+          "寝具"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 891,
+        "jitteriness": 24.794,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 15,
+        "targetItem": "PC用スピーカー",
+        "optimalPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "スピーカー",
+          "PC用スピーカー"
+        ],
+        "easingFunction": "easeInOutBack",
+        "totalTimeSec": 8.1805,
+        "firstClickDelaySec": 0.00207839999999851,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "エレクトロニクス",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "オーディオ機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 2.8343000000044705
+        },
+        {
+          "step": 2,
+          "action": "スピーカー",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.42260000000149
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "スピーカー"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1112,
+        "jitteriness": 21.005,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 16,
+        "targetItem": "ノイズキャンセリングヘッドホン",
+        "optimalPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "ヘッドホン・イヤホン",
+          "ノイズキャンセリングヘッドホン"
+        ],
+        "easingFunction": "easeInOutQuint",
+        "totalTimeSec": 5.85389999999851,
+        "firstClickDelaySec": 0.0014197999999970197,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "エレクトロニクス",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "オーディオ機器",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.1899000000059605
+        },
+        {
+          "step": 2,
+          "action": "ヘッドホン・イヤホン",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.1920999999940396
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "エレクトロニクス",
+          "オーディオ機器",
+          "ヘッドホン・イヤホン"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 979,
+        "jitteriness": 12.002,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 17,
+        "targetItem": "メンズ用レザーベルト",
+        "optimalPath": [
+          "ファッション",
+          "メンズウェア",
+          "防寒・小物",
+          "メンズ用レザーベルト"
+        ],
+        "easingFunction": "easeInOutQuad",
+        "totalTimeSec": 5.87189999999851,
+        "firstClickDelaySec": 0.0015408000000044703,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "メンズウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 1.3951999999955296
+        },
+        {
+          "step": 2,
+          "action": "防寒・小物",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.50689999999851
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "メンズウェア",
+          "防寒・小物"
+        ],
+        "errorCount": 0,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1.333,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1042,
+        "jitteriness": 19.648,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "4",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "2",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 18,
+        "targetItem": "レディースセーター",
+        "optimalPath": [
+          "ファッション",
+          "レディースウェア",
+          "トップス",
+          "レディースセーター"
+        ],
+        "easingFunction": "easeInOutQuint",
+        "totalTimeSec": 6.7635,
+        "firstClickDelaySec": 0.00155139999999851,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "レディースウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.7761999999955297
+        },
+        {
+          "step": 2,
+          "action": "防寒・小物",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.099
+        },
+        {
+          "step": 3,
+          "action": "トップス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.1612000000029803
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "レディースウェア",
+          "防寒・小物",
+          "トップス"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1387,
+        "jitteriness": 17.502,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "4",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 19,
+        "targetItem": "キャンディ・飴",
+        "optimalPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スイーツ",
+          "キャンディ・飴"
+        ],
+        "easingFunction": "linear",
+        "totalTimeSec": 6.7905,
+        "firstClickDelaySec": 0.0013160999999940394,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "食品・ドリンク",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "お菓子・スナック",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.9352000000029802
+        },
+        {
+          "step": 2,
+          "action": "スナック菓子",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.458
+        },
+        {
+          "step": 3,
+          "action": "スイーツ",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 0.921
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "食品・ドリンク",
+          "お菓子・スナック",
+          "スナック菓子",
+          "スイーツ"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 840,
+        "jitteriness": 13.726,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "3",
+        "taskDifficultyRating": "2",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    },
+    {
+      "taskOverview": {
+        "taskIndex": 20,
+        "targetItem": "メンズポロシャツ",
+        "optimalPath": [
+          "ファッション",
+          "メンズウェア",
+          "トップス",
+          "メンズポロシャツ"
+        ],
+        "easingFunction": "easeInOutBack",
+        "totalTimeSec": 8.28020000000298,
+        "firstClickDelaySec": 0.0013732000000029802,
+        "success": true
+      },
+      "navigationPath": [
+        {
+          "step": 0,
+          "action": "ファッション",
+          "depth": 0,
+          "duringAnimation": false,
+          "stayTime": 0
+        },
+        {
+          "step": 1,
+          "action": "メンズウェア",
+          "depth": 1,
+          "duringAnimation": false,
+          "stayTime": 0.7855999999940395
+        },
+        {
+          "step": 2,
+          "action": "防寒・小物",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 1.4149000000059604
+        },
+        {
+          "step": 3,
+          "action": "トップス",
+          "depth": 2,
+          "duringAnimation": false,
+          "stayTime": 2.58139999999851
+        }
+      ],
+      "performance": {
+        "actualPath": [
+          "ファッション",
+          "メンズウェア",
+          "防寒・小物",
+          "トップス"
+        ],
+        "errorCount": 1,
+        "menuTravelDistance": 0,
+        "pathEfficiency": 1,
+        "timedOut": false,
+        "animationClickCount": 0,
+        "animationErrorCount": 0,
+        "mouseDistance": 1723,
+        "jitteriness": 28.733,
+        "overshootCount": 0,
+        "frustrationCount": 0
+      },
+      "userFeedback": {
+        "animationEaseRating": "2",
+        "taskDifficultyRating": "3",
+        "animationDifferenceRating": "3",
+        "comments": ""
+      }
+    }
+  ],
+  "preSurvey": {
+    "preferences": {
+      "easeInOutQuad": 3,
+      "easeInOutQuint": 2,
+      "easeInOutExpo": 2,
+      "easeInOutBack": 4,
+      "linear": 4
+    },
+    "ranking": [
+      "linear",
+      "easeInOutQuad",
+      "easeInOutBack",
+      "easeInOutQuint",
+      "easeInOutExpo"
+    ],
+    "preferenceType": "other",
+    "comments": ""
+  },
+  "postSurvey": {
+    "noticeDifference": "はい",
+    "usabilityImpact": [
+      "操作のスピードが下がった（遅くなった）",
+      "どこを操作すればいいか分かりにくくなった",
+      "ストレスが増えた"
+    ],
+    "usabilityImpactOther": "",
+    "bestFeature": "弾むような動き",
+    "bestFeatureOther": "",
+    "worstFeature": "素早く動く",
+    "worstFeatureOther": "",
+    "improvements": ""
+  },
+  "systemInfo": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "screenInfo": {
+      "width": 2560,
+      "height": 1440,
+      "availWidth": 2560,
+      "availHeight": 1440,
+      "colorDepth": 24,
+      "pixelRatio": 1
+    }
+  }
+}

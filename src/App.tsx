@@ -78,7 +78,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("tutorial-complete"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("tutorial"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ
@@ -269,7 +269,7 @@ export default function App() {
   // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
     (itemName: string, _isCorrect: boolean, _depth: number, isLeaf: boolean) => {
-      const targetItem = lang === "en" ? "Dome Tent for 4 People" : "ドーム型テント 4人用";
+      const targetItem = lang === "en" ? "Frying Pan" : "フライパン";
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
@@ -893,8 +893,8 @@ export default function App() {
                             ? `Find "${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}"`
                             : `「${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}」を探してクリックしてください`
                           : lang === "en"
-                            ? "Find 'Dome Tent for 4 People'"
-                            : "「ドーム型テント 4人用」を探してクリックしてください"}
+                            ? "Find 'Frying Pan'"
+                            : "「フライパン」を探してクリックしてください"}
                       </div>
                     </div>
                   </div>

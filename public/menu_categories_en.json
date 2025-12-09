@@ -1,98 +1,193 @@
 {
   "meta": {
-    "description": "Dataset for easing function comparison experiment",
+    "description": "Dataset for Easing Experiment (English: Culturally Neutral)",
     "structure_depth": 4,
-    "items_per_category": "5-8 (uniform distribution)"
+    "items_per_category": "5"
   },
   "categories": [
     {
-      "name": "Electronics & PCs",
+      "name": "Fashion",
       "subcategories": [
         {
-          "name": "Personal Computers",
+          "name": "Women's",
           "subcategories": [
             {
-              "name": "Notebook PCs",
+              "name": "Tops",
               "subcategories": [
                 {
-                  "name": "13-inch Lightweight Mobile Notebook"
+                  "name": "T-Shirt"
                 },
                 {
-                  "name": "15-inch Standard Notebook"
+                  "name": "Blouse"
                 },
                 {
-                  "name": "Gaming Notebook with RTX"
+                  "name": "Sweater"
                 },
                 {
-                  "name": "2-in-1 Tablet PC"
+                  "name": "Hoodie"
                 },
                 {
-                  "name": "4K Model for Creators"
+                  "name": "Cardigan"
                 }
               ]
             },
             {
-              "name": "Desktop PCs",
+              "name": "Bags",
               "subcategories": [
                 {
-                  "name": "Tower Gaming PC"
+                  "name": "Shoulder Bag"
                 },
                 {
-                  "name": "Space-saving Slim PC"
+                  "name": "Tote Bag"
                 },
                 {
-                  "name": "All-in-one with LCD"
+                  "name": "Backpack"
                 },
                 {
-                  "name": "Mini PC (NUC)"
+                  "name": "Handbag"
                 },
                 {
-                  "name": "Workstation"
+                  "name": "Clutch Bag"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Smartphones",
+          "name": "Men's",
           "subcategories": [
             {
-              "name": "iPhone Related",
+              "name": "Outerwear",
               "subcategories": [
                 {
-                  "name": "iPhone 15 Pro Max"
+                  "name": "Down Jacket"
                 },
                 {
-                  "name": "iPhone 15 Standard Model"
+                  "name": "Trench Coat"
                 },
                 {
-                  "name": "iPhone SE (3rd Gen)"
+                  "name": "Leather Jacket"
                 },
                 {
-                  "name": "MagSafe Charger"
+                  "name": "Denim Jacket"
                 },
                 {
-                  "name": "Lightning Cable"
+                  "name": "Raincoat"
                 }
               ]
             },
             {
-              "name": "Android Related",
+              "name": "Accessories",
               "subcategories": [
                 {
-                  "name": "Galaxy S Series"
+                  "name": "Wristwatch"
                 },
                 {
-                  "name": "Pixel Pro Series"
+                  "name": "Sunglasses"
                 },
                 {
-                  "name": "Xperia 1 Series"
+                  "name": "Leather Belt"
                 },
                 {
-                  "name": "SIM-Free Entry Model"
+                  "name": "Scarf"
                 },
                 {
-                  "name": "Type-C Rapid Charger Adapter"
+                  "name": "Cap"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electronics",
+      "subcategories": [
+        {
+          "name": "Audio",
+          "subcategories": [
+            {
+              "name": "Headphones",
+              "subcategories": [
+                {
+                  "name": "Wireless Earbuds"
+                },
+                {
+                  "name": "Noise Cancelling"
+                },
+                {
+                  "name": "Gaming Headset"
+                },
+                {
+                  "name": "Sports Earphones"
+                },
+                {
+                  "name": "Wired Earphones"
+                }
+              ]
+            },
+            {
+              "name": "Speakers",
+              "subcategories": [
+                {
+                  "name": "Bluetooth Speaker"
+                },
+                {
+                  "name": "Soundbar"
+                },
+                {
+                  "name": "Smart Speaker"
+                },
+                {
+                  "name": "PC Speaker"
+                },
+                {
+                  "name": "Portable Speaker"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Computer Accessories",
+          "subcategories": [
+            {
+              "name": "Input Devices",
+              "subcategories": [
+                {
+                  "name": "Wireless Mouse"
+                },
+                {
+                  "name": "Keyboard"
+                },
+                {
+                  "name": "Webcam"
+                },
+                {
+                  "name": "Mouse Pad"
+                },
+                {
+                  "name": "USB Hub"
+                }
+              ]
+            },
+            {
+              "name": "Storage",
+              "subcategories": [
+                {
+                  "name": "USB Flash Drive"
+                },
+                {
+                  "name": "External HDD"
+                },
+                {
+                  "name": "External SSD"
+                },
+                {
+                  "name": "SD Card"
+                },
+                {
+                  "name": "microSD Card"
                 }
               ]
             }
@@ -104,90 +199,90 @@
       "name": "Home & Kitchen",
       "subcategories": [
         {
-          "name": "Cooking Appliances",
+          "name": "Kitchenware",
           "subcategories": [
             {
-              "name": "Rice Cookers & Microwaves",
+              "name": "Cookware",
               "subcategories": [
                 {
-                  "name": "Pressure IH Rice Cooker (5.5 cups)"
+                  "name": "Frying Pan"
                 },
                 {
-                  "name": "Steam Oven Microwave"
+                  "name": "Saucepan"
                 },
                 {
-                  "name": "Simple Microwave"
+                  "name": "Kitchen Knife"
                 },
                 {
-                  "name": "Electric Pressure Cooker"
+                  "name": "Cutting Board"
                 },
                 {
-                  "name": "Home Bakery Machine"
+                  "name": "Measuring Cup"
                 }
               ]
             },
             {
-              "name": "Coffee Makers",
+              "name": "Tableware",
               "subcategories": [
                 {
-                  "name": "Fully Automatic Espresso Machine"
+                  "name": "Mug"
                 },
                 {
-                  "name": "Capsule Coffee Maker"
+                  "name": "Dinner Plate"
                 },
                 {
-                  "name": "Drip Coffee Maker"
+                  "name": "Bowl"
                 },
                 {
-                  "name": "Electric Coffee Mill"
+                  "name": "Fork & Spoon"
                 },
                 {
-                  "name": "Milk Frother"
+                  "name": "Glass Cup"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Bedding & Beds",
+          "name": "Bedding & Bath",
           "subcategories": [
             {
-              "name": "Futons & Pillows",
+              "name": "Bedding",
               "subcategories": [
                 {
-                  "name": "High Resilience Mattress (Single)"
+                  "name": "Pillow"
                 },
                 {
-                  "name": "Down Comforter (Double Size)"
+                  "name": "Bed Sheet"
                 },
                 {
-                  "name": "Low Resilience Pillow"
+                  "name": "Duvet Cover"
                 },
                 {
-                  "name": "Cool Feeling Mattress Pad"
+                  "name": "Mattress"
                 },
                 {
-                  "name": "Dehumidifying Sheet"
+                  "name": "Blanket"
                 }
               ]
             },
             {
-              "name": "Bed Frames",
+              "name": "Bath",
               "subcategories": [
                 {
-                  "name": "Wooden Bed with Storage"
+                  "name": "Bath Towel"
                 },
                 {
-                  "name": "Pipe Bed (Single)"
+                  "name": "Face Towel"
                 },
                 {
-                  "name": "Folding Slatted Bed"
+                  "name": "Bath Mat"
                 },
                 {
-                  "name": "Loft Bed"
+                  "name": "Shower Curtain"
                 },
                 {
-                  "name": "Mattress with Legs"
+                  "name": "Bathrobe"
                 }
               ]
             }
@@ -196,93 +291,93 @@
       ]
     },
     {
-      "name": "Sports & Outdoors",
+      "name": "Beauty",
       "subcategories": [
         {
-          "name": "Camping Goods",
+          "name": "Skincare",
           "subcategories": [
             {
-              "name": "Tents & Tarps",
+              "name": "Face Care",
               "subcategories": [
                 {
-                  "name": "Dome Tent for 4 People"
+                  "name": "Face Wash"
                 },
                 {
-                  "name": "One-pole Tent"
+                  "name": "Toner"
                 },
                 {
-                  "name": "Hexa Tarp"
+                  "name": "Moisturizer"
                 },
                 {
-                  "name": "Pop-up Tent"
+                  "name": "Sunscreen"
                 },
                 {
-                  "name": "Peg & Hammer Set"
+                  "name": "Lip Balm"
                 }
               ]
             },
             {
-              "name": "Cooking & Bonfire",
+              "name": "Body Care",
               "subcategories": [
                 {
-                  "name": "Stainless Bonfire Stand"
+                  "name": "Body Soap"
                 },
                 {
-                  "name": "10-inch Dutch Oven"
+                  "name": "Hand Cream"
                 },
                 {
-                  "name": "Gas Burner Stove"
+                  "name": "Body Lotion"
                 },
                 {
-                  "name": "Outdoor Cooker"
+                  "name": "Bath Salt"
                 },
                 {
-                  "name": "50L Cooler Box"
+                  "name": "Hand Soap"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Fitness",
+          "name": "Hair Care",
           "subcategories": [
             {
-              "name": "Training Equipment",
+              "name": "Shampoo & Treatment",
               "subcategories": [
                 {
-                  "name": "Adjustable Dumbbells (20kg)"
+                  "name": "Shampoo"
                 },
                 {
-                  "name": "Thick Yoga Mat (10mm)"
+                  "name": "Conditioner"
                 },
                 {
-                  "name": "Ab Roller"
+                  "name": "Hair Oil"
                 },
                 {
-                  "name": "Pull-up Machine"
+                  "name": "Hair Mask"
                 },
                 {
-                  "name": "Balance Ball (65cm)"
+                  "name": "Scalp Tonic"
                 }
               ]
             },
             {
-              "name": "Running",
+              "name": "Styling",
               "subcategories": [
                 {
-                  "name": "Men's Running Shoes"
+                  "name": "Hair Dryer"
                 },
                 {
-                  "name": "GPS Running Watch"
+                  "name": "Curling Iron"
                 },
                 {
-                  "name": "Sports Tights"
+                  "name": "Hair Wax"
                 },
                 {
-                  "name": "Waist Pouch"
+                  "name": "Hair Spray"
                 },
                 {
-                  "name": "Hydration Bottle"
+                  "name": "Hair Brush"
                 }
               ]
             }
@@ -291,188 +386,93 @@
       ]
     },
     {
-      "name": "Books & Comics",
+      "name": "Food & Drink",
       "subcategories": [
         {
-          "name": "Business & Economy",
+          "name": "Beverages",
           "subcategories": [
             {
-              "name": "Self-improvement",
+              "name": "Coffee & Tea",
               "subcategories": [
                 {
-                  "name": "Complete Guide to Time Management"
+                  "name": "Coffee Beans"
                 },
                 {
-                  "name": "Leadership Textbook"
+                  "name": "Tea Bags"
                 },
                 {
-                  "name": "Introduction to Speaking & Presentation"
+                  "name": "Instant Coffee"
                 },
                 {
-                  "name": "Motivation Revolution"
+                  "name": "Green Tea"
                 },
                 {
-                  "name": "Techniques for Habit Formation"
+                  "name": "Herbal Tea"
                 }
               ]
             },
-            {
-              "name": "Finance & Investment",
-              "subcategories": [
-                {
-                  "name": "Basics of Stock Investment"
-                },
-                {
-                  "name": "Introduction to FX Chart Analysis"
-                },
-                {
-                  "name": "Textbook of Real Estate Investment"
-                },
-                {
-                  "name": "Finance Theory"
-                },
-                {
-                  "name": "Company Handbook Latest Edition"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Comics",
-          "subcategories": [
-            {
-              "name": "Boys' Comics",
-              "subcategories": [
-                {
-                  "name": "Adventure Fantasy Vol.1"
-                },
-                {
-                  "name": "Sports Youth Manga Vol.1"
-                },
-                {
-                  "name": "Battle Action Vol.1"
-                },
-                {
-                  "name": "School Comedy Vol.1"
-                },
-                {
-                  "name": "Sci-fi Robot Manga Vol.1"
-                }
-              ]
-            },
-            {
-              "name": "Men's Comics",
-              "subcategories": [
-                {
-                  "name": "Historical Drama Manga Vol.1"
-                },
-                {
-                  "name": "Suspense Mystery Vol.1"
-                },
-                {
-                  "name": "Business Success Story Vol.1"
-                },
-                {
-                  "name": "Gourmet Cooking Manga Vol.1"
-                },
-                {
-                  "name": "Outlaw Manga Vol.1"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Food & Drinks",
-      "subcategories": [
-        {
-          "name": "Beverages & Alcohol",
-          "subcategories": [
             {
               "name": "Soft Drinks",
               "subcategories": [
                 {
-                  "name": "Mineral Water 2L x6"
+                  "name": "Mineral Water"
                 },
                 {
-                  "name": "Unsweetened Sparkling Water 500ml x24"
+                  "name": "Orange Juice"
                 },
                 {
-                  "name": "100% Orange Juice"
+                  "name": "Cola"
                 },
                 {
-                  "name": "Specified Health Food Tea"
+                  "name": "Sparkling Water"
                 },
                 {
-                  "name": "Vegetable Juice Case"
-                }
-              ]
-            },
-            {
-              "name": "Alcohol",
-              "subcategories": [
-                {
-                  "name": "Premium Beer 350ml"
-                },
-                {
-                  "name": "Junmai Daiginjo 720ml"
-                },
-                {
-                  "name": "Full-bodied Red Wine"
-                },
-                {
-                  "name": "Whisky 12-year Aged"
-                },
-                {
-                  "name": "Sweet Potato Shochu 1.8L"
+                  "name": "Energy Drink"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Sweets",
+          "name": "Snacks",
           "subcategories": [
             {
-              "name": "Western Sweets",
+              "name": "Sweets",
               "subcategories": [
                 {
-                  "name": "Premium Chocolate Assortment"
+                  "name": "Chocolate"
                 },
                 {
-                  "name": "Cheesecake Whole"
+                  "name": "Cookies"
                 },
                 {
-                  "name": "Madeleine Gift Set"
+                  "name": "Gummy Candy"
                 },
                 {
-                  "name": "Fruit Jelly"
+                  "name": "Hard Candy"
                 },
                 {
-                  "name": "Baumkuchen"
+                  "name": "Marshmallow"
                 }
               ]
             },
             {
-              "name": "Japanese Sweets",
+              "name": "Salty Snacks",
               "subcategories": [
                 {
-                  "name": "Yokan Assortment"
+                  "name": "Potato Chips"
                 },
                 {
-                  "name": "Kasutera (Castella) 1 loaf"
+                  "name": "Popcorn"
                 },
                 {
-                  "name": "Dorayaki (10 pieces)"
+                  "name": "Mixed Nuts"
                 },
                 {
-                  "name": "Daifuku (6-piece set)"
+                  "name": "Crackers"
                 },
                 {
-                  "name": "Karinto Gift"
+                  "name": "Pretzels"
                 }
               ]
             }

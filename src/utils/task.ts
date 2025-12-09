@@ -118,7 +118,7 @@ export const generateTaskSequence = (
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
   const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
-  const TRIALS_PER_EASING = 1; // 1つのイージングにつき4回試行
+  const TRIALS_PER_EASING = 4; // 1つのイージングにつき4回試行
   const POSITIONS = [1, 2, 3, 4]; // 使用するポジション（0=一番上を除外）
 
   // シード付き乱数生成器 (Linear Congruential Generator)

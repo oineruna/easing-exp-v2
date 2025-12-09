@@ -128,7 +128,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               <AnimatePresence>
                 {hasSub && isActive && (
                   <motion.div
-                    initial={isMobile ? { height: 0, opacity: 0 } : { opacity: 0, x: -10 }}
+                    initial={isMobile ? { height: 0, opacity: 0 } : { opacity: 0, x: -30 }}
                     animate={isMobile ? { height: "auto", opacity: 1 } : { opacity: 1, x: 0 }}
                     exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{

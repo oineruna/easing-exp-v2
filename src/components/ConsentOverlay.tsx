@@ -127,12 +127,17 @@ export function ConsentOverlay({
               className="mb-6 text-center"
             >
               <a
-                href="https://mailkyutechjp-my.sharepoint.com/:w:/g/personal/tsunemori_shunsei127_mail_kyutech_jp/EY_yH9h79CRHsyEYN3SF4U0B-NvzqNC0rJJBuuQbfLgMNA?e=X8G2vm"
+                href={lang === "ja"
+                  ? "https://drive.google.com/file/d/1mtJBvmNhzrVmi68tWLZPQhHrPwWm_wt3/view?usp=sharing"
+                  : "https://drive.google.com/file/d/1ftXYfVuFyssO4N_JSQW1dlzrM1lO_82W/view?usp=sharing"
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 underline font-bold text-lg flex items-center justify-center gap-2"
               >
-                <span>📄</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
                 {t(lang, "consentLinkText")}
               </a>
             </motion.div>

@@ -49,7 +49,7 @@ export const TEXT = {
     startTutorial: "チュートリアル開始",
     tutorialLabel: "チュートリアル",
     tutorialIntroText:
-      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br />制限時間は1タスク当たり15秒です。",
+      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br /><span class='text-red-600 font-bold'>※ できるだけ早くクリアしてください。</span><br />制限時間は1タスク当たり15秒です。",
     tutorialIntroClose: "チュートリアル開始",
     tutorialInfo: (item: string) =>
       `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,
@@ -166,9 +166,9 @@ export const TEXT = {
     preSurveyTitle: "事前アンケート",
     preSurveyIntro:
       "これから5種類のアニメーションをお見せします。各アニメーションを見て、あなたの好みを評価してください。",
-    preSurveyNote: "※ この情報は実験データの分析に使用されます",
+    preSurveyNote: "※ この情報は実験データの分析にのみ使用されます",
     preSurveyStart: "開始する",
-    preSurveyDemoTitle: "あなたの感覚に最も近い評価を選んでください",
+    preSurveyDemoTitle: "あなたの感覚に最も近い評価を選んでください（不快-快適）",
     preSurveyPreference: "操作感",
     preSurveyLow: "不快",
     preSurveyHigh: "快適",
@@ -337,9 +337,9 @@ export const TEXT = {
     preSurveyTitle: "Pre-Survey",
     preSurveyIntro:
       "We will show you 5 types of animations. Please rate each animation based on your preference.",
-    preSurveyNote: "※ This information will be used for data analysis",
+    preSurveyNote: "※ This information will be used for data analysis only",
     preSurveyStart: "Start",
-    preSurveyDemoTitle: "Rate Each Animation based on your preference",
+    preSurveyDemoTitle: "Rate Each Animation based on your preference(Unpleasant - Pleasant)",
     preSurveyPreference: "Preference",
     preSurveyLow: "Low",
     preSurveyHigh: "High",

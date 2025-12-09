@@ -62,7 +62,7 @@ export function PreSurveyOverlay({
 }: PreSurveyOverlayProps) {
   // 現在のステップ管理
   const [currentStep, setCurrentStep] = useState<
-    "intro" | "demo" | "ranking" | "comments"
+    "intro" | "demo" | "ranking"
   >("intro");
 
   // 各イージングへの評価値 (1-5)
@@ -73,8 +73,8 @@ export function PreSurveyOverlay({
   // 好みの順位付けリスト
   const [ranking, setRanking] = useState<EasingFunction[]>([]);
 
-  // 自由記述コメント
-  const [comments, setComments] = useState("");
+  // 自由記述コメント（削除済み - 空文字列で保持）
+  const comments = "";
 
   // ドラッグ＆ドロップ用の状態
   const [draggedItem, setDraggedItem] = useState<EasingFunction | null>(null);
@@ -378,36 +378,6 @@ export function PreSurveyOverlay({
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setCurrentStep("comments")}
-                    className="px-10 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg shadow-lg"
-                  >
-                    {t(lang, "preSurveyNext")} →
-                  </motion.button>
-                </div>
-              </div>
-            )}
-
-            {/* ステップ4: 自由記述コメント */}
-            {currentStep === "comments" && (
-              <div>
-                <h2 className="text-2xl font-black mb-4 text-center gradient-text">
-                  {t(lang, "preSurveyCommentTitle")}
-                </h2>
-
-                <div className="bg-white/60 rounded-2xl p-4 mb-5">
-                  <textarea
-                    value={comments}
-                    onChange={(e) => setComments(e.target.value)}
-                    rows={4}
-                    placeholder={t(lang, "preSurveyCommentPlaceholder")}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg text-sm resize-vertical focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white/80"
-                  />
-                </div>
-
-                <div className="text-center">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                     onClick={handleSubmit}
                     className="px-10 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg"
                   >
@@ -416,6 +386,8 @@ export function PreSurveyOverlay({
                 </div>
               </div>
             )}
+
+
           </motion.div>
         </motion.div>
       )}

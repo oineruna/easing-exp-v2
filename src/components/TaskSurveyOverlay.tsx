@@ -89,24 +89,24 @@ export function TaskSurveyOverlay({
   const text = {
     ja: {
       title: `タスク ${taskNumber} の評価`,
-      q1: "タスクの難易度",
+      q1: "このタスクは簡単でしたか？",
       scale1: "1: 非常に難しい - 5: 非常に簡単",
-      q2: "アニメーションの動きやすさ",
+      q2: "メニューの動きは操作しやすかったですか？",
       scale2: "1: 非常に使いにくい - 5: 非常に使いやすい",
-      q3: "アニメーションの違和感",
-      scale3: "1: 違和感がある - 5: 自然である",
+      q3: "メニューの動きは自然でしたか？",
+      scale3: "1: 全く不自然 - 5: とても自然",
       comment: "気になった点があれば教えてください（任意）",
       placeholder: "自由記入欄...",
       submit: "次へ進む",
     },
     en: {
       title: `Task ${taskNumber} Evaluation`,
-      q1: "Task Difficulty",
+      q1: "Was this task easy?",
       scale1: "1: Very Difficult - 5: Very Easy",
-      q2: "Animation Ease of Use",
-      scale2: "1: Very Hard - 5: Very Easy",
-      q3: "Animation Naturalness",
-      scale3: "1: Unnatural - 5: Natural",
+      q2: "Was the menu movement easy to operate?",
+      scale2: "1: Very Hard to Use - 5: Very Easy to Use",
+      q3: "Did the menu movement feel natural?",
+      scale3: "1: Very Unnatural - 5: Very Natural",
       comment: "Any comments? (Optional)",
       placeholder: "Optional...",
       submit: "Next Task",
@@ -138,7 +138,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q1}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-500 font-normal mt-1">
                     {text.scale1}
                   </span>
                 </div>
@@ -164,7 +164,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q2}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-500 font-normal mt-1">
                     {text.scale2}
                   </span>
                 </div>
@@ -190,7 +190,7 @@ export function TaskSurveyOverlay({
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <div className="font-bold text-gray-800 mb-2">
                   {text.q3}
-                  <span className="block text-xs text-gray-500 font-normal mt-1">
+                  <span className="block text-sm text-gray-500 font-normal mt-1">
                     {text.scale3}
                   </span>
                 </div>

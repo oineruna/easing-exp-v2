@@ -144,14 +144,14 @@ export function RewardScreen({
               scale: [1, 1.1, 1, 1.1, 1],
             }}
             transition={{ duration: 1 }}
-            className="text-8xl mb-4"
+            className="text-8xl mb-8"
           >
             🎉
           </motion.div>
           <h2 className="text-5xl font-black text-gray-800 drop-shadow-sm mb-6">
             {t(lang, "taskCompleted")}
           </h2>
-          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-4">
+          <div className="inline-block bg-white/90 backdrop-blur text-gray-600 font-mono font-bold px-6 py-2 rounded-full shadow-lg mb-6">
             ID: {participantId}
           </div>
           <motion.div
@@ -167,7 +167,7 @@ export function RewardScreen({
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex justify-center mb-4"
+          className="flex justify-center mb-8"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -187,14 +187,13 @@ export function RewardScreen({
             {/* 正答率 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
-              className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl w-full"
-            >
+              className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 text-white shadow-lg w-full">
               <div className="text-sm font-semibold opacity-90 mb-2">
                 {t(lang, "totalAccuracy")}
               </div>
               <div className="text-5xl font-black">{stats.accuracy}</div>
               <div className="text-sm mt-2 opacity-80">
-               📖 {stats.correctTasks}/{stats.totalTasks}{" "}
+                📖 {stats.correctTasks}/{stats.totalTasks}{" "}
                 {t(lang, "tasksCompletedSuffix")}
               </div>
             </motion.div>
@@ -202,7 +201,7 @@ export function RewardScreen({
             {/* 平均時間 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: -2 }}
-              className="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl p-6 text-white shadow-xl w-full"
+              className="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-6 text-white shadow-lg w-full"
             >
               <div className="text-sm font-semibold opacity-90 mb-2">
                 {t(lang, "avgTime")}
@@ -216,7 +215,7 @@ export function RewardScreen({
             {/* 総クリック数 */}
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
-              className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 text-white shadow-xl w-full"
+              className="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-6 text-white shadow-lg w-full"
             >
               <div className="text-sm font-semibold opacity-90 mb-2">
                 {t(lang, "totalClicks")}

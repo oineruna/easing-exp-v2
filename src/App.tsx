@@ -78,7 +78,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("tutorial-complete"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ
@@ -865,22 +865,10 @@ export default function App() {
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                     {/* ステータスインジケーター */}
                     <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full self-start md:self-center">
-                      <motion.div
-                        className="w-4 h-4 bg-green-500 rounded-full shadow-lg"
-                        animate={{
-                          scale: [1, 1.3, 1],
-                          boxShadow: [
-                            "0 0 0 0 rgba(34, 197, 94, 0.4)",
-                            "0 0 0 8px rgba(34, 197, 94, 0)",
-                            "0 0 0 0 rgba(34, 197, 94, 0)"
-                          ]
-                        }}
-                        transition={{
-                          duration: 1.0,
-                          repeat: Infinity,
-                          ease: "linear"
-                        }}
-                      />
+                      <div className="relative">
+                        <div className="absolute inset-0 w-4 h-4 bg-green-500 rounded-full animate-ping opacity-75" />
+                        <div className="relative w-4 h-4 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-lg" />
+                      </div>
                       <span className="text-sm font-bold text-green-700 whitespace-nowrap">
                         {appState === "tutorial"
                           ? (lang === "ja" ? "チュートリアル中" : "In Tutorial")

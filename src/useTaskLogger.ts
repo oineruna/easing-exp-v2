@@ -1,7 +1,7 @@
 // --- START OF FILE src/hooks/useTaskLogger.ts ---
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import type { NavigationStep, Category, TaskLog, MouseTrajectoryPoint } from "./experiment"; // パス〉2修正
+import type { NavigationStep, Category, TaskLog, MouseTrajectoryPoint } from "./experiment";
 
 // 内部計算用にミリ秒のタイムスタンプを保持する拡張インターフェース
 interface InternalClickLog extends NavigationStep {
@@ -11,8 +11,9 @@ interface InternalClickLog extends NavigationStep {
 /**
  * タスク実行中のログ記録を行うカスタムフック
  * クリック、マウス移動、エラー、時間などを管理します
+ * @param animationDurationMs アニメーション時間（ミリ秒）
  */
-export function useTaskLogger() {
+export function useTaskLogger(animationDurationMs: number = 500) {
   // --- State Variables (Reactの状態管理) ---
 
   // 現在のタスク内でのクリック履歴
@@ -35,6 +36,9 @@ export function useTaskLogger() {
 
   // マウス軌跡データ
   const [mouseTrajectory, setMouseTrajectory] = useState<MouseTrajectoryPoint[]>([]);
+
+  // 階層の深さの履歴（Trace）
+  const [depthTrace, setDepthTrace] = useState<number[]>([]);
 
   // --- Refs (レンダリングを発生させない可変値) ---
 
@@ -139,9 +143,10 @@ export function useTaskLogger() {
    * クリックイベントを記録する関数
    * @param categoryName クリックされたカテゴリ名
    * @param categories 現在のカテゴリ構造（深さ計算用）
+   * @param _isLeaf 末端アイテムかどうか（現在未使用）
    */
   const recordClick = useCallback(
-    (categoryName: string, categories: Category[]) => {
+    (categoryName: string, categories: Category[], _isLeaf: boolean = false) => {
       const currentClickTime = performance.now();
       const currentDepth = getCategoryDepth(categories, categoryName);
 
@@ -161,14 +166,18 @@ export function useTaskLogger() {
       let animationProgress: number | undefined = undefined;
       if (isAnimatingRef.current) {
         const elapsed = currentClickTime - animationStartTimeRef.current;
-        // 0.0 〜 1.0 にクランプ (500ms = 0.5秒)
-        animationProgress = Math.min(Math.max(elapsed / 500, 0), 1.0);
+        // 0.0 〜 1.0 にクランプ
+        if (animationDurationMs <= 0) {
+          animationProgress = 1.0;
+        } else {
+          animationProgress = Math.min(Math.max(elapsed / animationDurationMs, 0), 1.0);
+        }
         // 小数点3桁に丸める
         animationProgress = Math.round(animationProgress * 1000) / 1000;
       }
 
       const newClick: InternalClickLog = {
-        step: clicksThisTask.length + 1, // ステップ数 (1から開始)
+        step: clicksThisTask.length, // ステップ数 (0から開始)
         action: categoryName,   // 'target' -> 'action'
         depth: currentDepth,
         duringAnimation: isAnimatingRef.current,
@@ -179,6 +188,7 @@ export function useTaskLogger() {
 
       // 状態更新
       setClicksThisTask((prev) => [...prev, newClick]);
+      setDepthTrace((prev) => [...prev, currentDepth]);
       setMenuTravelDistance(
         (prev) => prev + Math.abs(currentDepth - lastClickDepthRef.current)
       );
@@ -192,7 +202,7 @@ export function useTaskLogger() {
         setFrustrationCount(prev => prev + 1);
       }
     },
-    [clicksThisTask.length, firstClickTime, getCategoryDepth]
+    [clicksThisTask.length, firstClickTime, getCategoryDepth, animationDurationMs]
   );
 
   /**
@@ -241,6 +251,7 @@ export function useTaskLogger() {
     setClicksThisTask([]);
     setErrorCount(0);
     setMenuTravelDistance(0);
+    setDepthTrace([]);
     setFirstClickTime(null);
     lastClickTimeRef.current = 0;
     lastClickDepthRef.current = 0;
@@ -248,7 +259,6 @@ export function useTaskLogger() {
     // マウストラッキングをリセット
     mouseDistanceRef.current = 0;
     // 現在のマウス位置を取得してリセット（次のタスクの基準点とする）
-    // nullにすると次のmousemoveで自動的に新しい基準点が設定される
     lastMousePosRef.current = null;
 
     // 開始時刻をリセット
@@ -269,10 +279,11 @@ export function useTaskLogger() {
    * タスク終了時にログを確定して返す関数
    * @param isCorrect 正解したかどうか
    * @param timedOut 時間切れかどうか
+   * @param optimalPathLength 最適なパス長（効率計算用）
    * @returns 記録されたTaskLogの一部
    */
   const stopTask = useCallback(
-    (isCorrect: boolean, timedOut: boolean, correctPathLength: number = 0): Partial<TaskLog> => {
+    (isCorrect: boolean, timedOut: boolean, optimalPathLength: number = 0): Partial<TaskLog> => {
       // タスクを非アクティブ化（マウストラッキング停止）
       isTaskActiveRef.current = false;
 
@@ -280,7 +291,6 @@ export function useTaskLogger() {
       const totalDurationMs = endTime - startTimeRef.current;
 
       // Jitteriness (ふらつき) の計算
-      // 連続する3点の角度変化の総和
       let jitteriness = 0;
       if (mouseTrajectory.length >= 3) {
         for (let i = 2; i < mouseTrajectory.length; i++) {
@@ -301,9 +311,7 @@ export function useTaskLogger() {
       }
 
       // Overshoot (オーバーシュート) の計算
-      // クリック位置（ターゲット）を行き過ぎて戻る動作を検出
       let overshootCount = 0;
-      // 各クリックについて判定
       clicksThisTask.forEach(click => {
         // クリック直前500msの軌跡を抽出
         const relevantPoints = mouseTrajectory.filter(p =>
@@ -312,27 +320,24 @@ export function useTaskLogger() {
 
         if (relevantPoints.length < 5) return;
 
-        // Y軸方向の動きを分析（縦長メニューなので）
-        const clickY = relevantPoints[relevantPoints.length - 1].y; // クリック時のY座標と仮定
+        const clickY = relevantPoints[relevantPoints.length - 1].y;
         const minY = Math.min(...relevantPoints.map(p => p.y));
         const maxY = Math.max(...relevantPoints.map(p => p.y));
         const startY = relevantPoints[0].y;
+        const threshold = 20;
 
-        const threshold = 20; // 20px以上の行き過ぎを検出
-
-        // 下方向への移動だった場合
         if (clickY > startY) {
-          if (maxY > clickY + threshold) {
-            overshootCount++;
-          }
-        }
-        // 上方向への移動だった場合
-        else if (clickY < startY) {
-          if (minY < clickY - threshold) {
-            overshootCount++;
-          }
+          if (maxY > clickY + threshold) overshootCount++;
+        } else if (clickY < startY) {
+          if (minY < clickY - threshold) overshootCount++;
         }
       });
+
+      // Efficiency calculation
+      // Optimal / Actual. If actual is 0 (impossible if completed?), fallback to 0.
+      const clickEfficiency = optimalPathLength > 0 && clicksThisTask.length > 0
+        ? parseFloat((optimalPathLength / clicksThisTask.length).toFixed(3))
+        : 0;
 
       return {
         isCorrect,
@@ -344,26 +349,21 @@ export function useTaskLogger() {
         clicks: clicksThisTask.map(({ timestampMs, ...rest }) => rest), // timestampMsを除外して返す
         actualPath: clicksThisTask.map(c => c.action), // 実際にクリックした項目のリスト
         menuTravelDistance: menuTravelDistance,
-        mouseDistance: Math.round(mouseDistanceRef.current), // マウス総移動距離（ピクセル、整数）
+        mouseDistance: Math.round(mouseDistanceRef.current),
 
-        // アニメーション関連の集計
-        interactedDuringAnimation: clicksThisTask.some(click => click.duringAnimation), // アニメーション中に操作したか
-        animationClickCount: clicksThisTask.filter(click => click.duringAnimation).length, // アニメーション中のクリック数
-        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation).length, // アニメーション中の誤クリック数 (isCorrect削除のため全クリックをカウント)
+        // アニメーション関連
+        animationClickCount: clicksThisTask.filter(click => click.duringAnimation).length,
+        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation).length,
 
-        // 新しい指標
         frustrationCount: frustrationCount,
-        clickEfficiency: correctPathLength > 0 && clicksThisTask.length > 0
-          ? parseFloat((correctPathLength / clicksThisTask.length).toFixed(3))
-          : 0,
+        clickEfficiency: clickEfficiency,
+        depthTrace: depthTrace,
 
-        // マウス軌跡・詳細指標
-        // mouseTrajectory: mouseTrajectory, // 削除
         jitteriness: parseFloat(jitteriness.toFixed(3)),
         overshootCount: overshootCount,
       };
     },
-    [clicksThisTask, errorCount, firstClickTime, menuTravelDistance, frustrationCount, mouseTrajectory]
+    [clicksThisTask, errorCount, firstClickTime, menuTravelDistance, frustrationCount, mouseTrajectory, depthTrace]
   );
 
   /**

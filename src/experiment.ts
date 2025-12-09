@@ -48,6 +48,8 @@ export interface NavigationStep {
   duringAnimation: boolean; // アニメーション中にクリックされたか
   animationProgress?: number; // アニメーション進捗率 (0.0 - 1.0)
   stayTime: number;       // 滞在時間（秒単位）
+  depthTrace?: number[];  // 深さの履歴 (トレース) - 配列全体で保持する場合はTaskResult側だが、ステップごとに記録するならここ? 
+  // いや、useTaskLoggerではTaskResult側に depthTrace を追加した。NavigationStepには不要。
 }
 
 // 後方互換性のため
@@ -99,7 +101,6 @@ export interface TaskOverview {
   targetItem: string;         // 目標アイテム名
   optimalPath: string[];      // 最適解のパス配列
   easingFunction: EasingFunction; // 使用したイージング関数
-  usedEasing: EasingFunction; // 実際に使用されたイージング（確認用）
   totalTimeSec: number;       // 総所要時間（秒）
   firstClickDelaySec: number; // 最初のクリックまでの時間（秒）
   success: boolean;           // 成功したか（旧: isCorrect）
@@ -116,7 +117,6 @@ export interface Performance {
   timedOut: boolean;          // タイムアウトしたか
 
   // アニメーション関連指標
-  interactedDuringAnimation: boolean; // アニメーション中の操作があったか
   animationClickCount: number;        // アニメーション中のクリック総数
   animationErrorCount: number;        // アニメーション中の誤クリック数
 
@@ -134,6 +134,7 @@ export interface TaskResult {
   taskOverview: TaskOverview;
   navigationPath: NavigationStep[];
   performance: Performance;
+  depthTrace?: number[]; // 追加：タスク全体の深さ遷移
   userFeedback: UserFeedback;
 }
 
@@ -157,7 +158,6 @@ export interface PostSurveyResult {
 export interface Metadata {
   participantId: string;
   experimentDate: string;    // ISO 8601形式
-  totalTasks: number;
   averageFps?: number;
 }
 
@@ -205,7 +205,6 @@ export interface TaskLog {
   menuTravelDistance: number;
   mouseDistance: number;
 
-  interactedDuringAnimation: boolean;
   animationClickCount?: number;
   animationErrorCount?: number;
 
@@ -215,10 +214,10 @@ export interface TaskLog {
 
   jitteriness?: number;
   overshootCount?: number;
+  depthTrace?: number[];
 
 
   survey?: TaskSurveyResult;
 
   seqScore?: number;
-  usedEasing?: EasingFunction;
 }

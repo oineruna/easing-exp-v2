@@ -60,7 +60,7 @@ export function RewardScreen({
     >;
 
     allLogs.forEach((log) => {
-      const easing = (log.usedEasing ?? log.easingFunction) as EasingFunction;
+      const easing = log.easingFunction as EasingFunction;
       if (!easing) return;
       if (!easingStats[easing]) {
         easingStats[easing] = { total: 0, correct: 0, totalTime: 0 };

@@ -121,7 +121,7 @@ export default function App() {
 
   // Refs
   const timeoutIdRef = useRef<number | null>(null);
-  const taskLogger = useTaskLogger();
+  const taskLogger = useTaskLogger(500);
 
   // システム情報収集用
   const fpsMonitorRef = useRef<FrameRateMonitor | null>(null);
@@ -493,7 +493,7 @@ export default function App() {
             targetItem: log.targetItem,
             optimalPath: log.optimalPath, // 追加
             easingFunction: log.easingFunction,
-            usedEasing: log.usedEasing || log.easingFunction, // 追加（確認用）
+            // usedEasing deleted
             totalTimeSec: log.totalDuration / 1000, // msから秒へ変換
             firstClickDelaySec: log.firstClickTime / 1000, // msから秒へ変換
             success: log.isCorrect, // isCorrect → success
@@ -506,7 +506,6 @@ export default function App() {
             pathEfficiency: log.clickEfficiency || 0,
             timedOut: log.timedOut,
             // アニメーション関連指標（追加）
-            interactedDuringAnimation: log.interactedDuringAnimation,
             animationClickCount: log.animationClickCount || 0,
             animationErrorCount: log.animationErrorCount || 0,
             // 詳細指標
@@ -529,7 +528,7 @@ export default function App() {
         metadata: {
           participantId,
           experimentDate: new Date().toISOString(),
-          totalTasks: allLogs.length,
+          // totalTasks deleted
           averageFps: fpsMonitorRef.current ? fpsMonitorRef.current.getStats().average : undefined,
         },
         taskResults: allLogs.map(convertToTaskResult),

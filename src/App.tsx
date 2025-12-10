@@ -934,6 +934,7 @@ export default function App() {
                       correctPath={["...", "...", "..."]}
                       isTutorial={true}
                       onItemClick={handleTutorialItemClick}
+                      onAnimationChange={taskLogger.setAnimating}
                     />
                   )}
                   {appState !== "tutorial" &&

@@ -829,7 +829,7 @@ export default function App() {
 
                 {/* 右側:イージング選択（デバッグ/チュートリアル用） */}
                 {/* 被験者実験用に非表示 - 後で使う場合はコメント解除してください */}
-                {false && (
+                {true && (
                   <div className="flex items-center gap-4">
                     <label className="text-sm font-bold text-gray-700">
                       {lang === "ja" ? "イージング関数" : "Easing Function"}:

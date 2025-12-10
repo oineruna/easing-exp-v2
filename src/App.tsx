@@ -78,7 +78,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("tutorial"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ
@@ -828,33 +828,36 @@ export default function App() {
                 </div>
 
                 {/* 右側: イージング選択（デバッグ/チュートリアル用） */}
-                <div className="flex items-center gap-4">
-                  <label className="text-sm font-bold text-gray-700">
-                    {lang === "ja" ? "イージング関数" : "Easing Function"}:
-                  </label>
-                  <select
-                    value={currentEasing}
-                    onChange={(e) => {
-                      if (appState === "tutorial") {
-                        setTutorialEasing(e.target.value as EasingFunction);
-                      } else if (appState === "task" || appState === "seq" || appState === "next-task-ready") {
-                        if (currentTaskWithEasing) {
-                          setCurrentTaskWithEasing({
-                            ...currentTaskWithEasing,
-                            easing: e.target.value as EasingFunction
-                          });
+                {/* 被験者実験用に非表示 - 後で使う場合はコメント解除してください */}
+                {false && (
+                  <div className="flex items-center gap-4">
+                    <label className="text-sm font-bold text-gray-700">
+                      {lang === "ja" ? "イージング関数" : "Easing Function"}:
+                    </label>
+                    <select
+                      value={currentEasing}
+                      onChange={(e) => {
+                        if (appState === "tutorial") {
+                          setTutorialEasing(e.target.value as EasingFunction);
+                        } else if (appState === "task" || appState === "seq" || appState === "next-task-ready") {
+                          if (currentTaskWithEasing) {
+                            setCurrentTaskWithEasing({
+                              ...currentTaskWithEasing,
+                              easing: e.target.value as EasingFunction
+                            });
+                          }
                         }
-                      }
-                    }}
-                    className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all w-full md:w-auto"
-                  >
-                    <option value="linear">linear</option>
-                    <option value="easeInOutQuad">easeInOutQuad</option>
-                    <option value="easeInOutQuint">easeInOutQuint</option>
-                    <option value="easeInOutExpo">easeInOutExpo</option>
-                    <option value="easeInOutBack">easeInOutBack</option>
-                  </select>
-                </div>
+                      }}
+                      className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all w-full md:w-auto"
+                    >
+                      <option value="linear">linear</option>
+                      <option value="easeInOutQuad">easeInOutQuad</option>
+                      <option value="easeInOutQuint">easeInOutQuint</option>
+                      <option value="easeInOutExpo">easeInOutExpo</option>
+                      <option value="easeInOutBack">easeInOutBack</option>
+                    </select>
+                  </div>
+                )}
               </div>
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">

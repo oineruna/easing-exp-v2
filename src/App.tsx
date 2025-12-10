@@ -78,7 +78,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("tutorial"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ

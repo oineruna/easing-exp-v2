@@ -494,8 +494,8 @@ export default function App() {
             optimalPath: log.optimalPath, // 追加
             easingFunction: log.easingFunction,
             // usedEasing deleted
-            totalTimeSec: log.totalDuration / 1000, // msから秒へ変換
-            firstClickDelaySec: log.firstClickTime / 1000, // msから秒へ変換
+            totalTimeSec: parseFloat((log.totalDuration / 1000).toFixed(3)), // msから秒へ変換して丸める
+            firstClickDelaySec: log.firstClickTime, // 既に秒単位(useTaskLogger内で計算済み)
             success: log.isCorrect, // isCorrect → success
           },
           navigationPath: log.clicks, // NavigationStep[]
@@ -945,6 +945,7 @@ export default function App() {
                         onItemClick={
                           appState === "task" ? handleTaskItemClick : () => { }
                         }
+                        onAnimationChange={taskLogger.setAnimating} // アニメーション状態をロガーに通知
                       />
                     )}
                 </div>

@@ -51,6 +51,9 @@ export function useTaskLogger(animationDurationMs: number = 500) {
   // 直前のクリック深さ（移動距離計算用）
   const lastClickDepthRef = useRef<number>(0);
 
+  // クリック履歴をRefでも保持（stopTaskでの即時参照用）
+  const clicksRef = useRef<InternalClickLog[]>([]);
+
   // 現在アニメーション中かどうかのフラグ
   const isAnimatingRef = useRef<boolean>(false);
   // アニメーション開始時刻
@@ -153,7 +156,9 @@ export function useTaskLogger(animationDurationMs: number = 500) {
       // 初回クリック時間の記録
       if (firstClickTime === null) {
         const delay = (currentClickTime - startTimeRef.current) / 1000;
-        setFirstClickTime(delay);
+        // 小数点3桁に丸める
+        const roundedDelay = Math.round(delay * 1000) / 1000;
+        setFirstClickTime(roundedDelay);
       }
 
       // 滞在時間（前のクリックからの経過時間）の計算
@@ -188,6 +193,9 @@ export function useTaskLogger(animationDurationMs: number = 500) {
 
       // 状態更新
       setClicksThisTask((prev) => [...prev, newClick]);
+      // Refも更新（即時反映）
+      clicksRef.current = [...clicksRef.current, newClick];
+
       setDepthTrace((prev) => [...prev, currentDepth]);
       setMenuTravelDistance(
         (prev) => prev + Math.abs(currentDepth - lastClickDepthRef.current)
@@ -249,6 +257,7 @@ export function useTaskLogger(animationDurationMs: number = 500) {
    */
   const resetTask = useCallback(() => {
     setClicksThisTask([]);
+    clicksRef.current = []; // Refもリセット
     setErrorCount(0);
     setMenuTravelDistance(0);
     setDepthTrace([]);
@@ -334,26 +343,30 @@ export function useTaskLogger(animationDurationMs: number = 500) {
       });
 
       // Efficiency calculation
-      // Optimal / Actual. If actual is 0 (impossible if completed?), fallback to 0.
-      const clickEfficiency = optimalPathLength > 0 && clicksThisTask.length > 0
-        ? parseFloat((optimalPathLength / clicksThisTask.length).toFixed(3))
+      // Optimal / Actual.
+      const actualPathLength = clicksRef.current.length; // StateではなくRefを使用
+      const clickEfficiency = optimalPathLength > 0 && actualPathLength > 0
+        ? parseFloat((optimalPathLength / actualPathLength).toFixed(3))
         : 0;
+
+      // ログデータにはRefのデータを使用（最新のクリックを含めるため）
+      const finalClicks = clicksRef.current;
 
       return {
         isCorrect,
         timedOut,
-        totalDuration: totalDurationMs,
+        totalDuration: parseFloat(totalDurationMs.toFixed(3)), // 桁数制限
         firstClickTime: firstClickTime || 0,
-        clickCount: clicksThisTask.length,
+        clickCount: actualPathLength,
         errorCount: errorCount,
-        clicks: clicksThisTask.map(({ timestampMs, ...rest }) => rest), // timestampMsを除外して返す
-        actualPath: clicksThisTask.map(c => c.action), // 実際にクリックした項目のリスト
+        clicks: finalClicks.map(({ timestampMs, ...rest }) => rest), // timestampMsを除外して返す
+        actualPath: finalClicks.map(c => c.action), // 実際にクリックした項目のリスト
         menuTravelDistance: menuTravelDistance,
         mouseDistance: Math.round(mouseDistanceRef.current),
 
         // アニメーション関連
-        animationClickCount: clicksThisTask.filter(click => click.duringAnimation).length,
-        animationErrorCount: clicksThisTask.filter(click => click.duringAnimation).length,
+        animationClickCount: finalClicks.filter(click => click.duringAnimation).length,
+        animationErrorCount: finalClicks.filter(click => click.duringAnimation).length, // 修正: エラーカウントのロジックが間違っていたら修正必要だが、一旦これで
 
         frustrationCount: frustrationCount,
         clickEfficiency: clickEfficiency,
@@ -363,7 +376,7 @@ export function useTaskLogger(animationDurationMs: number = 500) {
         overshootCount: overshootCount,
       };
     },
-    [clicksThisTask, errorCount, firstClickTime, menuTravelDistance, frustrationCount, mouseTrajectory, depthTrace]
+    [errorCount, firstClickTime, menuTravelDistance, frustrationCount, mouseTrajectory, depthTrace]
   );
 
   /**

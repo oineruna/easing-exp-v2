@@ -8,6 +8,7 @@ interface TaskMenuProps {
   correctPath: string[];            // 正解のパス（デバッグやハイライト用）
   isTutorial: boolean;              // チュートリアルモードかどうか
   onItemClick: (itemName: string, isCorrectPath: boolean, depth: number, isLeaf: boolean) => void; // アイテムクリック時のコールバック
+  onAnimationChange?: (isAnimating: boolean) => void; // アニメーション状態変更時のコールバック
 }
 
 
@@ -32,6 +33,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   currentEasing,
   correctPath,
   onItemClick,
+  onAnimationChange,
 }) => {
   // 現在展開されているパスの状態管理
   const [activePath, setActivePath] = useState<string[]>([]);
@@ -132,9 +134,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                     animate={isMobile ? { height: "auto", opacity: 1 } : { opacity: 1, x: 0 }}
                     exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{
-                      duration: 0.5,
+                      duration: 0.3,
                       ease: bezierMap[currentEasing],
                     }}
+                    onAnimationStart={() => onAnimationChange?.(true)}
+                    onAnimationComplete={() => onAnimationChange?.(false)}
                     className={isMobile ? "overflow-hidden" : "absolute top-0 left-full -z-10"}
                   >
                     {renderMenu(cat.subcategories!, depth + 1)}

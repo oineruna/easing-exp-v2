@@ -827,7 +827,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 右側: イージング選択（デバッグ/チュートリアル用） */}
+                {/* 右側:イージング選択（デバッグ/チュートリアル用） */}
                 {/* 被験者実験用に非表示 - 後で使う場合はコメント解除してください */}
                 {false && (
                   <div className="flex items-center gap-4">

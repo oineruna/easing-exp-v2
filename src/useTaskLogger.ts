@@ -167,10 +167,21 @@ export function useTaskLogger(animationDurationMs: number = 500) {
         stayTime = (currentClickTime - lastClickTimeRef.current) / 1000;
       }
 
-      // アニメーション進捗率の計算
+      // アニメーション進捗率の計算 & アニメーション中判定
       let animationProgress: number | undefined = undefined;
-      if (isAnimatingRef.current) {
-        const elapsed = currentClickTime - animationStartTimeRef.current;
+      let isDuringAnimation = isAnimatingRef.current; // 基本はフラグに従う
+
+      // 経過時間を計算
+      const elapsed = currentClickTime - animationStartTimeRef.current;
+
+      // フラグがfalseでも、直近のアニメーション開始から duration 以内なら true とみなす (緩和策)
+      if (!isDuringAnimation && animationStartTimeRef.current > 0) {
+        if (elapsed >= 0 && elapsed <= animationDurationMs) {
+          isDuringAnimation = true;
+        }
+      }
+
+      if (isDuringAnimation) {
         // 0.0 〜 1.0 にクランプ
         if (animationDurationMs <= 0) {
           animationProgress = 1.0;
@@ -185,7 +196,7 @@ export function useTaskLogger(animationDurationMs: number = 500) {
         step: clicksThisTask.length, // ステップ数 (0から開始)
         action: categoryName,   // 'target' -> 'action'
         depth: currentDepth,
-        duringAnimation: isAnimatingRef.current,
+        duringAnimation: isDuringAnimation,
         animationProgress: animationProgress,
         timestampMs: currentClickTime, // 内部計算用
         stayTime: stayTime, // 滞在時間（秒）
@@ -273,6 +284,7 @@ export function useTaskLogger(animationDurationMs: number = 500) {
     // 開始時刻をリセット
     startTimeRef.current = performance.now();
     isAnimatingRef.current = false;
+    animationStartTimeRef.current = 0; // アニメーション開始時刻もリセット
 
     // タスクをアクティブ化（マウストラッキング開始）
     isTaskActiveRef.current = true;

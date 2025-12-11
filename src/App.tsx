@@ -827,40 +827,43 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 右側: イージング選択（デバッグ/チュートリアル用） */}
-                <div className="flex items-center gap-4">
-                  <label className="text-sm font-bold text-gray-700">
-                    {lang === "ja" ? "イージング関数" : "Easing Function"}:
-                  </label>
-                  <select
-                    value={currentEasing}
-                    onChange={(e) => {
-                      if (appState === "tutorial") {
-                        setTutorialEasing(e.target.value as EasingFunction);
-                      } else if (appState === "task" || appState === "seq" || appState === "next-task-ready") {
-                        if (currentTaskWithEasing) {
-                          setCurrentTaskWithEasing({
-                            ...currentTaskWithEasing,
-                            easing: e.target.value as EasingFunction
-                          });
+                {/* 右側:イージング選択（デバッグ/チュートリアル用） */}
+                {/* 被験者実験用に非表示 - 後で使う場合はコメント解除してください */}
+                {true && (
+                  <div className="flex items-center gap-4">
+                    <label className="text-sm font-bold text-gray-700">
+                      {lang === "ja" ? "イージング関数" : "Easing Function"}:
+                    </label>
+                    <select
+                      value={currentEasing}
+                      onChange={(e) => {
+                        if (appState === "tutorial") {
+                          setTutorialEasing(e.target.value as EasingFunction);
+                        } else if (appState === "task" || appState === "seq" || appState === "next-task-ready") {
+                          if (currentTaskWithEasing) {
+                            setCurrentTaskWithEasing({
+                              ...currentTaskWithEasing,
+                              easing: e.target.value as EasingFunction
+                            });
+                          }
                         }
-                      }
-                    }}
-                    className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all w-full md:w-auto"
-                  >
-                    <option value="linear">linear</option>
-                    <option value="easeInOutQuad">easeInOutQuad</option>
-                    <option value="easeInOutQuint">easeInOutQuint</option>
-                    <option value="easeInOutExpo">easeInOutExpo</option>
-                    <option value="easeInOutBack">easeInOutBack</option>
-                  </select>
-                </div>
+                      }}
+                      className="px-5 py-2.5 rounded-lg font-bold text-base border-2 border-gray-400 bg-white text-gray-800 cursor-pointer hover:border-blue-500 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all w-full md:w-auto"
+                    >
+                      <option value="linear">linear</option>
+                      <option value="easeInOutQuad">easeInOutQuad</option>
+                      <option value="easeInOutQuint">easeInOutQuint</option>
+                      <option value="easeInOutExpo">easeInOutExpo</option>
+                      <option value="easeInOutBack">easeInOutBack</option>
+                    </select>
+                  </div>
+                )}
               </div>
             </header>
             <main className="flex-1 overflow-y-auto bg-gray-50">
-              <div className="py-2">
+              <div className="py-0">
                 {/* タスク指示バー */}
-                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-2 mb-2 mx-4 md:mx-auto max-w-3xl">
+                <div className="bg-white border-2 border-gray-200 rounded-lg shadow-sm p-2 mb-1 mx-4 md:mx-auto max-w-3xl">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                     {/* ステータスインジケーター */}
                     <div className="flex items-center gap-3 px-3 py-2 bg-green-50 rounded-full self-start md:self-center">
@@ -922,7 +925,7 @@ export default function App() {
                 </div>
 
                 {/* メニューコンポーネント */}
-                <div className="relative min-h-[500px] z-0 w-full md:w-auto px-4 md:px-0 md:-ml-64 flex items-start pt-2 md:block -mt-2">
+                <div className="relative min-h-[500px] z-0 w-full md:w-auto px-4 md:px-0 md:-ml-112 flex items-start pt-2 md:block -mt-10">
                   {appState === "tutorial" && (
                     <TaskMenu
                       key="tutorial-menu"
@@ -931,6 +934,7 @@ export default function App() {
                       correctPath={["...", "...", "..."]}
                       isTutorial={true}
                       onItemClick={handleTutorialItemClick}
+                      onAnimationChange={taskLogger.setAnimating}
                     />
                   )}
                   {appState !== "tutorial" &&

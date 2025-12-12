@@ -168,19 +168,20 @@ export const generateTasksFromCategories = (categories: Category[]): Task[] => {
 
 /**
  * 実験用のタスクシーケンスを生成する関数
- * ラテン方格法を用いて、参加者ごとにイージング関数の提示順序を制御します
+ * 以下の条件を満たすようにシーケンスを生成します：
+ * 1. 全10項目のホワイトリストから、各項目が必ず2回ずつ出現（計20試行）
+ * 2. 同じ項目が連続して出現しない
+ * 3. 5種類のイージング関数が各4回ずつ出現
  * 
  * @param participantId 参加者ID（数値）
- * @param availableTasks 利用可能な全タスクのリスト
+ * @param availableTasks 利用可能な全タスクのリスト（ホワイトリスト適用済み）
  * @returns 試行順序、タスク、イージング関数のセット配列
  */
 export const generateTaskSequence = (
   participantId: number,
   availableTasks: Task[]
 ): { trial: number; task: Task; easing: EasingFunction }[] => {
-  const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
-  const TRIALS_PER_EASING = 4; // 1つのイージングにつき4回試行
-  const POSITIONS = [1, 2, 3, 4]; // 使用するポジション（0=一番上を除外）
+  const TOTAL_TRIALS = 20;
 
   // シード付き乱数生成器 (Linear Congruential Generator)
   let localSeed = participantId;
@@ -189,52 +190,78 @@ export const generateTaskSequence = (
     return localSeed / 233280;
   };
 
-  // タスクをポジション（leafIndex）ごとにグループ化
-  const tasksByPosition: Record<number, Task[]> = {};
-  POSITIONS.forEach(pos => {
-    tasksByPosition[pos] = availableTasks.filter(t => t.leafIndex === pos);
-    // Fisher-Yates シャッフルで公平にランダム化
-    const arr = tasksByPosition[pos];
-    for (let i = arr.length - 1; i > 0; i--) {
+  // Fisher-Yates shuffle helper
+  const shuffle = <T>(array: T[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      [array[i], array[j]] = [array[j], array[i]];
     }
-  });
+    return array;
+  };
 
-  // (Easing, Position) のペアを作成
-  // 各イージングについて、TRIALS_PER_EASING回数分、ポジションを割り当てる
-  let pairs: { easing: EasingFunction; position: number }[] = [];
-  EASING_FUNCS.forEach(easing => {
-    for (let i = 0; i < TRIALS_PER_EASING; i++) {
-      // ポジションを順番に割り当て（足りなくなったらループ）
-      const pos = POSITIONS[i % POSITIONS.length];
-      pairs.push({ easing, position: pos });
+  // 1. タスクリストの生成 (各項目2回ずつ)
+  let taskPool: Task[] = [];
+
+  // availableTasksが10個未満の場合は、20個になるように調整（基本は10個前提）
+  if (availableTasks.length === 10) {
+    // 10個の場合は各2回
+    taskPool = [...availableTasks, ...availableTasks];
+  } else if (availableTasks.length > 0) {
+    // それ以外の場合はランダムに埋める（フォールバック）
+    while (taskPool.length < TOTAL_TRIALS) {
+      // 足りない分をavailableTasksから順番に追加
+      taskPool.push(...availableTasks);
     }
-  });
-
-  // ペアの順序をランダムにシャッフル
-  for (let i = pairs.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+    taskPool = taskPool.slice(0, TOTAL_TRIALS);
   }
 
-  // ペアに基づいてタスクを割り当て
-  pairs.forEach((pair, index) => {
-    // 指定されたポジションのタスクプールから1つ取り出す
-    let task = tasksByPosition[pair.position].pop();
-
-    // 万が一足りない場合は、再度フィルタしてランダムに取得
-    if (!task) {
-      const candidates = availableTasks.filter(t => t.leafIndex === pair.position);
-      task = candidates[Math.floor(random() * candidates.length)];
+  // 連続しないようにシャッフル (最大100回試行)
+  let isValidSequence = false;
+  for (let attempt = 0; attempt < 100; attempt++) {
+    shuffle(taskPool);
+    isValidSequence = true;
+    for (let i = 0; i < taskPool.length - 1; i++) {
+      if (taskPool[i].id === taskPool[i + 1].id) {
+        isValidSequence = false;
+        break;
+      }
     }
+    if (isValidSequence) break;
+  }
 
-    sequence.push({
-      trial: index + 1,
-      task: task!,
-      easing: pair.easing,
-    });
+  // それでもダメなら、隣り合う重複を無理やり入れ替え
+  if (!isValidSequence) {
+    for (let i = 0; i < taskPool.length - 1; i++) {
+      if (taskPool[i].id === taskPool[i + 1].id) {
+        // 重複していない要素を探してスワップ
+        for (let j = 0; j < taskPool.length; j++) {
+          if (taskPool[j].id !== taskPool[i].id &&
+            (j === 0 || taskPool[j - 1].id !== taskPool[i].id) &&
+            (j === taskPool.length - 1 || taskPool[j + 1].id !== taskPool[i].id)) {
+            [taskPool[i + 1], taskPool[j]] = [taskPool[j], taskPool[i + 1]];
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // 2. イージングリストの生成 (5種類 × 4回)
+  let easingPool: EasingFunction[] = [];
+  EASING_FUNCS.forEach(easing => {
+    for (let i = 0; i < 4; i++) easingPool.push(easing);
   });
+  shuffle(easingPool);
+
+  // 3. タスクとイージングを結合
+  const sequence: { trial: number; task: Task; easing: EasingFunction }[] = [];
+  for (let i = 0; i < TOTAL_TRIALS; i++) {
+    sequence.push({
+      trial: i + 1,
+      task: taskPool[i],
+      easing: easingPool[i]
+    });
+  }
 
   return sequence;
 };

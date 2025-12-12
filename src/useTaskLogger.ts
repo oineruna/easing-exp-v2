@@ -174,14 +174,21 @@ export function useTaskLogger(animationDurationMs: number = 800) {
       // 経過時間を計算
       const elapsed = currentClickTime - animationStartTimeRef.current;
 
-      // フラグがfalseでも、直近のアニメーション開始から duration 以内なら true とみなす (緩和策)
+      // フラグがfalseでも、直近のアニメーション開始から duration + 500ms (バッファ) 以内なら true とみなす
+      // これにより、アニメーション終了直後のクリックも「アニメーションの影響下」として扱う
+      const BUFFER_MS = 500;
+
       if (!isDuringAnimation && animationStartTimeRef.current > 0) {
-        if (elapsed >= 0 && elapsed <= animationDurationMs) {
+        if (elapsed >= 0 && elapsed <= animationDurationMs + BUFFER_MS) {
           isDuringAnimation = true;
+          // バッファ期間中の場合、進捗は 1.0 (完了) とする
+          if (elapsed > animationDurationMs) {
+            animationProgress = 1.0;
+          }
         }
       }
 
-      if (isDuringAnimation) {
+      if (isDuringAnimation && animationProgress === undefined) {
         // 0.0 〜 1.0 にクランプ
         if (animationDurationMs <= 0) {
           animationProgress = 1.0;
@@ -190,6 +197,11 @@ export function useTaskLogger(animationDurationMs: number = 800) {
         }
         // 小数点3桁に丸める
         animationProgress = Math.round(animationProgress * 1000) / 1000;
+      }
+
+      // DEBUG: アニメーション判定の詳細をログ出力
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Click] ${categoryName} - isAnimRef: ${isAnimatingRef.current}, elapsed: ${elapsed.toFixed(1)}ms, duration: ${animationDurationMs}ms, => Result: ${isDuringAnimation}`);
       }
 
       const newClick: InternalClickLog = {

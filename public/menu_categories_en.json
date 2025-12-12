@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Dataset for Easing Experiment (English: Symmetric 5-2-2-5 / Snacks Fixed / Towels Fixed)",
+    "description": "Easing Experiment Dataset (Fully Symmetric Structure: 5-2-2-5 / Sports Category Fitness & Dance Version)",
     "structure": "Root(5) > Sub(2) > SubSub(2) > Items(5)"
   },
   "categories": [
@@ -8,90 +8,90 @@
       "name": "Fashion",
       "subcategories": [
         {
-          "name": "Men's",
+          "name": "Tops / Bottoms",
           "subcategories": [
             {
               "name": "Tops",
               "subcategories": [
                 {
-                  "name": "Dress Shirt"
+                  "name": "Jackets"
                 },
                 {
-                  "name": "Men's Hoodie"
+                  "name": "Hoodies"
                 },
                 {
-                  "name": "Men's T-Shirt"
+                  "name": "Knitwear / Sweaters"
                 },
                 {
-                  "name": "Men's Jacket"
+                  "name": "Shirts / Blouses"
                 },
                 {
-                  "name": "Men's Polo Shirt"
+                  "name": "T-Shirts"
                 }
               ]
             },
             {
-              "name": "Accessories",
+              "name": "Bottoms",
               "subcategories": [
                 {
-                  "name": "Men's Scarf"
+                  "name": "Chino Pants"
                 },
                 {
-                  "name": "Men's Gloves"
+                  "name": "Denim Pants"
                 },
                 {
-                  "name": "Necktie"
+                  "name": "Sweatpants"
                 },
                 {
-                  "name": "Leather Belt"
+                  "name": "Shorts"
                 },
                 {
-                  "name": "Men's Cap"
+                  "name": "Cargo Pants"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Women's",
+          "name": "Shoes / Bags",
           "subcategories": [
             {
-              "name": "Tops",
+              "name": "Footwear",
               "subcategories": [
                 {
-                  "name": "Women's T-Shirt"
+                  "name": "Leather Shoes"
                 },
                 {
-                  "name": "Women's Blouse"
+                  "name": "Sandals"
                 },
                 {
-                  "name": "Women's Hoodie"
+                  "name": "Boots"
                 },
                 {
-                  "name": "Women's Sweater"
+                  "name": "Sneakers"
                 },
                 {
-                  "name": "Women's Dress"
+                  "name": "Running Shoes"
                 }
               ]
             },
             {
-              "name": "Accessories",
+              "name": "Bags",
               "subcategories": [
                 {
-                  "name": "Women's Scarf"
+                  "name": "Shopping Bags"
                 },
                 {
-                  "name": "Women's Gloves"
+                  "name": "Tote Bags"
                 },
                 {
-                  "name": "Women's Belt"
+                  "name": "Shoulder Bags"
                 },
                 {
-                  "name": "Necklace"
+                  "name": "Handbags"
                 },
                 {
-                  "name": "Women's Hat"
+                  "name": "Pouches / Small Bags"
                 }
               ]
             }
@@ -100,93 +100,93 @@
       ]
     },
     {
-      "name": "Electronics",
+      "name": "Audio / PC Peripherals",
       "subcategories": [
         {
-          "name": "Audio",
+          "name": "Speakers / Headphones",
           "subcategories": [
             {
-              "name": "Headphones",
+              "name": "Speakers",
               "subcategories": [
                 {
-                  "name": "Sports Earphones"
+                  "name": "Soundbars"
                 },
                 {
-                  "name": "Noise Cancelling"
+                  "name": "Smart Speakers"
                 },
                 {
-                  "name": "Gaming Headset"
+                  "name": "Bluetooth Speakers"
+                },
+                {
+                  "name": "PC Speakers"
+                },
+                {
+                  "name": "Waterproof Speakers"
+                }
+              ]
+            },
+            {
+              "name": "Headphones / Earphones",
+              "subcategories": [
+                {
+                  "name": "Over-Ear Headphones"
+                },
+                {
+                  "name": "Wired Earphones"
                 },
                 {
                   "name": "Wireless Earbuds"
                 },
                 {
-                  "name": "Wired Earphones"
-                }
-              ]
-            },
-            {
-              "name": "Speakers",
-              "subcategories": [
-                {
-                  "name": "Waterproof Speaker"
+                  "name": "Gaming Headsets"
                 },
                 {
-                  "name": "TV Soundbar"
-                },
-                {
-                  "name": "Smart Speaker"
-                },
-                {
-                  "name": "PC Speaker"
-                },
-                {
-                  "name": "Bluetooth Speaker"
+                  "name": "Earphones with Mic"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Computers",
+          "name": "Input / Storage",
           "subcategories": [
             {
-              "name": "Input Devices",
+              "name": "Mouse / Keyboard",
               "subcategories": [
+                {
+                  "name": "Mouse Pads"
+                },
+                {
+                  "name": "Gaming Mouse"
+                },
                 {
                   "name": "Wireless Mouse"
                 },
                 {
-                  "name": "Keyboard"
+                  "name": "Gaming Keyboards"
                 },
                 {
-                  "name": "Webcam"
-                },
-                {
-                  "name": "Mouse Pad"
-                },
-                {
-                  "name": "USB Hub"
+                  "name": "Wireless Keyboards"
                 }
               ]
             },
             {
-              "name": "Storage",
+              "name": "Storage Media",
               "subcategories": [
                 {
                   "name": "External HDD"
                 },
                 {
+                  "name": "SD Cards"
+                },
+                {
+                  "name": "MicroSD Cards"
+                },
+                {
+                  "name": "USB Flash Drives"
+                },
+                {
                   "name": "External SSD"
-                },
-                {
-                  "name": "USB Flash Drive"
-                },
-                {
-                  "name": "SD Card"
-                },
-                {
-                  "name": "microSD Card"
                 }
               ]
             }
@@ -195,28 +195,123 @@
       ]
     },
     {
-      "name": "Home & Kitchen",
+      "name": "Sports / Fitness",
       "subcategories": [
         {
-          "name": "Kitchenware",
+          "name": "Ball Sports / Golf",
+          "subcategories": [
+            {
+              "name": "Baseball",
+              "subcategories": [
+                {
+                  "name": "Baseball Gloves"
+                },
+                {
+                  "name": "Baseball Bats"
+                },
+                {
+                  "name": "Baseball Balls"
+                },
+                {
+                  "name": "Baseball Cleats"
+                },
+                {
+                  "name": "Baseball Uniforms"
+                }
+              ]
+            },
+            {
+              "name": "Golf",
+              "subcategories": [
+                {
+                  "name": "Golf Clubs"
+                },
+                {
+                  "name": "Golf Balls"
+                },
+                {
+                  "name": "Golf Shoes"
+                },
+                {
+                  "name": "Caddy Bags"
+                },
+                {
+                  "name": "Golf Apparel"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Training / Swimming",
+          "subcategories": [
+            {
+              "name": "Training",
+              "subcategories": [
+                {
+                  "name": "Dumbbells"
+                },
+                {
+                  "name": "Yoga Mats"
+                },
+                {
+                  "name": "Protein Supplements"
+                },
+                {
+                  "name": "Fitness Apparel"
+                },
+                {
+                  "name": "Foam Rollers"
+                }
+              ]
+            },
+            {
+              "name": "Swimming",
+              "subcategories": [
+                {
+                  "name": "Swimsuits"
+                },
+                {
+                  "name": "Goggles"
+                },
+                {
+                  "name": "Swim Caps"
+                },
+                {
+                  "name": "Inner Tubes / Floats"
+                },
+                {
+                  "name": "Kickboards"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home / Kitchen",
+      "subcategories": [
+        {
+          "name": "Cooking Tools / Tableware",
           "subcategories": [
             {
               "name": "Cookware",
               "subcategories": [
                 {
-                  "name": "Measuring Cup"
+                  "name": "Measuring Cups"
                 },
                 {
-                  "name": "Saucepan"
+                  "name": "Saucepans"
                 },
                 {
-                  "name": "Kitchen Knife"
+                  "name": "Kitchen Knives"
                 },
                 {
-                  "name": "Cutting Board"
+                  "name": "Cutting Boards"
                 },
                 {
-                  "name": "Frying Pan"
+                  "name": "Frying Pans"
                 }
               ]
             },
@@ -224,64 +319,64 @@
               "name": "Tableware",
               "subcategories": [
                 {
-                  "name": "Mug"
+                  "name": "Curry Dishes"
                 },
                 {
-                  "name": "Dinner Plate"
+                  "name": "Salad Plates"
                 },
                 {
-                  "name": "Chopsticks Set"
+                  "name": "Pasta Plates"
                 },
                 {
-                  "name": "Rice Bowl"
+                  "name": "Soup Bowls"
                 },
                 {
-                  "name": "Dessert Plate"
+                  "name": "Children's Plates"
                 }
               ]
             }
           ]
         },
         {
-          "name": "Bed & Bath",
+          "name": "Bedding / Towels",
           "subcategories": [
             {
               "name": "Bedding",
               "subcategories": [
                 {
-                  "name": "Bed Pad"
+                  "name": "Mattress Pads"
                 },
                 {
-                  "name": "Duvet Cover"
+                  "name": "Duvet Covers"
                 },
                 {
-                  "name": "Mattress"
+                  "name": "Mattresses"
                 },
                 {
-                  "name": "Blanket"
+                  "name": "Blankets / Throws"
                 },
                 {
-                  "name": "Memory Foam Pillow"
+                  "name": "Pillows"
                 }
               ]
             },
             {
-              "name": "Towels & Mats",
+              "name": "Towels",
               "subcategories": [
                 {
-                  "name": "Hand Towel"
+                  "name": "Imabari Towels"
                 },
                 {
-                  "name": "Face Towel"
+                  "name": "Face Towels"
                 },
                 {
-                  "name": "Bath Mat"
+                  "name": "Hand Towels"
                 },
                 {
-                  "name": "Bathrobe"
+                  "name": "Sports Towels"
                 },
                 {
-                  "name": "Bath Towel"
+                  "name": "Bath Towels"
                 }
               ]
             }
@@ -290,105 +385,10 @@
       ]
     },
     {
-      "name": "Beauty",
+      "name": "Food / Drinks",
       "subcategories": [
         {
-          "name": "Skincare",
-          "subcategories": [
-            {
-              "name": "Face Care",
-              "subcategories": [
-                {
-                  "name": "Face Wash"
-                },
-                {
-                  "name": "Toner"
-                },
-                {
-                  "name": "Moisturizer"
-                },
-                {
-                  "name": "Sunscreen"
-                },
-                {
-                  "name": "Lip Balm"
-                }
-              ]
-            },
-            {
-              "name": "Body Care",
-              "subcategories": [
-                {
-                  "name": "Body Soap"
-                },
-                {
-                  "name": "Hand Cream"
-                },
-                {
-                  "name": "Body Oil"
-                },
-                {
-                  "name": "Deodorant Spray"
-                },
-                {
-                  "name": "Body Lotion"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Hair Care",
-          "subcategories": [
-            {
-              "name": "Shampoo & More",
-              "subcategories": [
-                {
-                  "name": "Shampoo"
-                },
-                {
-                  "name": "Conditioner"
-                },
-                {
-                  "name": "Hair Treatment"
-                },
-                {
-                  "name": "Scalp Tonic"
-                },
-                {
-                  "name": "Hair Oil"
-                }
-              ]
-            },
-            {
-              "name": "Styling",
-              "subcategories": [
-                {
-                  "name": "Hair Dryer"
-                },
-                {
-                  "name": "Curling Iron"
-                },
-                {
-                  "name": "Hair Wax"
-                },
-                {
-                  "name": "Hair Brush"
-                },
-                {
-                  "name": "Hair Spray"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Food & Drink",
-      "subcategories": [
-        {
-          "name": "Beverages",
+          "name": "Drinks / Coffee & Tea",
           "subcategories": [
             {
               "name": "Soft Drinks",
@@ -397,24 +397,24 @@
                   "name": "Mineral Water"
                 },
                 {
-                  "name": "100% Fruit Juice"
+                  "name": "Fruit Juices"
                 },
                 {
-                  "name": "Cola"
+                  "name": "Carbonated Drinks"
                 },
                 {
-                  "name": "Sparkling Water"
+                  "name": "Ready-to-Drink Tea"
                 },
                 {
-                  "name": "Energy Drink"
+                  "name": "Energy Drinks"
                 }
               ]
             },
             {
-              "name": "Coffee & Tea",
+              "name": "Coffee / Tea",
               "subcategories": [
                 {
-                  "name": "Coffee Beans"
+                  "name": "Regular Coffee Beans"
                 },
                 {
                   "name": "Instant Coffee"
@@ -423,7 +423,7 @@
                   "name": "Tea Bags"
                 },
                 {
-                  "name": "Green Tea"
+                  "name": "Japanese Tea Leaves"
                 },
                 {
                   "name": "Matcha Powder"
@@ -433,45 +433,45 @@
           ]
         },
         {
-          "name": "Snacks",
+          "name": "Snacks / Sweets",
           "subcategories": [
             {
               "name": "Salty Snacks",
               "subcategories": [
                 {
-                  "name": "Potato Chips"
+                  "name": "Tortilla Chips"
                 },
                 {
                   "name": "Popcorn"
                 },
                 {
-                  "name": "Tortilla Chips"
+                  "name": "Potato Chips"
                 },
                 {
                   "name": "Pretzels"
                 },
                 {
-                  "name": "Crackers"
+                  "name": "Rice Crackers / Senbei"
                 }
               ]
             },
             {
-              "name": "Sweet Treats",
+              "name": "Confectionery / Candy",
               "subcategories": [
                 {
                   "name": "Chocolate"
                 },
                 {
-                  "name": "Cookies"
+                  "name": "Cookies / Biscuits"
                 },
                 {
-                  "name": "Candy"
+                  "name": "Candy / Drops"
                 },
                 {
-                  "name": "Gummy Candy"
+                  "name": "Gummies"
                 },
                 {
-                  "name": "Marshmallow"
+                  "name": "Marshmallows"
                 }
               ]
             }

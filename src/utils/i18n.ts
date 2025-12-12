@@ -49,7 +49,7 @@ export const TEXT = {
     startTutorial: "チュートリアル開始",
     tutorialLabel: "チュートリアル",
     tutorialIntroText:
-      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br /><span class='text-red-600 font-bold'>※ できるだけ早くクリアしてください。</span><br />制限時間は1タスク当たり20秒です。",
+      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br /><span class='text-red-600 font-bold'>※ できるだけ早くクリアしてください。</span><br />制限時間は1タスク当たり15秒です。",
     tutorialIntroClose: "チュートリアル開始",
     tutorialInfo: (item: string) =>
       `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,

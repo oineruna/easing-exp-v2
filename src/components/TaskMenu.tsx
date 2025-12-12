@@ -9,18 +9,18 @@ interface TaskMenuProps {
   isTutorial: boolean;              // チュートリアルモードかどうか
   onItemClick: (itemName: string, isCorrectPath: boolean, depth: number, isLeaf: boolean) => void; // アイテムクリック時のコールバック
   onAnimationChange?: (isAnimating: boolean) => void; // アニメーション状態変更時のコールバック
+  animationDuration?: number;       // アニメーション時間（秒）
+  slideDistance?: number;           // スライド距離（px）
 }
-
-
 
 // イージング関数のベジェ曲線定義マップ
 // CSSの cubic-bezier() に渡すパラメータです
 const bezierMap: Record<EasingFunction, [number, number, number, number]> = {
-  linear: [0.25, 0.25, 0.75, 0.75],         // 等速
+  linear: [0.25, 0.25, 0.75, 0.75],         // 等速（元に戻す）
   easeInOutQuad: [0.455, 0.03, 0.515, 0.955], // 緩やか
   easeInOutQuint: [0.86, 0, 0.07, 1],       // 急激
   easeInOutExpo: [1, 0, 0, 1],              // 非常に急激
-  easeInOutBack: [0.68, -0.55, 0.265, 1.55], // バウンド
+  easeInOutBack: [0.68, -0.6, 0.32, 1.6],   // バウンド（少し誇張）
 };
 
 /**
@@ -34,6 +34,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   correctPath,
   onItemClick,
   onAnimationChange,
+  animationDuration = 0.8, // デフォルト値
+  slideDistance = 50,      // デフォルト値
 }) => {
   // 現在展開されているパスの状態管理
   const [activePath, setActivePath] = useState<string[]>([]);
@@ -130,11 +132,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               <AnimatePresence>
                 {hasSub && isActive && (
                   <motion.div
-                    initial={isMobile ? { height: 0, opacity: 0 } : { opacity: 0, x: -30 }}
+                    initial={isMobile ? { height: 0, opacity: 0 } : { opacity: 0, x: -slideDistance }} // 透明度変化を戻す
                     animate={isMobile ? { height: "auto", opacity: 1 } : { opacity: 1, x: 0 }}
                     exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{
-                      duration: 0.3,
+                      duration: animationDuration,
                       ease: bezierMap[currentEasing],
                     }}
                     onAnimationStart={() => onAnimationChange?.(true)}

@@ -115,13 +115,17 @@ export default function App() {
   // チュートリアル完了状態
   const [isTutorialCompleted, setIsTutorialCompleted] = useState(false);
 
+  // アニメーション設定（調整用）
+  const [animDuration, setAnimDuration] = useState(0.8);
+  const [slideDist, setSlideDist] = useState(50);
+
   // 現在適用中のイージング関数
   const currentEasing: EasingFunction =
     appState === "tutorial" ? tutorialEasing : (currentTaskWithEasing?.easing || "easeInOutExpo");
 
   // Refs
   const timeoutIdRef = useRef<number | null>(null);
-  const taskLogger = useTaskLogger(500);
+  const taskLogger = useTaskLogger(animDuration * 1000); // 動的な時間を渡す
 
   // システム情報収集用
   const fpsMonitorRef = useRef<FrameRateMonitor | null>(null);
@@ -856,6 +860,30 @@ export default function App() {
                       <option value="easeInOutExpo">easeInOutExpo</option>
                       <option value="easeInOutBack">easeInOutBack</option>
                     </select>
+
+                    {/* アニメーション調整コントロール */}
+                    <div className="flex items-center gap-2 border-l border-gray-300 pl-4 py-1">
+                      <div className="flex flex-col">
+                        <label className="text-xs font-bold text-gray-500">Duration (s)</label>
+                        <input
+                          type="number"
+                          value={animDuration}
+                          onChange={(e) => setAnimDuration(Math.max(0.1, parseFloat(e.target.value)))}
+                          step="0.1"
+                          className="w-16 px-1 py-0.5 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-xs font-bold text-gray-500">Dist (px)</label>
+                        <input
+                          type="number"
+                          value={slideDist}
+                          onChange={(e) => setSlideDist(Math.max(0, parseInt(e.target.value)))}
+                          step="10"
+                          className="w-16 px-1 py-0.5 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -935,6 +963,8 @@ export default function App() {
                       isTutorial={true}
                       onItemClick={handleTutorialItemClick}
                       onAnimationChange={taskLogger.setAnimating}
+                      animationDuration={animDuration}
+                      slideDistance={slideDist}
                     />
                   )}
                   {appState !== "tutorial" &&
@@ -950,6 +980,8 @@ export default function App() {
                           appState === "task" ? handleTaskItemClick : () => { }
                         }
                         onAnimationChange={taskLogger.setAnimating} // アニメーション状態をロガーに通知
+                        animationDuration={animDuration}
+                        slideDistance={slideDist}
                       />
                     )}
                 </div>

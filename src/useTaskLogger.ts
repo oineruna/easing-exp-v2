@@ -13,7 +13,7 @@ interface InternalClickLog extends NavigationStep {
  * クリック、マウス移動、エラー、時間などを管理します
  * @param animationDurationMs アニメーション時間（ミリ秒）
  */
-export function useTaskLogger(animationDurationMs: number = 500) {
+export function useTaskLogger(animationDurationMs: number = 800) {
   // --- State Variables (Reactの状態管理) ---
 
   // 現在のタスク内でのクリック履歴

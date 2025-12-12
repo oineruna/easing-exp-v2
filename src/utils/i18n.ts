@@ -149,10 +149,11 @@ export const TEXT = {
     postSurveyQ5:
       "5. 最も「使いにくい・操作しづらい」と感じたアニメーションの特徴は何ですか？",
     postSurveyFeatureOptions: [
+      "一定速度で動く",
       "ゆっくり滑らかに動く",
       "素早く動く",
       "弾むような動き",
-      "一定速度で動く",
+
       "その他",
     ],
     postSurveyQ6:
@@ -169,7 +170,7 @@ export const TEXT = {
     preSurveyNote: "※ この情報は実験データの分析にのみ使用されます",
     preSurveyStart: "開始する",
     preSurveyDemoTitle: "あなたの感覚に最も近い評価を選んでください（不快-快適）",
-    preSurveyPreference: "操作感",
+    preSurveyPreference: "好み",
     preSurveyLow: "不快",
     preSurveyHigh: "快適",
     preSurveyNext: "次へ",
@@ -183,16 +184,16 @@ export const TEXT = {
     preSurveyAlert: "すべてのアニメーションを評価してください",
 
     // Easing Labels (JA)
-    easingLinearLabel: "一定速度",
+    easingLinearLabel: "一定速度で動く",
     easingLinearDesc: "等速で動く",
-    easingQuadLabel: "ゆったり",
-    easingQuadDesc: "ゆっくり加速・減速",
-    easingQuintLabel: "なめらか",
-    easingQuintDesc: "とても滑らか",
-    easingExpoLabel: "メリハリ",
+    easingQuadLabel: "ゆっくり滑らかに動く",
+    easingQuadDesc: "滑らかに加速・減速",
+    easingQuintLabel: "滑らかに動く",
+    easingQuintDesc: "滑らかに加速・減速",
+    easingExpoLabel: "素早く動く",
     easingExpoDesc: "急加速・急停止",
-    easingBackLabel: "弾む",
-    easingBackDesc: "オーバーシュート",
+    easingBackLabel: "弾むような動き",
+    easingBackDesc: "オーバーシュートする動き",
 
     // ConsentOverlay
     langJa: "日本語",
@@ -353,16 +354,16 @@ export const TEXT = {
     preSurveyAlert: "Please rate all animations",
 
     // Easing Labels (EN)
-    easingLinearLabel: "Linear",
-    easingLinearDesc: "Constant speed",
-    easingQuadLabel: "Smooth (Weak)",
-    easingQuadDesc: "Gentle acceleration",
-    easingQuintLabel: "Smooth (Strong)",
-    easingQuintDesc: "Very smooth",
-    easingExpoLabel: "Snappy",
-    easingExpoDesc: "Quick start/stop",
-    easingBackLabel: "Bounce",
-    easingBackDesc: "Overshoot effect",
+    easingLinearLabel: "Constant speed movement",
+    easingLinearDesc: "Moves at constant speed",
+    easingQuadLabel: "Slow and smooth movement",
+    easingQuadDesc: "Smooth acceleration and deceleration",
+    easingQuintLabel: "Smooth movement",
+    easingQuintDesc: "Smooth acceleration and deceleration",
+    easingExpoLabel: "Quick movement",
+    easingExpoDesc: "Quick acceleration and stop",
+    easingBackLabel: "Bouncy movement",
+    easingBackDesc: "Overshooting movement",
 
     // ConsentOverlay
     langJa: "日本語",

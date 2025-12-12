@@ -128,8 +128,8 @@ export function ConsentOverlay({
             >
               <a
                 href={lang === "ja"
-                  ? "https://drive.google.com/file/d/1mtJBvmNhzrVmi68tWLZPQhHrPwWm_wt3/view?usp=sharing"
-                  : "https://drive.google.com/file/d/1ftXYfVuFyssO4N_JSQW1dlzrM1lO_82W/view?usp=sharing"
+                  ? "https://drive.google.com/file/d/1OHZ_y1_yZ6GWTmzHohE1P5VM3pvXq8xs/view?usp=sharing"
+                  : "https://drive.google.com/file/d/1PJw2rOzcx-8TqmvuQnvzFf4pjzYdDtvy/view?usp=sharing"
                 }
                 target="_blank"
                 rel="noopener noreferrer"

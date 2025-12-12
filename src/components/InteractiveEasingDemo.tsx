@@ -28,7 +28,7 @@ export function InteractiveEasingDemo({
                 <motion.div
                     animate={{ x: [0, 152, 0] }} // 往復アニメーション
                     transition={{
-                        duration: 2,
+                        duration: 1.6,
                         repeat: Infinity,
                         ease: easingBezier as any, // ベジェ曲線を適用
                         repeatDelay: 0.5

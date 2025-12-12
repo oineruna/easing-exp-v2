@@ -244,10 +244,10 @@ export function PreSurveyOverlay({
                           <motion.div
                             animate={{ x: [0, 152, 0] }}
                             transition={{
-                              duration: 2,
+                              duration: 1.6,
                               repeat: Infinity,
                               ease: demo.bezier as any,
-                              repeatDelay: 0.5,
+                              repeatDelay: 0.6,
                             }}
                             className="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md shadow-md"
                           />
@@ -347,10 +347,10 @@ export function PreSurveyOverlay({
                             <motion.div
                               animate={{ x: [0, 96, 0] }} // w-32 (128px) - w-8 (32px) = 96px
                               transition={{
-                                duration: 1.5,
+                                duration: 1.6,
                                 repeat: Infinity,
                                 ease: demo.bezier as any,
-                                repeatDelay: 0.3,
+                                repeatDelay: 0.6,
                               }}
                               className="absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md shadow-md"
                             />

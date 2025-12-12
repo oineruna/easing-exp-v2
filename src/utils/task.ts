@@ -73,6 +73,16 @@ export const loadTutorialCategories = async (
 };
 
 /**
+ * タスクから除外するカテゴリ名のブラックリスト
+ * ここに追加した名前を含むパスはタスクとして生成されません
+ */
+const CATEGORY_BLACKLIST: string[] = [
+  "トレーニング／水泳",
+  // 必要に応じて追加してください
+  // 例: "野球／ゴルフ",
+];
+
+/**
  * カテゴリツリーを探索して、末端（サブカテゴリを持たない）の項目をすべて抽出し、
  * タスク（目標アイテム）のリストを生成する関数
  * @param categories カテゴリツリーのルート配列
@@ -85,6 +95,16 @@ export const generateTasksFromCategories = (categories: Category[]): Task[] => {
   const traverse = (cats: Category[], path: string[]) => {
     cats.forEach((cat, index) => {
       const currentPath = [...path, cat.name];
+
+      // ブラックリストチェック: パスにブラックリスト項目が含まれていたらスキップ
+      const isBlacklisted = CATEGORY_BLACKLIST.some(blacklisted =>
+        currentPath.includes(blacklisted)
+      );
+
+      if (isBlacklisted) {
+        return; // このカテゴリとその子孫をスキップ
+      }
+
       // サブカテゴリがない場合、それをタスクのターゲットとする
       if (!cat.subcategories || cat.subcategories.length === 0) {
         tasks.push({

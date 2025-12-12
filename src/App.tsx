@@ -282,7 +282,7 @@ export default function App() {
   // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
     (itemName: string, _isCorrect: boolean, _depth: number, isLeaf: boolean) => {
-      const targetItem = lang === "en" ? "Frying Pan" : "フライパン";
+      const targetItem = lang === "en" ? "Measuring Cup" : "計量カップ";
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
@@ -846,7 +846,7 @@ export default function App() {
 
                 {/* 右側:イージング選択（デバッグ/チュートリアル用） */}
                 {/* 被験者実験用に非表示 - 後で使う場合はコメント解除してください */}
-                {true && (
+                {false && (
                   <div className="flex items-center gap-4">
                     <label className="text-sm font-bold text-gray-700">
                       {lang === "ja" ? "イージング関数" : "Easing Function"}:
@@ -938,7 +938,7 @@ export default function App() {
                             : `「${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}」を探してクリックしてください`
                           : lang === "en"
                             ? "Find 'Frying Pan'"
-                            : "「フライパン」を探してクリックしてください"}
+                            : "「計量カップ」を探してクリックしてください"}
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import "./utils/easing_functions.css";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { ConsentOverlay } from "./components/ConsentOverlay";
 import { TutorialIntroOverlay } from "./components/TutorialIntroOverlay";
@@ -78,7 +80,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("tutorial"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ
@@ -118,6 +120,10 @@ export default function App() {
   // アニメーション設定（調整用）
   const [animDuration, setAnimDuration] = useState(0.8);
   const [slideDist, setSlideDist] = useState(50);
+
+  // チュートリアルタイマー (20s to match task timeout)
+  const [tutorialTimeLeft, setTutorialTimeLeft] = useState(20);
+  const tutorialTimerRef = useRef<number | null>(null);
 
   // 現在適用中のイージング関数
   const currentEasing: EasingFunction =
@@ -248,9 +254,31 @@ export default function App() {
       setFeedback(null);
       setFeedbackType("");
       setAppState("tutorial");
+      // Start tutorial timer (20s to match task timeout)
+      setTutorialTimeLeft(20);
+      if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
+      tutorialTimerRef.current = window.setInterval(() => {
+        setTutorialTimeLeft((prev) => {
+          if (prev <= 1) {
+            if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
+            // Show timeout feedback but allow continuation
+            setFeedback(lang === "ja" ? "タイムアウト" : "Timeout");
+            setFeedbackType("timeout");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     },
-    []
+    [taskLogger]
   );
+
+  // Tutorial cancel handler - skip to experiment start
+  const handleCancelTutorial = useCallback(() => {
+    if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
+    setIsTutorialCompleted(true);
+    setAppState("ready");
+  }, []);
 
 
   // ... (existing code)
@@ -258,6 +286,7 @@ export default function App() {
   const handleTutorialCompleteClose = useCallback(
     () => {
       console.log("[App] handleTutorialCompleteClose called");
+      if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
       setFeedback(null);
       setFeedbackType("");
       setIsTutorialCompleted(true); // チュートリアル完了フラグを立てる
@@ -795,17 +824,9 @@ export default function App() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleConfirmStartTutorial}
-                  className="px-6 py-3 bg-blue-500 text-white rounded-xl font-bold shadow-lg hover:bg-blue-600 transition"
+                  className="px-8 py-3 bg-blue-500 text-white rounded-xl font-bold shadow-lg hover:bg-blue-600 transition"
                 >
                   {lang === "ja" ? "開始する" : "Start"}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowTutorialConfirm(false)}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition"
-                >
-                  {lang === "ja" ? "キャンセル" : "Cancel"}
                 </motion.button>
               </div>
             </motion.div>
@@ -829,6 +850,18 @@ export default function App() {
                   <div className="px-3 py-1 bg-gray-100 rounded font-mono text-sm text-gray-800">
                     {participantId}
                   </div>
+
+                  {/* Tutorial cancel button */}
+                  {appState === "tutorial" && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleCancelTutorial}
+                      className="px-4 py-1 bg-red-500 hover:bg-red-600 text-white rounded font-bold text-sm shadow transition"
+                    >
+                      {lang === "ja" ? "キャンセル" : "Cancel"}
+                    </motion.button>
+                  )}
                 </div>
 
                 {/* 右側:イージング選択（デバッグ/チュートリアル用） */}

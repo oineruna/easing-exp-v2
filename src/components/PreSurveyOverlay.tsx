@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { t } from "../utils/i18n";
 import type { Lang, TextKey } from "../utils/i18n";
 import type { EasingFunction, PreSurveyData } from "../experiment";
+import { getEasingBezier } from "../utils/easings";
 
 interface PreSurveyOverlayProps {
   isVisible: boolean;
@@ -16,37 +17,31 @@ const EASING_DEMOS: Array<{
   name: EasingFunction;
   labelKey: TextKey;
   descKey: TextKey;
-  bezier: [number, number, number, number];
 }> = [
     {
       name: "linear",
       labelKey: "easingLinearLabel",
       descKey: "easingLinearDesc",
-      bezier: [0.25, 0.25, 0.75, 0.75],
     },
     {
       name: "easeInOutQuad",
       labelKey: "easingQuadLabel",
       descKey: "easingQuadDesc",
-      bezier: [0.455, 0.03, 0.515, 0.955],
     },
     {
       name: "easeInOutQuint",
       labelKey: "easingQuintLabel",
       descKey: "easingQuintDesc",
-      bezier: [0.86, 0, 0.07, 1],
     },
     {
       name: "easeInOutExpo",
       labelKey: "easingExpoLabel",
       descKey: "easingExpoDesc",
-      bezier: [1, 0, 0, 1],
     },
     {
       name: "easeInOutBack",
       labelKey: "easingBackLabel",
       descKey: "easingBackDesc",
-      bezier: [0.68, -0.55, 0.265, 1.55],
     },
   ];
 
@@ -233,9 +228,8 @@ export function PreSurveyOverlay({
                   {EASING_DEMOS.map((demo, index) => (
                     <motion.div
                       key={demo.name}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: index * 0.1 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                       className="bg-white/80 rounded-2xl p-4 shadow-md"
                     >
                       <div className="flex items-center gap-4">
@@ -246,7 +240,8 @@ export function PreSurveyOverlay({
                             transition={{
                               duration: 1.6,
                               repeat: Infinity,
-                              ease: demo.bezier as any,
+                              repeatType: 'loop',
+                              ease: getEasingBezier(demo.name) as any,
                               repeatDelay: 0.6,
                             }}
                             className="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md shadow-md"
@@ -338,8 +333,18 @@ export function PreSurveyOverlay({
                           className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm cursor-move"
                         >
                           {/* 順位バッジ */}
-                          <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-md flex items-center justify-center font-bold text-lg">
-                            {index + 1}
+                          <div
+                            className={`flex-shrink-0 w-12 h-12 text-white rounded-md flex flex-col items-center justify-center font-bold shadow-md ${index === 0
+                              ? 'bg-gradient-to-br from-yellow-400 to-yellow-600'
+                              : index === 1
+                                ? 'bg-gradient-to-br from-gray-300 to-gray-500'
+                                : index === 2
+                                  ? 'bg-gradient-to-br from-orange-400 to-orange-600'
+                                  : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                              }`}
+                          >
+                            <span className="text-lg leading-none">{index + 1}</span>
+                            <span className="text-xs leading-none">位</span>
                           </div>
 
                           {/* アニメーションプレビュー（小） */}
@@ -349,7 +354,8 @@ export function PreSurveyOverlay({
                               transition={{
                                 duration: 1.6,
                                 repeat: Infinity,
-                                ease: demo.bezier as any,
+                                repeatType: 'loop',
+                                ease: getEasingBezier(demo.name) as any,
                                 repeatDelay: 0.6,
                               }}
                               className="absolute top-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md shadow-md"

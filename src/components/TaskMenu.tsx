@@ -15,13 +15,11 @@ interface TaskMenuProps {
 
 // イージング関数のベジェ曲線定義マップ
 // CSSの cubic-bezier() に渡すパラメータです
-const bezierMap: Record<EasingFunction, [number, number, number, number]> = {
-  linear: [0.25, 0.25, 0.75, 0.75],         // 等速（元に戻す）
-  easeInOutQuad: [0.455, 0.03, 0.515, 0.955], // 緩やか
-  easeInOutQuint: [0.86, 0, 0.07, 1],       // 急激
-  easeInOutExpo: [1, 0, 0, 1],              // 非常に急激
-  easeInOutBack: [0.68, -0.6, 0.32, 1.6],   // バウンド（少し誇張）
-};
+import { getEasingBezier } from "../utils/easings";
+
+// イージング関数のベジェ曲線定義マップ
+// CSSの cubic-bezier() に渡すパラメータです
+// const bezierMap は削除し、getEasingBezier を使用します
 
 /**
  * 多階層ドリルダウンメニューコンポーネント
@@ -137,7 +135,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                     exit={isMobile ? { height: 0, opacity: 0 } : { opacity: 0 }}
                     transition={{
                       duration: animationDuration,
-                      ease: bezierMap[currentEasing],
+                      ease: getEasingBezier(currentEasing),
                     }}
                     onAnimationStart={() => onAnimationChange?.(true)}
                     onAnimationComplete={() => onAnimationChange?.(false)}

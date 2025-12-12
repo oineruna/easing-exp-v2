@@ -3,7 +3,7 @@
 import type { Category, Task, EasingFunction } from "../experiment";
 
 // タスクの制限時間（ミリ秒）
-export const TIME_LIMIT_MS = 20000;
+export const TIME_LIMIT_MS = 200000;
 
 // 実験で使用するイージング関数のリスト
 // 以下の5種類を比較対象とします

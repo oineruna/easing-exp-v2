@@ -225,7 +225,7 @@ export function PreSurveyOverlay({
                 </h2>
 
                 <div className="space-y-4 mb-6">
-                  {EASING_DEMOS.map((demo, index) => (
+                  {EASING_DEMOS.map((demo) => (
                     <motion.div
                       key={demo.name}
                       initial={{ opacity: 0 }}

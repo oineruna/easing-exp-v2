@@ -80,7 +80,7 @@ const hashCode = (str: string) => {
 export default function App() {
   // --- State Definitions ---
   const [lang, setLang] = useState<Lang>("ja");
-  const [appState, setAppState] = useState<AppState>("tutorial"); // 初期状態は同意画面
+  const [appState, setAppState] = useState<AppState>("consent"); // 初期状態は同意画面
   const [participantId, setParticipantId] = useState<string>("");
 
   // メニューデータ
@@ -120,10 +120,6 @@ export default function App() {
   // アニメーション設定（調整用）
   const [animDuration, setAnimDuration] = useState(0.8);
   const [slideDist, setSlideDist] = useState(50);
-
-  // チュートリアルタイマー (20s to match task timeout)
-  const [tutorialTimeLeft, setTutorialTimeLeft] = useState(20);
-  const tutorialTimerRef = useRef<number | null>(null);
 
   // 現在適用中のイージング関数
   const currentEasing: EasingFunction =
@@ -254,28 +250,13 @@ export default function App() {
       setFeedback(null);
       setFeedbackType("");
       setAppState("tutorial");
-      // Start tutorial timer (20s to match task timeout)
-      setTutorialTimeLeft(20);
-      if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
-      tutorialTimerRef.current = window.setInterval(() => {
-        setTutorialTimeLeft((prev) => {
-          if (prev <= 1) {
-            if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
-            // Show timeout feedback but allow continuation
-            setFeedback(lang === "ja" ? "タイムアウト" : "Timeout");
-            setFeedbackType("timeout");
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      // Tutorial timeout handled by task logger
     },
-    [taskLogger]
+    []
   );
 
   // Tutorial cancel handler - skip to experiment start
   const handleCancelTutorial = useCallback(() => {
-    if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
     setIsTutorialCompleted(true);
     setAppState("ready");
   }, []);
@@ -286,7 +267,6 @@ export default function App() {
   const handleTutorialCompleteClose = useCallback(
     () => {
       console.log("[App] handleTutorialCompleteClose called");
-      if (tutorialTimerRef.current) clearInterval(tutorialTimerRef.current);
       setFeedback(null);
       setFeedbackType("");
       setIsTutorialCompleted(true); // チュートリアル完了フラグを立てる

@@ -174,9 +174,9 @@ export function useTaskLogger(animationDurationMs: number = 800) {
       // 経過時間を計算
       const elapsed = currentClickTime - animationStartTimeRef.current;
 
-      // フラグがfalseでも、直近のアニメーション開始から duration + 500ms (バッファ) 以内なら true とみなす
+      // フラグがfalseでも、直近のアニメーション開始から duration + 200ms (バッファ) 以内なら true とみなす
       // これにより、アニメーション終了直後のクリックも「アニメーションの影響下」として扱う
-      const BUFFER_MS = 500;
+      const BUFFER_MS = 200;
 
       if (!isDuringAnimation && animationStartTimeRef.current > 0) {
         if (elapsed >= 0 && elapsed <= animationDurationMs + BUFFER_MS) {

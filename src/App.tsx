@@ -282,7 +282,7 @@ export default function App() {
   // チュートリアル中のアイテムクリック処理
   const handleTutorialItemClick = useCallback(
     (itemName: string, _isCorrect: boolean, _depth: number, isLeaf: boolean) => {
-      const targetItem = lang === "en" ? "Measuring Cup" : "計量カップ";
+      const targetItem = lang === "en" ? "Measuring Cups" : "計量カップ";
       if (itemName === targetItem) {
         setFeedback(t(lang, "tutorialCorrect"));
         setFeedbackType("correct");
@@ -937,7 +937,7 @@ export default function App() {
                             ? `Find "${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}"`
                             : `「${currentTaskWithEasing.task.targetPath[currentTaskWithEasing.task.targetPath.length - 1]}」を探してクリックしてください`
                           : lang === "en"
-                            ? "Find 'Frying Pan'"
+                            ? "Find 'Measuring Cups'"
                             : "「計量カップ」を探してクリックしてください"}
                       </div>
                     </div>

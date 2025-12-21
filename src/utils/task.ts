@@ -78,8 +78,10 @@ export const loadTutorialCategories = async (
  */
 const CATEGORY_BLACKLIST: string[] = [
   "トレーニング／水泳",
+  "Training / Swimming",
   // 必要に応じて追加してください
   // 例: "野球／ゴルフ",
+  // "Ball Sports / Golf",
 ];
 
 /**
@@ -98,24 +100,24 @@ const CATEGORY_BLACKLIST: string[] = [
  */
 const TASK_WHITELIST: string[] = [
   // ファッション (上=トップス, 下=バッグ)
-  "パーカー",           // トップス／ボトムス > トップス [leafIndex: 1]
-  "ポーチバッグ",       // シューズ／バッグ > バッグ [leafIndex: 4]
+  "パーカー", "Hoodies",                        // トップス／ボトムス > トップス [leafIndex: 1]
+  "ポーチバッグ", "Pouches / Small Bags",       // シューズ／バッグ > バッグ [leafIndex: 4]
 
   // パソコン周辺機器 (上=スピーカー, 下=記録メディア)
-  "Bluetoothスピーカー", // スピーカー／イヤホン > スピーカー [leafIndex: 2]
-  "マイクロSDカード",    // キーボード／記録メディア > 記録メディア [leafIndex: 2]
+  "Bluetoothスピーカー", "Bluetooth Speakers",  // スピーカー／イヤホン > スピーカー [leafIndex: 2]
+  "マイクロSDカード", "MicroSD Cards",          // キーボード／記録メディア > 記録メディア [leafIndex: 2]
 
   // スポーツ・アウトドア (上=野球, 上=ゴルフ ※下層はブラックリストのため両方上層から)
-  "野球ボール",         // 野球／ゴルフ > 野球 [leafIndex: 2]
-  "ゴルフウェア",       // 野球／ゴルフ > ゴルフ [leafIndex: 4]
+  "野球ボール", "Baseball Balls",               // 野球／ゴルフ > 野球 [leafIndex: 2]
+  "ゴルフウェア", "Golf Apparel",               // 野球／ゴルフ > ゴルフ [leafIndex: 4]
 
   // ホーム・キッチン (上=調理器具, 下=タオル)
-  "片手鍋",             // 調理器具／食皿 > 調理器具 [leafIndex: 1]
-  "スポーツタオル",     // 布団／タオル > タオル [leafIndex: 3]
+  "片手鍋", "Saucepans",                        // 調理器具／食皿 > 調理器具 [leafIndex: 1]
+  "スポーツタオル", "Sports Towels",            // 布団／タオル > タオル [leafIndex: 3]
 
   // 食品・ドリンク (上=ソフトドリンク, 下=ケーキ)
-  "お茶飲料（ペットボトル）", // 野菜／ソフトドリンク > ソフトドリンク [leafIndex: 3]
-  "チョコレートケーキ", // スナック菓子／ケーキ > ケーキ [leafIndex: 3]
+  "お茶飲料（ペットボトル）", "Ready-to-Drink Tea", // 野菜／ソフトドリンク > ソフトドリンク [leafIndex: 3]
+  "チョコレートケーキ", "Gummies",              // スナック菓子／ケーキ > ケーキ [leafIndex: 3]
 ];
 
 /**

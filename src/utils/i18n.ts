@@ -1,5 +1,7 @@
 // --- START OF FILE src/utils/i18n.ts ---
 
+import { TIME_LIMIT_MS } from "./task";
+
 // サポートされている言語の定義
 const SUPPORTED = ["ja", "en"] as const;
 export type Lang = (typeof SUPPORTED)[number];
@@ -49,7 +51,7 @@ export const TEXT = {
     startTutorial: "チュートリアル開始",
     tutorialLabel: "チュートリアル",
     tutorialIntroText:
-      "メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br /><span class='text-red-600 font-bold'>※ できるだけ早くクリアしてください。</span><br />制限時間は1タスク当たり15秒です。",
+      `メニューを開くたびにマウスでクリックして選択してください。<br /><br />すべてのメニューは４階層まであります。<br /><br /><span class='text-red-600 font-bold'>※ できるだけ早くクリアしてください。</span><br />制限時間は1タスク当たり${TIME_LIMIT_MS / 1000}秒です。`,
     tutorialIntroClose: "チュートリアル開始",
     tutorialInfo: (item: string) =>
       `【チュートリアル】「${item}」をメニューから見つけて、クリックしてください。`,
@@ -224,7 +226,7 @@ export const TEXT = {
     startTutorial: "Start Tutorial",
     tutorialLabel: "Tutorial",
     tutorialIntroText:
-      "Click to select items from the menu.<br /><br />Start with the button below.<br /><br />Time limit: 20s per task.",
+      `Click to select items from the menu.<br /><br />Start with the button below.<br /><br />Time limit: ${TIME_LIMIT_MS / 1000}s per task.`,
     tutorialIntroClose: "Close",
     tutorialInfo: (item: string) => `[Tutorial] Find "${item}" and click it.`,
     tutorialWrong: "Tutorial: Incorrect item.",

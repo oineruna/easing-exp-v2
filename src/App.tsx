@@ -214,6 +214,13 @@ export default function App() {
     }
   }, [appState, isTutorialCompleted]);
 
+  // 初期ロード時にチュートリアル未完了なら確認モーダルを自動表示
+  useEffect(() => {
+    if (appState === "ready" && !isTutorialCompleted) {
+      setShowTutorialConfirm(true);
+    }
+  }, [appState, isTutorialCompleted]);
+
   // --- Event Handlers ---
 
   // 同意画面
@@ -342,7 +349,16 @@ export default function App() {
     // 確認ダイアログを閉じる
     setShowStartConfirm(false);
 
-    if (menuCategories.length === 0) return;
+    // メニューカテゴリがロードされていない場合のエラーハンドリング
+    if (menuCategories.length === 0) {
+      console.error("[handleStartTask] Menu categories not loaded. Current lang:", lang);
+      alert(
+        lang === "en"
+          ? "Error: Menu data not loaded. Please refresh the page."
+          : "エラー: メニューデータが読み込まれていません。ページを更新してください。"
+      );
+      return;
+    }
 
     // タスクシーケンス生成（ラテン方格法を使用）
     const seed = hashCode(participantId);
@@ -751,7 +767,7 @@ export default function App() {
               <p className="text-gray-600 mb-8 text-lg">
                 {lang === "ja"
                   ? "実験を開始してもよろしいですか？"
-                  : "Are you sure you want to start?"}
+                  :" Are you sure you want to start?"}
               </p>
               <div className="flex gap-2 justify-center">
                 <motion.button
